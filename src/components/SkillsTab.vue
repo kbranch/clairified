@@ -21,9 +21,6 @@ const visibleSkills = computed(() => {
 
 <div class="d-flex">
   <div>
-    <span>
-      Base formula: 
-    </span>
     <DamageFormula />
   </div>
   <SkillBox v-for="skill in visibleSkills" :key="skill.name" :skill="skill" />

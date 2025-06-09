@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useLoadoutStore } from '@/stores/loadout';
 import DamageFormula from './DamageFormula.vue';
 import { DamageCalc } from '@/damageCalc';
+import { sum } from '@/main';
 
 const props = defineProps(['skill']);
 const loadout = useLoadoutStore();
@@ -14,7 +15,7 @@ const cost = computed(() => {
 });
 
 const hits = computed(() => {
-  return props.skill.hits ?? 1;
+  return sum(props.skill.hits, 'count') ?? 1;
 });
 
 const calc = computed (() => {
@@ -97,7 +98,8 @@ const calc = computed (() => {
   border-style: solid;
   border-width: 2px;
   border-radius: 10px;
-  margin: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 </style>

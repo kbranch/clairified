@@ -1,32 +1,51 @@
 export class DamageCalc {
+  static defaultHit = {count: 1};
+
   constructor(skill, mods, loadout) {
     this.skill = skill;
     this.mods = mods;
     this.loadout = loadout;
+
+    if (!this.skill) {
+      this.skill = {
+        name: 'None',
+        hits: [DamageCalc.defaultHit],
+      };
+    }
   }
 
-  getSkillMultiplier() {
-    return DamageCalc.getMultiplier(this.skill?.multiplier ?? 1, this.mods, this.skill);
+  getHitMultiplier(hit) {
+    return DamageCalc.getMultiplier(hit?.multiplier ?? 1, this.mods, hit);
   }
 
-  hitDamage(mods, extraMods=[], includeAdditive=true) {
+  hitDamage(hit, mods, extraMods=[], includeAdditive=true) {
+    if (!hit) {
+      hit = DamageCalc.defaultHit;
+    }
+
     let damage = this.loadout.baseAttackPower;
     let combinedMods = mods.concat(extraMods);
-    let multiplier = this.getTotalMultiplier(combinedMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
 
-    return damage * multiplier;
+    combinedMods.push(hit);
+
+    let multiplier = this.getTotalMultiplier(hit, combinedMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
+    let hitDamage = damage * multiplier;
+
+    hitDamage = Math.round(this.loadout.capDamage ? Math.min(hitDamage, 9999) : hitDamage);
+
+    return hitDamage * (hit.count ?? 1);
   }
 
-  hitCrit(mods, extraMods=[]) {
+  hitCrit(hit, mods, extraMods=[]) {
     let crit = this.loadout.baseCrit;
     let combinedMods = mods.concat(extraMods);
-    let extra = this.getTotalMultiplier(combinedMods, 'nope', 'crit', 'critGroup') - 1;
+    let extra = this.getTotalMultiplier(hit, combinedMods, 'nope', 'crit', 'critGroup') - 1;
 
     return Math.min(crit + extra, 100);
   }
 
   skillCrit(extraMods=[]) {
-    let hit = this.hitCrit(this.mods, extraMods);
+    let hit = this.hitCrit({}, this.mods, extraMods);
 
     return Math.round(hit);
   }
@@ -42,9 +61,15 @@ export class DamageCalc {
 
   skillDamage(extraMods=[], includeAdditive=true) {
     extraMods = extraMods.concat(this.getSkillQteMultiplier());
-    let hit = this.hitDamage(this.mods, [this.getSkillMultiplier()].concat(extraMods), includeAdditive);
+    let damage = 0;
+    let hits = this.skill?.hits ?? [{count: 1},];
 
-    return (Math.round(this.loadout.capDamage ? Math.min(hit, 9999) : hit) * (this.skill?.hits ?? 1));
+    for (const hit of hits) {
+      hit.name = this.skill?.name;
+      damage += this.hitDamage(hit, this.mods, extraMods, includeAdditive);
+    }
+
+    return damage;
   }
 
   skillCritDamage(extraMods=[]) {
@@ -58,7 +83,7 @@ export class DamageCalc {
     return Math.round(this.skillDamage(extraMods) * hitChance + this.skillCritDamage(extraMods) * critChance);
   }
 
-  getTotalMultiplier(mods, multName='multiplier', additiveMultName='additiveMultiplier', additiveGroupName='additiveGroup') {
+  getTotalMultiplier(hit, mods, multName='multiplier', additiveMultName='additiveMultiplier', additiveGroupName='additiveGroup') {
     let groups = {};
     let totalMultiplier = 1;
 
@@ -73,21 +98,15 @@ export class DamageCalc {
         target = this.loadout.modByName(mod);
       }
 
-      let multiplier = DamageCalc.getMultiplier(target, mods, this.skill, multName);
+      let multiplier = DamageCalc.getMultiplier(target, mods, hit, multName);
 
       totalMultiplier *= multiplier;
 
       if (mod[additiveMultName]) {
         let group = String(mod[additiveGroupName]);
-        let mult = DamageCalc.getMultiplier(mod[additiveMultName], mods, this.skill);
+        let mult = DamageCalc.getMultiplier(mod[additiveMultName], mods, hit);
         groups[group] = (groups[group] || 0) + mult;
       }
-    }
-
-    if (this.skill && this.skill[additiveMultName]) {
-      let group = String(this.skill[additiveGroupName]);
-      let mult = DamageCalc.getMultiplier(this.skill[additiveMultName], mods, this.skill);
-      groups[group] = (groups[group] || 0) + mult;
     }
 
     for (const group in groups) {
@@ -97,7 +116,7 @@ export class DamageCalc {
     return totalMultiplier;
   }
 
-  static getMultiplier(target, mods, skill, multName='multiplier') {
+  static getMultiplier(target, mods, hit, multName='multiplier') {
     let multiplier = target[multName] ?? 1;
 
     if (target[multName]) {
@@ -109,7 +128,7 @@ export class DamageCalc {
     }
     else if (typeof target === 'function') {
       mods.byName = (name) => mods.find(mod => mod.name === name);
-      multiplier = target(mods, skill ?? {});
+      multiplier = target(mods, hit ?? {});
     }
 
     return multiplier;

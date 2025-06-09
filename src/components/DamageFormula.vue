@@ -7,9 +7,9 @@ const loadout = useLoadoutStore();
 
 const props = defineProps(['skill', 'type']);
 
-const base = computed(() => {
-  return props.skill ? baseCalc.value.skillDamage([], additiveMods.value.length == 0) : loadout.baseAttackPower;
-});
+function base(hit) {
+  return baseCalc.value.hitDamage(null, props.skill ? rawMods.value : [], [], additiveMods(hit).length == 0);
+}
 
 const rawMods = computed(() => {
   let list = [...loadout.selectedMods];
@@ -21,35 +21,35 @@ const rawMods = computed(() => {
   return list;
 });
 
-const mods = computed(() => {
+function mods(hit) {
   let list = rawMods.value
-    .filter(x => modDifferentWithSkill(x))
+    .filter(x => modDifferentWithSkill(x, hit))
     .map(x => ({
         name: x.name ?? x,
         mod: x,
-        mult: DamageCalc.getMultiplier(x, rawMods.value, props.skill),
+        mult: DamageCalc.getMultiplier(x, rawMods.value, hit),
     }))
     .filter(x => x.mult !== 1);
 
   return list
-});
+}
 
-const additiveMods = computed(() => {
+function additiveMods(hit) {
   let combined = rawMods.value.filter(x => x.additiveMultiplier);
 
-  if (props.skill?.additiveMultiplier) {
+  if (hit.additiveMultiplier) {
     combined = combined.concat([{
       name: 'skill',
-      additiveMultiplier: props.skill.additiveMultiplier,
+      additiveMultiplier: hit.additiveMultiplier,
     }]);
   }
 
   const newMods = combined
-    .filter(x => modDifferentWithSkill(x, 'additiveMultiplier'))
+    .filter(x => modDifferentWithSkill(x, hit, 'additiveMultiplier'))
     .map(x => ({
         name: x.name ?? x,
         mod: x,
-        mult: DamageCalc.getMultiplier(x.additiveMultiplier, rawMods.value, props.skill),
+        mult: DamageCalc.getMultiplier(x.additiveMultiplier, rawMods.value, hit),
     }))
     .filter(x => x.mult !== 0)
 
@@ -58,13 +58,13 @@ const additiveMods = computed(() => {
       .map(x => ({
           name: x.name ?? x,
           mod: x,
-          mult: DamageCalc.getMultiplier(x.additiveMultiplier, rawMods.value, props.skill),
+          mult: DamageCalc.getMultiplier(x.additiveMultiplier, rawMods.value, hit),
       }))
       .filter(x => x.mult !== 0)
   }
 
   return [];
-});
+}
 
 const calc = computed(() => {
   return new DamageCalc(props.skill, rawMods.value, loadout);
@@ -86,23 +86,25 @@ const critCalc = computed(() => {
 });
 
 const baseCalc = computed(() => {
-  const fakeSkill = {
-    name: '',
-    hits: 1,
-    multiplier: 1,
-  };
-
-  return new DamageCalc(fakeSkill, rawMods.value, loadout);
+  return new DamageCalc(null, rawMods.value, loadout);
 });
 
-const skillMult = computed(() => {
-  return props.skill ? calc.value.getSkillMultiplier() : 1;
+const hits = computed(() => {
+  return props.skill?.hits ?? [DamageCalc.defaultHit];
 });
 
-function modDifferentWithSkill(mod, multName = 'multiplier') {
+function hitMult(hit) {
+  return calc.value.getHitMultiplier(hit);
+}
+
+function modDifferentWithSkill(mod, hit, multName = 'multiplier') {
   return !props.skill
     || ['skill', 'Critical Hit'].includes(mod.name)
-    || DamageCalc.getMultiplier(mod[multName] ?? 1, rawMods.value) !== DamageCalc.getMultiplier(mod[multName] ?? 1, rawMods.value, props.skill)
+    || DamageCalc.getMultiplier(mod[multName] ?? 1, rawMods.value) !== DamageCalc.getMultiplier(mod[multName] ?? 1, rawMods.value, hit)
+}
+
+function showHits(hit) {
+  return hit.count !== 1;
 }
 
 </script>
@@ -124,54 +126,59 @@ function modDifferentWithSkill(mod, multName = 'multiplier') {
 </template>
 
 <template v-else>
-  <span>
-    {{ base.toLocaleString() }}
-  </span>
+  <div v-for="hit in hits" :key="hit">
+    <span v-if="!props.skill">
+      Base formula:
+    </span>
 
-  <span v-for="mod in mods" :key="mod">
-    * {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
-    <v-tooltip v-if="!skill" activator="parent" location="top">
-      {{ mod.name }}
-    </v-tooltip>
-  </span>
-
-  <span v-if="skillMult && skillMult !== 1">
-    * {{ skillMult.toLocaleString() }} (skill)
-  </span>
-
-  <template v-if="additiveMods.length > 0">
     <span>
-      * (1 + 
+      {{ base(hit).toLocaleString() }}
     </span>
 
-    <span v-for="(mod, i) in additiveMods" :key="mod">
-      {{ i > 0 ? ' + ' : '' }}
-      {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
-      <template v-if="mod.name == 'skill'">
-        (skill)
-      </template>
-    <v-tooltip v-if="!skill" activator="parent" location="top">
-      {{ mod.name }}
-    </v-tooltip>
+    <span v-for="mod in mods(hit)" :key="mod">
+      * {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
+      <v-tooltip v-if="!skill" activator="parent" location="top">
+        {{ mod.name }}
+      </v-tooltip>
     </span>
 
-    <span class="end-paren">
-      )
+    <span v-if="hitMult(hit) !== 1">
+      * {{ hitMult(hit).toLocaleString() }} (skill)
     </span>
-  </template>
 
-  <span v-if="skill && calc.getSkillQteMultiplier() !== 1">
-    * {{ calc.getSkillQteMultiplier().toLocaleString() }} (QTE)
-  </span>
+    <template v-if="additiveMods(hit).length > 0">
+      <span>
+        * (1 + 
+      </span>
 
-  <span v-if="skill && skill.hits !== 1">
-    * {{ skill.hits.toLocaleString() }} hits
-  </span>
+      <span v-for="(mod, i) in additiveMods(hit)" :key="mod">
+        {{ i > 0 ? ' + ' : '' }}
+        {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
+        <template v-if="mod.name == 'skill'">
+          (skill)
+        </template>
+      <v-tooltip v-if="!skill" activator="parent" location="top">
+        {{ mod.name }}
+      </v-tooltip>
+      </span>
 
-  <span>
-    = {{ calc.skillDamage().toLocaleString() }}
-  </span>
+      <span class="end-paren">
+        )
+      </span>
+    </template>
 
+    <span v-if="skill && calc.getSkillQteMultiplier() !== 1">
+      * {{ calc.getSkillQteMultiplier().toLocaleString() }} (QTE)
+    </span>
+
+    <span v-if="showHits(hit)">
+      * {{ hit.count.toLocaleString() }} hits
+    </span>
+
+    <span>
+      = {{ calc.hitDamage(hit, rawMods, [calc.getSkillQteMultiplier()]).toLocaleString() }}
+    </span>
+  </div>
 </template>
 
 </template>

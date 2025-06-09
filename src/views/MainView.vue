@@ -165,7 +165,7 @@ onUnmounted(() => {
       </div>
 
       <template v-if="activeTab == 'Luminas'">
-        <div class="d-flex">
+        <div class="lumina-container">
           <LuminaBox v-for="lumina in visibleLuminas" :key="lumina.name" :lumina="lumina"
             @clicked="(lumina) => lumina.selected = !lumina.selected" />
         </div>
@@ -235,6 +235,13 @@ onUnmounted(() => {
 </style>
 
 <style scoped>
+
+.lumina-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -5px;
+  margin-right: -10px;
+}
 
 .search-icon {
   height: 22px;

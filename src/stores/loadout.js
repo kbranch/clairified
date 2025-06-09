@@ -77,6 +77,10 @@ export const useLoadoutStore = defineStore('loadout', () => {
         name: weapon.name,
       });
 
+      for (const level of weapon.levels) {
+        level.name = `${weapon.name} L${level.level}`;
+      }
+
       mods = mods.concat(weapon.levels);
     }
 
@@ -113,6 +117,10 @@ export const useLoadoutStore = defineStore('loadout', () => {
         name: weapon.name,
         type: 'weapon',
       });
+
+      for (const level of weapon.levels) {
+        level.name = `${weapon.name} L${level.level}`;
+      }
 
       mods = mods.concat(weapon.levels.filter(x => x.selected));
     }

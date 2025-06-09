@@ -8,7 +8,7 @@ const loadout = useLoadoutStore();
 const props = defineProps(['skill', 'type']);
 
 const base = computed(() => {
-  return props.skill ? baseCalc.value.skillDamage([], false) : loadout.baseAttackPower;
+  return props.skill ? baseCalc.value.skillDamage([], additiveMods.value.length == 0) : loadout.baseAttackPower;
 });
 
 const mods = computed(() => {
@@ -23,9 +23,17 @@ const mods = computed(() => {
 });
 
 const additiveMods = computed(() => {
-  const newMods = loadout.selectedMods
-    .filter(x => x.additiveMultiplier
-      && modDifferentWithSkill(x, 'additiveMultiplier'))
+  let combined = loadout.selectedMods.filter(x => x.additiveMultiplier);
+
+  if (props.skill?.additiveMultiplier) {
+    combined = combined.concat([{
+      name: 'skill',
+      additiveMultiplier: props.skill.additiveMultiplier,
+    }]);
+  }
+
+  const newMods = combined
+    .filter(x => modDifferentWithSkill(x, 'additiveMultiplier'))
     .map(x => ({
         name: x.name ?? x,
         mod: x,
@@ -33,14 +41,17 @@ const additiveMods = computed(() => {
     }))
     .filter(x => x.mult !== 0)
 
-  return newMods ? loadout.selectedMods
-    .filter(x => x.additiveMultiplier)
-    .map(x => ({
-        name: x.name ?? x,
-        mod: x,
-        mult: DamageCalc.getMultiplier(x.additiveMultiplier, loadout.selectedMods, props.skill),
-    }))
-    .filter(x => x.mult !== 0) : [] ;
+  if(newMods.length > 0) {
+    return combined
+      .map(x => ({
+          name: x.name ?? x,
+          mod: x,
+          mult: DamageCalc.getMultiplier(x.additiveMultiplier, loadout.selectedMods, props.skill),
+      }))
+      .filter(x => x.mult !== 0)
+  }
+
+  return [];
 });
 
 const calc = computed(() => {
@@ -63,6 +74,7 @@ const skillMult = computed(() => {
 
 function modDifferentWithSkill(mod, multName = 'multiplier') {
   return !props.skill
+    || mod.name == 'skill'
     || DamageCalc.getMultiplier(mod[multName] ?? 1, loadout.selectedMods) !== DamageCalc.getMultiplier(mod[multName] ?? 1, loadout.selectedMods, props.skill)
 }
 
@@ -93,6 +105,9 @@ function modDifferentWithSkill(mod, multName = 'multiplier') {
   <span v-for="(mod, i) in additiveMods" :key="mod">
     {{ i > 0 ? ' + ' : '' }}
     {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
+    <template v-if="mod.name == 'skill'">
+      (skill)
+    </template>
    <v-tooltip v-if="!skill" activator="parent" location="top">
     {{ mod.name }}
    </v-tooltip>

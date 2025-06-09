@@ -97,7 +97,7 @@ const visibleSkills = computed(() => {
           <input type="number" id="totalAP" v-model="loadout.baseAttackPower" class="form-control big-number mb-2" min="0">
         </div>
         <div class="me-2">
-          <label for="critChance">Crit</label>
+          <label for="critChance">Crit %</label>
           <input type="number" id="critChance" v-model="loadout.baseCrit" class="form-control mid-number mb-2" min="0" max="100">
         </div>
 
@@ -125,7 +125,6 @@ const visibleSkills = computed(() => {
             v-tooltip="'Reset Weapons'" @click="loadout.resetWeapons()"/>
         </div>
         <div class="d-flex align-items-center">
-          <!-- <v-btn><img src="@/assets/search.svg" class="pe-2 search-icon" /></v-btn> -->
           <img src="@/assets/search.svg" class="pe-2 search-icon"/>
           <input v-if="activeTab  == 'Luminas'" type="text" class="form-control search-box" v-model="luminaFilter">
           <input v-if="activeTab  == 'Weapons'" type="text" class="form-control search-box" v-model="weaponFilter">

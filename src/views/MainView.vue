@@ -8,6 +8,7 @@ import { spoilerLevels } from '@/consts.js';
 import { useLoadoutStore } from '@/stores/loadout';
 import BuffGroups from '@/components/BuffGroups.vue';
 import DamageFormula from '@/components/DamageFormula.vue';
+import { sum } from '@/main';
 
 const loadout = useLoadoutStore();
 
@@ -124,7 +125,16 @@ const visibleSkills = computed(() => {
           <img v-if="activeTab  == 'Weapons'" class="icon-button" src="@/assets/arrow-counterclockwise.svg"
             v-tooltip="'Reset Weapons'" @click="loadout.resetWeapons()"/>
         </div>
+        <div>
+          <span v-if="activeTab  == 'Luminas'" v-tooltip="'Total Lumina cost'">
+            {{ sum(loadout.selectedLuminas, 'cost') }}
+          </span>
+        </div>
         <div class="d-flex align-items-center">
+          <img v-if="activeTab  == 'Luminas' && luminaFilter" class="icon-button" src="@/assets/x-lg.svg"
+            v-tooltip="'Clear Filter'" @click="luminaFilter = null"/>
+          <img v-if="activeTab  == 'Weapons' && weaponFilter" class="icon-button" src="@/assets/x-lg.svg"
+            v-tooltip="'Clear Filter'" @click="weaponFilter = null"/>
           <img src="@/assets/search.svg" class="pe-2 search-icon"/>
           <input v-if="activeTab  == 'Luminas'" type="text" class="form-control search-box" v-model="luminaFilter">
           <input v-if="activeTab  == 'Weapons'" type="text" class="form-control search-box" v-model="weaponFilter">
@@ -174,6 +184,7 @@ const visibleSkills = computed(() => {
   width: 32px;
   padding: 6px;
   margin-left: 6px;
+  margin-right: 6px;
   filter: invert(1)
           brightness(0.5);
   cursor: pointer;

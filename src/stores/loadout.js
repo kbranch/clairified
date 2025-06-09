@@ -26,6 +26,8 @@ export const useLoadoutStore = defineStore('loadout', () => {
       && (x.spoilerLevel ?? 0) <= spoilerLevel.value.level);
   });
 
+  const selectedLuminas = computed(() => luminas.value.filter(x => x.selected > 0));
+
   const skills = computed(() => {
     return allSkills.filter(x => (x.character ?? character.value.name) == character.value.name
       && (x.spoilerLevel ?? 0) <= spoilerLevel.value.level);
@@ -322,5 +324,5 @@ export const useLoadoutStore = defineStore('loadout', () => {
   loadSelections(character.value.name);
 
   return { character, spoilerLevel, baseAttackPower, baseCrit, capDamage, characters, luminas, skills, gimmick,
-    weapons, selfBuffs, targetBuffs, allMods, selectedMods, modByName, resetLuminas, resetWeapons };
+    weapons, selfBuffs, targetBuffs, allMods, selectedMods, selectedLuminas, modByName, resetLuminas, resetWeapons };
 })

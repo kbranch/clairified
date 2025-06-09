@@ -1,18 +1,26 @@
 <script setup>
 
-import { ref, computed } from 'vue'; 
+import { ref, computed, onMounted, onUnmounted } from 'vue'; 
 import LuminaBox from '@/components/LuminaBox.vue';
 import WeaponBox from '@/components/WeaponBox.vue';
-import SkillBox from '@/components/SkillBox.vue';
 import { spoilerLevels } from '@/consts.js';
 import { useLoadoutStore } from '@/stores/loadout';
 import BuffGroups from '@/components/BuffGroups.vue';
-import DamageFormula from '@/components/DamageFormula.vue';
 import { sum } from '@/main';
+import SkillsTab from '@/components/SkillsTab.vue';
 
 const loadout = useLoadoutStore();
 
-const subTabs = ref(['Luminas', 'Weapons']);
+const subTabs = computed(() => {
+  let tabs = ['Luminas', 'Weapons']
+
+  if (isNarrow.value) {
+    tabs.push('Skills');
+  }
+
+  return tabs;
+});
+
 const activeTab = ref('Luminas');
 
 const luminaFilter = ref(null);
@@ -33,11 +41,23 @@ const visibleWeapons = computed(() => {
       || x.levels.some(level => level.description.toLowerCase().includes(weaponFilter.value.toLowerCase())));
 });
 
-const visibleSkills = computed(() => {
-  return loadout.skills
-    .filter(x => !skillFilter.value
-      || x.name.toLowerCase().includes(skillFilter.value.toLowerCase())
-      || x.description?.toLowerCase().includes(skillFilter.value.toLowerCase()));
+const isNarrow = computed(() => {
+  return pageWidth.value <= 1200;
+});
+
+const pageWidth = ref(null);
+
+function updatePageWidth() {
+  pageWidth.value = window.innerWidth;
+}
+
+onMounted(() => {
+  updatePageWidth();
+  window.addEventListener('resize', updatePageWidth);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updatePageWidth);
 });
 
 </script>
@@ -45,7 +65,7 @@ const visibleSkills = computed(() => {
 <template>
 
   <div class="row">
-    <div class="col d-flex justify-content-start">
+    <div class="col d-flex justify-content-start pt-2">
       <h1>Clairified</h1>
     </div>
 
@@ -125,19 +145,22 @@ const visibleSkills = computed(() => {
           <img v-if="activeTab  == 'Weapons'" class="icon-button" src="@/assets/arrow-counterclockwise.svg"
             v-tooltip="'Reset Weapons'" @click="loadout.resetWeapons()"/>
         </div>
-        <div>
+        <div class="pe-2">
           <span v-if="activeTab  == 'Luminas'" v-tooltip="'Total Lumina cost'">
             {{ sum(loadout.selectedLuminas, 'cost') }}
           </span>
         </div>
-        <div class="d-flex align-items-center">
+        <div class="filters">
           <img v-if="activeTab  == 'Luminas' && luminaFilter" class="icon-button" src="@/assets/x-lg.svg"
             v-tooltip="'Clear Filter'" @click="luminaFilter = null"/>
           <img v-if="activeTab  == 'Weapons' && weaponFilter" class="icon-button" src="@/assets/x-lg.svg"
             v-tooltip="'Clear Filter'" @click="weaponFilter = null"/>
+          <img v-if="activeTab  == 'Skills' && skillFilter" class="icon-button" src="@/assets/x-lg.svg"
+            v-tooltip="'Clear Filter'" @click="skillFilter = null"/>
           <img src="@/assets/search.svg" class="pe-2 search-icon"/>
           <input v-if="activeTab  == 'Luminas'" type="text" class="form-control search-box" v-model="luminaFilter">
           <input v-if="activeTab  == 'Weapons'" type="text" class="form-control search-box" v-model="weaponFilter">
+          <input v-if="activeTab  == 'Skills'" type="text" class="form-control search-box" v-model="skillFilter">
         </div>
       </div>
 
@@ -153,8 +176,13 @@ const visibleSkills = computed(() => {
             @clicked="(weapon) => weapon.selected = true" @levelClicked="(level) => level.selected = !level.selected" />
         </div>
       </template>
+      <template v-if="activeTab == 'Skills'">
+        <div class="d-flex">
+          <SkillsTab :skill-filter="skillFilter" />
+        </div>
+      </template>
     </div>
-    <div class="col">
+    <div v-if="!isNarrow" class="col">
       <div class="tab-header">
         <h4>Skills</h4>
         <div class="d-flex align-items-center">
@@ -163,15 +191,7 @@ const visibleSkills = computed(() => {
         </div>
       </div>
 
-      <div class="d-flex">
-        <div>
-          <span>
-            Base formula: 
-          </span>
-          <DamageFormula />
-        </div>
-        <SkillBox v-for="skill in visibleSkills" :key="skill.name" :skill="skill" />
-      </div>
+      <SkillsTab :skill-filter="skillFilter" />
     </div>
   </div>
 
@@ -231,14 +251,25 @@ const visibleSkills = computed(() => {
 
 .search-box {
   max-width: 200px;
+  min-width: 75px;
+  flex-shrink: 1;
   background-color: #ffffff0d;
   border-color: #00000080;
   color: unset;
+  width: 100%;
+}
+
+.filters {
+  flex: 1;
+  min-width: 0;
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .search-box:focus {
   background-color: #ffffff10;
-  /* border-color: #00000080; */
   color: unset;
 }
 

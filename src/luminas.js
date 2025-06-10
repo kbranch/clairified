@@ -52,7 +52,7 @@ export var luminas = reactive([
     name: 'Augmented Counter I',
     description: '25% increased Counterattack damage',
     cost: 3,
-    additiveMultiplier: (mods, skill) => skill.name == 'Parry Counter' ? 0.5 : 0,
+    additiveMultiplier: (mods, skill) => skill.name == 'Counterattack' ? 0.5 : 0,
   },
   {
     name: 'Breaker',
@@ -70,7 +70,7 @@ export var luminas = reactive([
     name: 'Breaking Counter',
     description: '50% more Break potency on Counterattack',
     cost: 3,
-    breakMultiplier: (mods, skill) => skill.name == 'Parry Counter' ? 1.5 : 1,
+    breakMultiplier: (mods, skill) => skill.name == 'Counterattack' ? 1.5 : 1,
   },
   {
     name: 'Breaking Shots',

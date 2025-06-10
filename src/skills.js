@@ -3,6 +3,7 @@ import { reactive } from "vue";
 export var skills = reactive([
   {
     name: 'Base Attack',
+    isSkill: false,
     hits: [{
       count: 1,
       element: 'weapon',
@@ -11,6 +12,7 @@ export var skills = reactive([
   },
   {
     name: 'Free Aim',
+    isSkill: false,
     hits: [{
       count: 1,
       element: 'weapon',
@@ -19,7 +21,8 @@ export var skills = reactive([
     apCost: 1,
   },
   {
-    name: 'Parry Counter',
+    name: 'Counterattack',
+    isSkill: false,
     hits: [{
       count: 1,
       element: 'weapon',

@@ -1,3 +1,5 @@
+import { stripProxy } from "./main";
+
 export class DamageCalc {
   static defaultHit = {count: 1};
 
@@ -76,6 +78,7 @@ export class DamageCalc {
 
     for (const hit of hits) {
       hit.name = this.skill?.name;
+      hit.isSkill = 'isSkill' in this.skill ? this.skill.isSkill : true;
       damage += this.hitDamage(hit, this.mods, extraMods, includeAdditive);
     }
 
@@ -184,7 +187,18 @@ export class DamageCalc {
     }
     else if (typeof target === 'function') {
       mods.byName = (name) => mods.find(mod => mod.name === name);
-      multiplier = target(mods, hit ?? {});
+
+      let originalElement = hit?.element;
+      let tempHit = hit ?? {};
+      tempHit = stripProxy(tempHit);
+
+      if (tempHit.element == 'weapon') {
+        tempHit.element = mods.find(x => x.element && x.element != 'weapon')?.element ?? 'weapon';
+      }
+
+      multiplier = target(mods, tempHit);
+
+      tempHit.element = originalElement;
     }
 
     return multiplier;

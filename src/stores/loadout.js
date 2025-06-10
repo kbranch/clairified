@@ -122,6 +122,7 @@ export const useLoadoutStore = defineStore('loadout', () => {
     if (weapon) {
       mods.push({
         name: weapon.name,
+        element: weapon.element,
         type: 'weapon',
       });
 

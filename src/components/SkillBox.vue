@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { useLoadoutStore } from '@/stores/loadout';
 import DamageFormula from './DamageFormula.vue';
 import { DamageCalc } from '@/damageCalc';
-import { sum } from '@/main';
+import { sum, upperFirst } from '@/main';
 
 const props = defineProps(['skill']);
 const loadout = useLoadoutStore();
@@ -21,10 +21,6 @@ const hits = computed(() => {
 const calc = computed (() => {
   return new DamageCalc(props.skill, loadout.selectedMods, loadout);
 });
-
-function upperFirst(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
 
 </script>
 

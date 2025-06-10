@@ -1,4 +1,8 @@
 <script setup>
+import { upperFirst } from '@/main';
+import { useLoadoutStore } from '@/stores/loadout';
+
+const loadout = useLoadoutStore();
 
 defineProps(['weapon']);
 defineEmits(['clicked', 'levelClicked']);
@@ -10,6 +14,8 @@ defineEmits(['clicked', 'levelClicked']);
 <div class="box" :class="{ 'active': weapon.selected }" @click="$emit('clicked', weapon)">
   <div class="header">
     <h5>{{ weapon.name }}</h5>
+    <img :src="loadout.elementUrl(weapon.element)" class="element-icon"
+      v-tooltip="upperFirst(loadout.resolveElement(weapon.element))" />
   </div>
 
   <div class="levels">
@@ -29,6 +35,12 @@ defineEmits(['clicked', 'levelClicked']);
 </template>
 
 <style scoped>
+
+.element-icon {
+  height: 20px;
+  width: 20px;
+  margin-left: 5px;
+}
 
 .header {
   display: flex;

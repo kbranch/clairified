@@ -52,6 +52,14 @@ function updatePageWidth() {
   pageWidth.value = window.innerWidth;
 }
 
+function selectWeapon(weapon) {
+  for (const w of loadout.weapons) {
+    w.selected = false;
+  }
+
+  weapon.selected = true;
+}
+
 onMounted(() => {
   updatePageWidth();
   window.addEventListener('resize', updatePageWidth);
@@ -179,7 +187,7 @@ onUnmounted(() => {
       <template v-if="activeTab == 'Weapons'">
         <div class="d-flex">
           <WeaponBox v-for="weapon in visibleWeapons" :key="weapon.name" :weapon="weapon"
-            @clicked="(weapon) => weapon.selected = true" @levelClicked="(level) => level.selected = !level.selected" />
+            @clicked="(weapon) => selectWeapon(weapon)" @levelClicked="(level) => level.selected = !level.selected" />
         </div>
       </template>
       <template v-if="activeTab == 'Skills'">

@@ -162,6 +162,10 @@ export const useLoadoutStore = defineStore('loadout', () => {
     return element;
   }
 
+  function elementUrl(element) {
+    return `/images/${resolveElement(element)}.png`;
+  }
+
   function weaknessMod(element) {
     element = resolveElement(element);
     return allMods.value.find(mod => mod.type == 'weakness' && mod.value == weaknesses.value[element]) ?? 1;
@@ -377,5 +381,5 @@ export const useLoadoutStore = defineStore('loadout', () => {
 
   return { character, spoilerLevel, baseAttackPower, baseCrit, capDamage, characters, luminas, skills, gimmick,
     weapons, selectedWeapon, selfBuffs, targetBuffs, allMods, selectedMods, selectedLuminas, modByName, resetLuminas,
-    resetWeapons, weaknessMod, resolveElement, weaknesses };
+    resetWeapons, weaknessMod, resolveElement, elementUrl, weaknesses };
 })

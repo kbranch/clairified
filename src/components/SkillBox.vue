@@ -22,10 +22,6 @@ const calc = computed (() => {
   return new DamageCalc(props.skill, loadout.selectedMods, loadout);
 });
 
-function elementUrl(element) {
-  return `/icons/${loadout.resolveElement(element)}.png`;
-}
-
 function upperFirst(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
@@ -41,7 +37,7 @@ function upperFirst(text) {
       <span>
         {{ hits }} {{ hits === 1 ? 'hit' : 'hits' }}
       </span>
-      <img v-for="element in [... new Set(skill.hits.map(x => x.element))]" :key="element" :src="elementUrl(element)"
+      <img v-for="element in [... new Set(skill.hits.map(x => x.element))]" :key="element" :src="loadout.elementUrl(element)"
         class="element-icon" v-tooltip="upperFirst(loadout.resolveElement(element))" />
       <span class="ps-2">
         {{ cost }} AP

@@ -5,16 +5,12 @@ defineProps(['element']);
 
 const loadout = useLoadoutStore();
 
-function elementUrl(element) {
-  return `/icons/${loadout.resolveElement(element)}.png`;
-}
-
 </script>
 
 <template>
 
 <div class="py-1">
-  <img :src="elementUrl(element ?? 'weapon')" class="element-icon" />
+  <img :src="loadout.elementUrl(element ?? 'weapon')" class="element-icon" />
 
   <input type="radio" class="btn-check" :name="`${element}-weakness`" :id="`${element}-weak`" autocomplete="off"
     value="weak" v-model="loadout.weaknesses[element]">

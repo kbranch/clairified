@@ -114,10 +114,6 @@ function showHits(hit) {
   return hit.count !== 1;
 }
 
-function elementUrl(element) {
-  return `/icons/${loadout.resolveElement(element)}.png`;
-}
-
 </script>
 
 <template>
@@ -189,7 +185,7 @@ function elementUrl(element) {
     <span>
       = {{ calc.hitDamage(hit, rawMods, [calc.getSkillQteMultiplier()]).toLocaleString() }}
     </span>
-    <img :src="elementUrl(hit.element ?? 'weapon')" class="element-icon" />
+    <img :src="loadout.elementUrl(hit.element ?? 'weapon')" class="element-icon" />
   </div>
 </template>
 

@@ -82,7 +82,16 @@ export var luminas = reactive([
     name: 'Combo Attack I',
     description: 'Base Attack has 1 extra hit',
     cost: 10,
-    multiplier: (mods, skill) => skill.name == 'Base Attack' ? 2 : 1, // Wrong, but we can't modify a skill's hits yet
+    extraHits: (mods, skill) => {
+      if (skill.name == 'Base Attack') {
+        return [{
+          count: 1,
+          element: 'weapon',
+        }];
+      }
+
+      return null;
+    },
   },
   {
     name: 'Critical Break',

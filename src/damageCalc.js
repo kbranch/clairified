@@ -23,21 +23,27 @@ export class DamageCalc {
       hit = DamageCalc.defaultHit;
     }
 
-    let damage = this.loadout.baseAttackPower;
-    let combinedMods = mods.concat(extraMods);
+    let totalDamage = 0;
 
-    combinedMods.push(hit);
+    for (let i = 0; i < DamageCalc.hitCount(hit, this.mods, this.skill); i++) {
+      let damage = this.loadout.baseAttackPower;
+      let combinedMods = mods
+        .concat(extraMods)
+        .filter(x => !x.hitDuration || x.hitDuration > hit.previousHits + i);
 
-    if (hit?.element) {
-      combinedMods.push(this.loadout.weaknessMod(hit.element));
+      combinedMods.push(hit);
+
+      if (hit?.element) {
+        combinedMods.push(this.loadout.weaknessMod(hit.element));
+      }
+
+      let multiplier = this.getTotalMultiplier(hit, combinedMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
+      let hitDamage = damage * multiplier;
+
+      totalDamage += Math.round(this.loadout.capDamage ? Math.min(hitDamage, 9999) : hitDamage);
     }
 
-    let multiplier = this.getTotalMultiplier(hit, combinedMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
-    let hitDamage = damage * multiplier;
-
-    hitDamage = Math.round(this.loadout.capDamage ? Math.min(hitDamage, 9999) : hitDamage);
-
-    return hitDamage * (hit.count ?? 1);
+    return totalDamage;
   }
 
   hitCrit(hit, mods, extraMods=[]) {
@@ -66,7 +72,7 @@ export class DamageCalc {
   skillDamage(extraMods=[], includeAdditive=true) {
     extraMods = extraMods.concat(this.getSkillQteMultiplier());
     let damage = 0;
-    let hits = this.skill?.hits ?? [{count: 1},];
+    let hits = DamageCalc.getHits(this.skill, this.mods, extraMods);
 
     for (const hit of hits) {
       hit.name = this.skill?.name;
@@ -118,6 +124,52 @@ export class DamageCalc {
     }
 
     return totalMultiplier;
+  }
+
+  static hitCount(hit, mods, skill) {
+    let count = hit.count ?? 1;
+
+    if (typeof count === 'function') {
+      count = count(mods, skill);
+    }
+
+    return count;
+  }
+
+  static getHits(skill, mods, extraMods=[]) {
+    let hits = skill.hits;
+
+    if (!skill || !skill.hits) {
+      hits = [DamageCalc.defaultHit];
+    }
+    else if (typeof skill.hits === 'function') {
+      let combined = mods.concat(extraMods);
+      hits = skill.hits(combined);
+    }
+
+    let extraHits = mods
+      .map(x => x.extraHits)
+      .filter(x => x);
+    
+    for (const extra of extraHits) {
+      if (typeof extra === 'function') {
+        let result = extra(mods, skill);
+        if (result) {
+          hits = hits.concat(result);
+        }
+      }
+      else {
+        hits = hits.concat(extra);
+      }
+    }
+
+    let previousHits = 0;
+    for (const hit of hits) {
+      hit.previousHits = previousHits;
+      previousHits += DamageCalc.hitCount(hit, mods, skill);
+    }
+
+    return hits;
   }
 
   static getMultiplier(target, mods, hit, multName='multiplier') {

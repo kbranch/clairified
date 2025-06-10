@@ -15,7 +15,7 @@ const cost = computed(() => {
 });
 
 const hits = computed(() => {
-  return sum(props.skill.hits, 'count') ?? 1;
+  return sum(DamageCalc.getHits(calc.value.skill, calc.value.mods), 'count') ?? 1;
 });
 
 const calc = computed (() => {

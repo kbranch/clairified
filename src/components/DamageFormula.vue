@@ -96,7 +96,7 @@ const baseCalc = computed(() => {
 });
 
 const hits = computed(() => {
-  return props.skill?.hits ?? [DamageCalc.defaultHit];
+  return DamageCalc.getHits(calc.value.skill, calc.value.mods);
 });
 
 function hitMult(hit) {
@@ -187,11 +187,19 @@ function showHits(hit) {
     </span>
     <img :src="loadout.elementUrl(hit.element ?? 'weapon')" class="element-icon" />
   </div>
+  <div v-if="hits.length > 1 && type !== 'average'">
+    <span>Total: </span>
+    <span class="total">{{ calc.skillDamage().toLocaleString() }}</span>
+  </div>
 </template>
 
 </template>
 
 <style scoped>
+
+.total {
+  font-weight: bold;
+}
 
 .end-paren {
   margin-left: -3px;

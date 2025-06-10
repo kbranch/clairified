@@ -45,7 +45,7 @@ export var targetBuffs = reactive([
     type: 'boolean',
     description: 'The next hit deals 50% more damage.',
     multiplier: 1.5,
-    hits: 1,
+    hitDuration: 1,
   },
   {
     name: 'Defenceless',

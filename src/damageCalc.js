@@ -28,6 +28,10 @@ export class DamageCalc {
 
     combinedMods.push(hit);
 
+    if (hit?.element) {
+      combinedMods.push(this.loadout.weaknessMod(hit.element));
+    }
+
     let multiplier = this.getTotalMultiplier(hit, combinedMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
     let hitDamage = damage * multiplier;
 

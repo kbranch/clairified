@@ -4,6 +4,7 @@ export var weapons = reactive([
   {
     name: 'Glaisum',
     character: 'Maelle',
+    element: 'physical',
     levels: [
       {
         level: 4,

@@ -2,24 +2,39 @@ import { reactive } from "vue";
 
 export var targetBuffs = reactive([
   {
-    name: 'Vulnerability',
-    type: 'comboBox',
-    options: [
-      {
-        name: 'Normal',
-        description: 'Attacks deal normal damage.',
-      },
-      {
-        name: 'Weakness',
-        description: 'Attacks deal 50% more damage',
-        multiplier: 1.5,
-      },
-      {
-        name: 'Resistant',
-        description: 'Attacks deal 50% less damage.',
-        multiplier: 0.5,
-      },
-    ],
+    name: 'Normal',
+    type: 'weakness',
+    value: 'normal',
+    multiplier: 1,
+    character: 'None',
+  },
+  {
+    name: 'Weakness',
+    type: 'weakness',
+    value: 'weak',
+    multiplier: 1.5,
+    character: 'None',
+  },
+  {
+    name: 'Resistant',
+    type: 'weakness',
+    value: 'resist',
+    multiplier: 0.5,
+    character: 'None',
+  },
+  {
+    name: 'Immune',
+    type: 'weakness',
+    value: 'immune',
+    multiplier: 0,
+    character: 'None',
+  },
+  {
+    name: 'Absorb',
+    type: 'weakness',
+    value: 'absorb',
+    multiplier: -0.5,
+    character: 'None',
   },
   {
     name: 'Flying',

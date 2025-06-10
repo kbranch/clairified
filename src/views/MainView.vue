@@ -8,6 +8,7 @@ import { useLoadoutStore } from '@/stores/loadout';
 import BuffGroups from '@/components/BuffGroups.vue';
 import { sum } from '@/main';
 import SkillsTab from '@/components/SkillsTab.vue';
+import ElementPicker from '@/components/ElementPicker.vue';
 
 const loadout = useLoadoutStore();
 
@@ -128,6 +129,11 @@ onUnmounted(() => {
       <h4>Target</h4>
       <div class="buff-container">
         <BuffGroups :buffs="loadout.targetBuffs" />
+      </div>
+
+      <div class="d-flex">
+        <ElementPicker v-for="element in ['light', 'dark', 'physical', 'fire', 'ice', 'lightning', 'earth']"
+          :key="element" :element="element" />
       </div>
 
       <div class="tab-header">

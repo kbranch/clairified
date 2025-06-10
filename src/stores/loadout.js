@@ -10,6 +10,7 @@ import { targetBuffs as allTargetBuffs, selfBuffs as allSelfBuffs } from '@/buff
 export const useLoadoutStore = defineStore('loadout', () => {
   const defaultAttackPower = 1000;
   const defaultCrit = 25;
+  const elements = ['dark', 'light', 'physical', 'fire', 'ice', 'lightning', 'earth', 'void'];
 
   const character = ref(allCharacters[0]);
   const spoilerLevel = ref(spoilerLevels[4]);
@@ -20,6 +21,8 @@ export const useLoadoutStore = defineStore('loadout', () => {
   const selections = ref([]);
 
   const characters = computed(() => allCharacters.filter(x => (x.spoilerLevel ?? 0) <= spoilerLevel.value.level));
+
+  const weaknesses = ref({});
 
   const luminas = computed(() => {
     return allLuminas.filter(x => (x.character ?? character.value.name) == character.value.name
@@ -42,6 +45,8 @@ export const useLoadoutStore = defineStore('loadout', () => {
     return allWeapons.filter(x => (x.character ?? character.value.name) == character.value.name
       && (x.spoilerLevel ?? 0) <= spoilerLevel.value.level);
   });
+
+  const selectedWeapon = computed(() => weapons.value.find(x => x.selected));
 
   const selfBuffs = computed(() => {
     return sortByKey(allSelfBuffs.filter(x => (x.character ?? character.value.name) == character.value.name
@@ -149,6 +154,19 @@ export const useLoadoutStore = defineStore('loadout', () => {
     }
   }
 
+  function resolveElement(element) {
+    if (element == 'weapon') {
+      element = selectedWeapon.value?.element ?? 'physical';
+    }
+
+    return element;
+  }
+
+  function weaknessMod(element) {
+    element = resolveElement(element);
+    return allMods.value.find(mod => mod.type == 'weakness' && mod.value == weaknesses.value[element]) ?? 1;
+  }
+
   watch(gimmick, (value) => {
     if (value?.type == 'comboBox') {
       value.selected = value.options[0];
@@ -189,6 +207,15 @@ export const useLoadoutStore = defineStore('loadout', () => {
     saveSelections(selectedMods.value);
   });
 
+  watch(weaknesses, () => {
+    if (savedCharacter && character.value.name != savedCharacter) {
+      savedCharacter = character.value.name;
+      return;
+    }
+
+    saveSelections(selectedMods.value);
+  }, { deep: true });
+
   watch(character, (value) => {
     if (selections.value[value.name]) {
       loadSelections(value.name);
@@ -219,6 +246,9 @@ export const useLoadoutStore = defineStore('loadout', () => {
       else if (mod.type == 'crit') {
         baseCrit.value = mod.count;
       }
+      else if (mod.type == 'element') {
+        weaknesses.value[mod.name] = mod.selected;
+      }
 
       let modData = modByName(mod.name);
       if (modData) {
@@ -237,6 +267,18 @@ export const useLoadoutStore = defineStore('loadout', () => {
         type: mod.type,
         count: mod.count,
         selected: mod.selected,
+      });
+    }
+
+    for (const element of elements) {
+      if (!weaknesses.value[element]) {
+        continue;
+      }
+
+      storage.push({
+        name: element,
+        selected: weaknesses.value[element],
+        type: 'element',
       });
     }
 
@@ -271,6 +313,8 @@ export const useLoadoutStore = defineStore('loadout', () => {
 
       initMod(mod);
     }
+
+    initWeaknesses();
 
     baseAttackPower.value = defaultAttackPower;
     baseCrit.value = defaultCrit;
@@ -312,6 +356,12 @@ export const useLoadoutStore = defineStore('loadout', () => {
     }
   }
 
+  function initWeaknesses() {
+    for (const element of elements) {
+      weaknesses.value[element] = 'normal';
+    }
+  }
+
   for (const buff of allSelfBuffs.concat(allTargetBuffs)) {
     initMod(buff);
   }
@@ -320,9 +370,12 @@ export const useLoadoutStore = defineStore('loadout', () => {
     initMod(lumina);
   }
 
+  initWeaknesses();
+
   loadSelectionsFromStorage();
   loadSelections(character.value.name);
 
   return { character, spoilerLevel, baseAttackPower, baseCrit, capDamage, characters, luminas, skills, gimmick,
-    weapons, selfBuffs, targetBuffs, allMods, selectedMods, selectedLuminas, modByName, resetLuminas, resetWeapons };
+    weapons, selectedWeapon, selfBuffs, targetBuffs, allMods, selectedMods, selectedLuminas, modByName, resetLuminas,
+    resetWeapons, weaknessMod, resolveElement, weaknesses };
 })

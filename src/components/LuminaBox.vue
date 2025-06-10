@@ -49,7 +49,7 @@ defineEmits(['clicked']);
 
 .active {
   background-color: #ffffff10;
-  border-color: #0d6efd;
+  border-color: var(--color-highlight);
 }
 
 </style>

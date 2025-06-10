@@ -22,7 +22,13 @@ const rawMods = computed(() => {
 });
 
 function mods(hit) {
-  let list = rawMods.value
+  let raw = [... rawMods.value];
+
+  if (hit?.element) {
+    raw.push(loadout.weaknessMod(hit.element));
+  }
+
+  let list = raw
     .filter(x => modDifferentWithSkill(x, hit))
     .map(x => ({
         name: x.name ?? x,
@@ -100,11 +106,16 @@ function hitMult(hit) {
 function modDifferentWithSkill(mod, hit, multName = 'multiplier') {
   return !props.skill
     || ['skill', 'Critical Hit'].includes(mod.name)
+    || mod.type == 'weakness'
     || DamageCalc.getMultiplier(mod[multName] ?? 1, rawMods.value) !== DamageCalc.getMultiplier(mod[multName] ?? 1, rawMods.value, hit)
 }
 
 function showHits(hit) {
   return hit.count !== 1;
+}
+
+function elementUrl(element) {
+  return `/icons/${loadout.resolveElement(element)}.png`;
 }
 
 </script>
@@ -178,6 +189,7 @@ function showHits(hit) {
     <span>
       = {{ calc.hitDamage(hit, rawMods, [calc.getSkillQteMultiplier()]).toLocaleString() }}
     </span>
+    <img :src="elementUrl(hit.element ?? 'weapon')" class="element-icon" />
   </div>
 </template>
 
@@ -186,7 +198,13 @@ function showHits(hit) {
 <style scoped>
 
 .end-paren {
-  margin-left: -4px;
+  margin-left: -3px;
+}
+
+.element-icon {
+  height: 20px;
+  width: 20px;
+  margin-left: 5px;
 }
 
 </style>

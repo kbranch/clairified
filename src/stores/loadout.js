@@ -149,8 +149,10 @@ export const useLoadoutStore = defineStore('loadout', () => {
   function resetWeapons() {
     for (const weapon of weapons.value) {
       weapon.selected = false;
-      for (const level of weapon.levels) {
-        level.selected = false;
+      if (weapon.levels) {
+        for (const level of weapon.levels) {
+          level.selected = false;
+        }
       }
     }
   }

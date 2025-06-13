@@ -6,10 +6,11 @@ import WeaponBox from '@/components/WeaponBox.vue';
 import { spoilerLevels } from '@/consts.js';
 import { useLoadoutStore } from '@/stores/loadout';
 import BuffGroups from '@/components/BuffGroups.vue';
-import { sum } from '@/main';
+import { sortByKey, sum } from '@/main';
 import SkillsTab from '@/components/SkillsTab.vue';
 import ElementPicker from '@/components/ElementPicker.vue';
 import { useSettingsStore } from '@/stores/settings';
+import SortPicker from '@/components/SortPicker.vue';
 
 const loadout = useLoadoutStore();
 const settings = useSettingsStore();
@@ -31,17 +32,19 @@ const weaponFilter = ref(null);
 const skillFilter = ref(null);
 
 const visibleLuminas = computed(() => {
-  return loadout.luminas
-    .filter(x => !luminaFilter.value
-      || x.name.toLowerCase().includes(luminaFilter.value.toLowerCase())
-      || x.description.toLowerCase().includes(luminaFilter.value.toLowerCase()));
+  return sortByKey(loadout.luminas
+      .filter(x => !luminaFilter.value
+        || x.name.toLowerCase().includes(luminaFilter.value.toLowerCase())
+        || x.description.toLowerCase().includes(luminaFilter.value.toLowerCase()))
+    , x => x[settings.luminaSort.prop], settings.luminaSort.asc);
 });
 
 const visibleWeapons = computed(() => {
-  return loadout.weapons
-    .filter(x => !weaponFilter.value
-      || x.name.toLowerCase().includes(weaponFilter.value.toLowerCase())
-      || x.levels?.some(level => level.description.toLowerCase().includes(weaponFilter.value.toLowerCase())));
+  return sortByKey(loadout.weapons
+      .filter(x => !weaponFilter.value
+        || x.name.toLowerCase().includes(weaponFilter.value.toLowerCase())
+        || x.levels?.some(level => level.description.toLowerCase().includes(weaponFilter.value.toLowerCase())))
+    , x => x[settings.weaponSort.prop], settings.weaponSort.asc);
 });
 
 const isNarrow = computed(() => {
@@ -157,22 +160,25 @@ onUnmounted(() => {
             </li>
           </ul>
           <img v-if="activeTab  == 'Luminas'" class="icon-button" src="@/assets/arrow-counterclockwise.svg"
-            v-tooltip="'Reset Luminas'" @click="loadout.resetLuminas()"/>
+            v-tooltip:top="'Reset Luminas'" @click="loadout.resetLuminas()"/>
           <img v-if="activeTab  == 'Weapons'" class="icon-button" src="@/assets/arrow-counterclockwise.svg"
-            v-tooltip="'Reset Weapons'" @click="loadout.resetWeapons()"/>
+            v-tooltip:top="'Reset Weapons'" @click="loadout.resetWeapons()"/>
         </div>
         <div class="pe-2">
-          <span v-if="activeTab  == 'Luminas'" v-tooltip="'Total Lumina cost'">
+          <span v-if="activeTab  == 'Luminas'" v-tooltip:top="'Total Lumina cost'">
             {{ sum(loadout.selectedLuminas, 'cost') }}
           </span>
         </div>
         <div class="filters">
+          <SortPicker v-if="activeTab  == 'Luminas'" v-model="settings.luminaSort" type="lumina" />
+          <SortPicker v-if="activeTab  == 'Weapons'" v-model="settings.weaponSort" type="weapon" />
+          <SortPicker v-if="activeTab  == 'Skills'" v-model="settings.skillSort" type="skill" />
           <img v-if="activeTab  == 'Luminas' && luminaFilter" class="icon-button" src="@/assets/x-lg.svg"
-            v-tooltip="'Clear Filter'" @click="luminaFilter = null"/>
+            v-tooltip:top="'Clear Filter'" @click="luminaFilter = null"/>
           <img v-if="activeTab  == 'Weapons' && weaponFilter" class="icon-button" src="@/assets/x-lg.svg"
-            v-tooltip="'Clear Filter'" @click="weaponFilter = null"/>
+            v-tooltip:top="'Clear Filter'" @click="weaponFilter = null"/>
           <img v-if="activeTab  == 'Skills' && skillFilter" class="icon-button" src="@/assets/x-lg.svg"
-            v-tooltip="'Clear Filter'" @click="skillFilter = null"/>
+            v-tooltip:top="'Clear Filter'" @click="skillFilter = null"/>
           <img src="@/assets/search.svg" class="pe-2 search-icon"/>
           <input v-if="activeTab  == 'Luminas'" type="text" class="form-control search-box" v-model="luminaFilter">
           <input v-if="activeTab  == 'Weapons'" type="text" class="form-control search-box" v-model="weaponFilter">
@@ -202,6 +208,7 @@ onUnmounted(() => {
       <div class="tab-header">
         <h4>Skills</h4>
         <div class="d-flex align-items-center">
+          <SortPicker v-model="settings.skillSort" type="skill" />
           <img src="@/assets/search.svg" class="pe-2 search-icon" />
           <input type="text" class="form-control search-box" v-model="skillFilter">
         </div>

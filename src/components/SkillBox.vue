@@ -8,11 +8,6 @@ import { upperFirst } from '@/main';
 const props = defineProps(['skill']);
 const loadout = useLoadoutStore();
 
-const cost = computed(() => {
-  const mods = loadout.selectedMods;
-  return typeof props.skill.apCost === 'function' ? DamageCalc.resolveFunction(props.skill.apCost, mods, props.skill) : props.skill.apCost;
-});
-
 const hits = computed(() => {
   return DamageCalc.getHits(calc.value.skill, calc.value.mods);
 })
@@ -45,7 +40,7 @@ const calc = computed (() => {
       <img v-for="element in [... new Set(hits.map(x => x.element))]" :key="element" :src="loadout.elementUrl(element)"
         class="element-icon" v-tooltip="upperFirst(loadout.resolveElement(element))" />
       <span class="ps-2">
-        {{ cost }} AP
+        {{ skill.calculatedCost }} AP
       </span>
     </div>
   </div>

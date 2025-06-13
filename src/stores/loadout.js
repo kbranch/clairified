@@ -7,6 +7,7 @@ import { luminas as allLuminas } from '@/luminas.js';
 import { weapons as allWeapons } from '@/weapons.js';
 import { targetBuffs as allTargetBuffs, selfBuffs as allSelfBuffs } from '@/buffs.js';
 import { useSettingsStore } from './settings';
+import { DamageCalc } from '@/damageCalc';
 
 export const useLoadoutStore = defineStore('loadout', () => {
   const settings = useSettingsStore();
@@ -230,6 +231,29 @@ export const useLoadoutStore = defineStore('loadout', () => {
     }
   });
 
+  function updateLuminas() {
+    allLuminas.forEach(lumina => {
+      let mult = DamageCalc.getMultiplier(lumina, selectedMods.value) - 1;
+      let additive = DamageCalc.getMultiplier(lumina, selectedMods.value, null, 'additiveMultiplier');
+
+      if (additive == 1) {
+        additive = 0;
+      }
+
+      lumina.sortMult = mult - 1 + additive;
+    });
+  }
+
+  function updateSkills() {
+    allSkills.forEach(skill => {
+      const cost = typeof skill.apCost === 'function'
+        ? DamageCalc.resolveFunction(skill.apCost, selectedMods.value, skill)
+        : skill.apCost;
+
+      skill.calculatedCost = cost
+    });
+  }
+
   function loadSelections(character) {
     clearSelections();
 
@@ -305,6 +329,9 @@ export const useLoadoutStore = defineStore('loadout', () => {
     selections.value[character.value.name] = storage;
     saveSelectionsToStorage();
     savedCharacter = character.value.name;
+
+    updateLuminas();
+    updateSkills();
   }
 
   function clearSelections() {

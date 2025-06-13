@@ -15,7 +15,7 @@ defineEmits(['clicked', 'levelClicked']);
   <div class="header">
     <h5>{{ weapon.name }}</h5>
     <img :src="loadout.elementUrl(weapon.element)" class="element-icon"
-      v-tooltip="upperFirst(loadout.resolveElement(weapon.element))" />
+      v-tooltip:top="upperFirst(loadout.resolveElement(weapon.element))" />
   </div>
 
   <div class="levels">

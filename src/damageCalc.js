@@ -92,8 +92,13 @@ export class DamageCalc {
   skillAverageDamage(extraMods=[]) {
     let critChance = this.skillCrit() / 100;
     let hitChance = 1 - critChance;
+    let damage = Math.round(this.skillDamage(extraMods) * hitChance + this.skillCritDamage(extraMods) * critChance);
 
-    return Math.round(this.skillDamage(extraMods) * hitChance + this.skillCritDamage(extraMods) * critChance);
+    if (this.skill) {
+      this.skill.averageDamage = damage;
+    }
+
+    return damage;
   }
 
   getTotalMultiplier(hit, mods, multName='multiplier', additiveMultName='additiveMultiplier', additiveGroupName='additiveGroup') {

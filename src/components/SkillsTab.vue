@@ -3,16 +3,20 @@ import { useLoadoutStore } from '@/stores/loadout';
 import { computed } from 'vue';
 import SkillBox from './SkillBox.vue';
 import DamageFormula from './DamageFormula.vue';
+import { sortByKey } from '@/main';
+import { useSettingsStore } from '@/stores/settings';
 
 const loadout = useLoadoutStore();
+const settings = useSettingsStore();
 
 const props = defineProps(['skillFilter'])
 
 const visibleSkills = computed(() => {
-  return loadout.skills
-    .filter(x => !props.skillFilter
-      || x.name.toLowerCase().includes(props.skillFilter.toLowerCase())
-      || x.description?.toLowerCase().includes(props.skillFilter.toLowerCase()));
+  return sortByKey(loadout.skills
+      .filter(x => !props.skillFilter
+        || x.name.toLowerCase().includes(props.skillFilter.toLowerCase())
+        || x.description?.toLowerCase().includes(props.skillFilter.toLowerCase()))
+    , x => x[settings.skillSort.prop], settings.skillSort.asc);
 });
 
 </script>

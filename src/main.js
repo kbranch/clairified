@@ -36,8 +36,9 @@ function compare(a, b) {
   }
 }
 
-export function sortByKey(arr, key) {
-  return arr.sort((a, b) => compare(key(a), key(b)))
+export function sortByKey(arr, key, sortAsc = true) {
+  let result = arr.sort((a, b) => compare(key(a), key(b)));
+  return sortAsc ? result : result.reverse();
 }
 
 export function sum(items, prop) {

@@ -9,8 +9,10 @@ import BuffGroups from '@/components/BuffGroups.vue';
 import { sum } from '@/main';
 import SkillsTab from '@/components/SkillsTab.vue';
 import ElementPicker from '@/components/ElementPicker.vue';
+import { useSettingsStore } from '@/stores/settings';
 
 const loadout = useLoadoutStore();
+const settings = useSettingsStore();
 
 const subTabs = computed(() => {
   let tabs = ['Luminas', 'Weapons']
@@ -79,11 +81,11 @@ onUnmounted(() => {
     </div>
 
     <div class="col d-flex justify-content-end align-items-center">
-      <input class="form-check-input ms-2" type="checkbox" id="capDamage" v-model="loadout.capDamage">
+      <input class="form-check-input ms-2" type="checkbox" id="capDamage" v-model="settings.capDamage">
       <label for="capDamage" class="mx-2">Cap Damage</label>
 
       <label for="spoilerLevel" class="mx-2">Spoiler Level</label>
-      <select id="spoilerLevel" v-model="loadout.spoilerLevel" class="form-select">
+      <select id="spoilerLevel" v-model="settings.spoilerLevel" class="form-select">
         <option v-for="level in spoilerLevels" :key="level.name" :value="level">
           {{ level.name }}
         </option>

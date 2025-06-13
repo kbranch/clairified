@@ -1,3 +1,5 @@
+import { useSettingsStore } from "@/stores/settings";
+
 export class DamageCalc {
   static defaultHit = {count: 1};
 
@@ -5,6 +7,7 @@ export class DamageCalc {
     this.skill = skill;
     this.mods = mods;
     this.loadout = loadout;
+    this.settings = useSettingsStore();
 
     if (!this.skill) {
       this.skill = {
@@ -39,7 +42,7 @@ export class DamageCalc {
       let multiplier = this.getTotalMultiplier(hit, hitMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
       let hitDamage = damage * multiplier;
 
-      totalDamage += Math.round(this.loadout.capDamage ? Math.min(hitDamage, 9999) : hitDamage);
+      totalDamage += Math.round(this.settings.capDamage ? Math.min(hitDamage, 9999) : hitDamage);
     }
 
     return totalDamage;

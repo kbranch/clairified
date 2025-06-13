@@ -1,61 +1,62 @@
 import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { sortByKey } from '@/main';
-import { characters as allCharacters, spoilerLevels, gimmicks } from '@/consts.js';
+import { characters as allCharacters, gimmicks } from '@/consts.js';
 import { skills as allSkills } from '@/skills.js';
 import { luminas as allLuminas } from '@/luminas.js';
 import { weapons as allWeapons } from '@/weapons.js';
 import { targetBuffs as allTargetBuffs, selfBuffs as allSelfBuffs } from '@/buffs.js';
+import { useSettingsStore } from './settings';
 
 export const useLoadoutStore = defineStore('loadout', () => {
+  const settings = useSettingsStore();
+
   const defaultAttackPower = 1000;
   const defaultCrit = 25;
   const elements = ['dark', 'light', 'physical', 'fire', 'ice', 'lightning', 'earth', 'void'];
 
   const character = ref(allCharacters[0]);
-  const spoilerLevel = ref(spoilerLevels[4]);
   const baseAttackPower = ref(defaultAttackPower);
   const baseCrit = ref(defaultCrit);
-  const capDamage = ref(true);
 
   const selections = ref([]);
 
-  const characters = computed(() => allCharacters.filter(x => (x.spoilerLevel ?? 0) <= spoilerLevel.value.level));
+  const characters = computed(() => allCharacters.filter(x => (x.spoilerLevel ?? 0) <= settings.spoilerLevel.level));
 
   const weaknesses = ref({});
 
   const luminas = computed(() => {
     return allLuminas.filter(x => (x.character ?? character.value.name) == character.value.name
-      && (x.spoilerLevel ?? 0) <= spoilerLevel.value.level);
+      && (x.spoilerLevel ?? 0) <= settings.spoilerLevel.level);
   });
 
   const selectedLuminas = computed(() => luminas.value.filter(x => x.selected > 0));
 
   const skills = computed(() => {
     return allSkills.filter(x => (x.character ?? character.value.name) == character.value.name
-      && (x.spoilerLevel ?? 0) <= spoilerLevel.value.level);
+      && (x.spoilerLevel ?? 0) <= settings.spoilerLevel.level);
   });
 
   const gimmick = computed (() => {
     return gimmicks.filter(x => (x.character ?? character.value.name) == character.value.name
-      && (x.spoilerLevel ?? 0) <= spoilerLevel.value.level)[0];
+      && (x.spoilerLevel ?? 0) <= settings.spoilerLevel.level)[0];
   });
 
   const weapons = computed(() => {
     return allWeapons.filter(x => (x.character ?? character.value.name) == character.value.name
-      && (x.spoilerLevel ?? 0) <= spoilerLevel.value.level);
+      && (x.spoilerLevel ?? 0) <= settings.spoilerLevel.level);
   });
 
   const selectedWeapon = computed(() => weapons.value.find(x => x.selected));
 
   const selfBuffs = computed(() => {
     return sortByKey(allSelfBuffs.filter(x => (x.character ?? character.value.name) == character.value.name
-      && (x.spoilerLevel ?? 0) <= spoilerLevel.value.level), x => [x.type, x.name]);
+      && (x.spoilerLevel ?? 0) <= settings.spoilerLevel.level), x => [x.type, x.name]);
   });
 
   const targetBuffs = computed(() => {
     return sortByKey(allTargetBuffs.filter(x => (x.character ?? character.value.name) == character.value.name
-      && (x.spoilerLevel ?? 0) <= spoilerLevel.value.level), x => [x.type, x.name]);
+      && (x.spoilerLevel ?? 0) <= settings.spoilerLevel.level), x => [x.type, x.name]);
   });
 
   const allMods = computed(() => {
@@ -382,7 +383,7 @@ export const useLoadoutStore = defineStore('loadout', () => {
   loadSelectionsFromStorage();
   loadSelections(character.value.name);
 
-  return { character, spoilerLevel, baseAttackPower, baseCrit, capDamage, characters, luminas, skills, gimmick,
+  return { character, baseAttackPower, baseCrit, characters, luminas, skills, gimmick,
     weapons, selectedWeapon, selfBuffs, targetBuffs, allMods, selectedMods, selectedLuminas, modByName, resetLuminas,
     resetWeapons, weaknessMod, resolveElement, elementUrl, weaknesses };
 })

@@ -184,7 +184,7 @@ function showHits(hit) {
     </span>
 
     <span v-if="showHits(hit)">
-      * {{ hitCount(hit).toLocaleString() }} hits
+     = {{ (calc.hitDamage(hit, rawMods, [calc.getSkillQteMultiplier()]) / hitCount(hit)).toLocaleString() }} per hit * {{ hitCount(hit).toLocaleString() }} hits
     </span>
 
     <span>

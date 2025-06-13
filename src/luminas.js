@@ -54,30 +54,30 @@ export var luminas = reactive([
     cost: 3,
     additiveMultiplier: (mods, skill) => skill.name == 'Counterattack' ? 0.5 : 0,
   },
-  {
-    name: 'Breaker',
-    description: '25% more Break potency',
-    cost: 10,
-    breakMultiplier: 1.25,
-  },
-  {
-    name: 'Breaking Burn',
-    description: '25% more Break potency on burning targets',
-    cost: 5,
-    breakMultiplier: (mods) => mods.byName('Burn') ? 1.25 : 1,
-  },
-  {
-    name: 'Breaking Counter',
-    description: '50% more Break potency on Counterattack',
-    cost: 3,
-    breakMultiplier: (mods, skill) => skill.name == 'Counterattack' ? 1.5 : 1,
-  },
-  {
-    name: 'Breaking Shots',
-    description: '50% increased Break potency with Free Aim shots',
-    cost: 3,
-    breakMultiplier: (mods, skill) => skill.name == 'Free Aim' ? 1.5 : 1,
-  },
+  // {
+  //   name: 'Breaker',
+  //   description: '25% more Break potency',
+  //   cost: 10,
+  //   breakMultiplier: 1.25,
+  // },
+  // {
+  //   name: 'Breaking Burn',
+  //   description: '25% more Break potency on burning targets',
+  //   cost: 5,
+  //   breakMultiplier: (mods) => mods.byName('Burn') ? 1.25 : 1,
+  // },
+  // {
+  //   name: 'Breaking Counter',
+  //   description: '50% more Break potency on Counterattack',
+  //   cost: 3,
+  //   breakMultiplier: (mods, skill) => skill.name == 'Counterattack' ? 1.5 : 1,
+  // },
+  // {
+  //   name: 'Breaking Shots',
+  //   description: '50% increased Break potency with Free Aim shots',
+  //   cost: 3,
+  //   breakMultiplier: (mods, skill) => skill.name == 'Free Aim' ? 1.5 : 1,
+  // },
   {
     name: 'Combo Attack I',
     description: 'Base Attack has 1 extra hit',
@@ -93,12 +93,12 @@ export var luminas = reactive([
       return null;
     },
   },
-  {
-    name: 'Critical Break',
-    description: '25% more Break potency on Critical hits',
-    cost: 5,
-    breakMultiplier: (mods) => mods.byName('Critical Hit') ? 1.25 : 1,
-  },
+  // {
+  //   name: 'Critical Break',
+  //   description: '25% more Break potency on Critical hits',
+  //   cost: 5,
+  //   breakMultiplier: (mods) => mods.byName('Critical Hit') ? 1.25 : 1,
+  // },
   {
     name: 'Critical Burn',
     description: '25% increased Critical Chance on Burning enemies',
@@ -141,12 +141,12 @@ export var luminas = reactive([
     cost: 10,
     additiveMultiplier: (mods) => mods.byName('Stunned') ? 0.3 : 0,
   },
-  {
-    name: 'Staggering Attack',
-    description: '50% more Break potency on Base Attack',
-    cost: 3,
-    breakMultiplier: (mods, skill) => skill.name == 'Base Attack' ? 1.5 : 1,
-  },
+  // {
+  //   name: 'Staggering Attack',
+  //   description: '50% more Break potency on Base Attack',
+  //   cost: 3,
+  //   breakMultiplier: (mods, skill) => skill.name == 'Base Attack' ? 1.5 : 1,
+  // },
   {
     name: 'Solo Fighter',
     description: 'Deal 50% more damage if fighting alone',

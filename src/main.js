@@ -49,19 +49,3 @@ export function sum(items, prop) {
 export function upperFirst(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
-
-export function stripProxy(obj, level=0) {
-  // Arbitrary limit to prevent loops
-  if (level < 5) {
-    for(const key in obj) {
-      if (isProxy(obj[key])) {
-        obj[key] = toRaw(obj[key]);
-      }
-
-      // Recursively strip members too
-      stripProxy(obj[key], level + 1);
-    }
-  }
-
-  return toRaw(obj);
-}

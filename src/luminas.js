@@ -159,5 +159,28 @@ export var luminas = reactive([
     cost: 15,
     additiveMultiplier: (mods) => Math.min(mods.byName('Turn')?.count ?? 0, 5) * 0.05,
   },
-
+  {
+    name: 'Confident Fighter',
+    description: 'Deal 30% increased damage, but can\'t be Healed',
+    cost: 15,
+    additiveMultiplier: 0.3,
+  },
+  {
+    name: 'Glass Canon',
+    description: 'Deal 25% more damage, but take 25% more damage',
+    cost: 10,
+    multiplier: 1.25,
+  },
+  {
+    name: 'Immaculate',
+    description: 'Deal 30% increased damage until a hit is received',
+    cost: 10,
+    additiveMultiplier: 0.3,
+  },
+  {
+    name: 'Shield Affinity',
+    description: 'Deal 30% increased damage while having Shields, but receiving any damage always removes all Shields',
+    cost: 15,
+    additiveMultiplier: (mods) => mods.byName('Self Shield') ? 0.3 : 0,
+  }
 ]);

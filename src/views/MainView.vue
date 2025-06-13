@@ -39,7 +39,7 @@ const visibleWeapons = computed(() => {
   return loadout.weapons
     .filter(x => !weaponFilter.value
       || x.name.toLowerCase().includes(weaponFilter.value.toLowerCase())
-      || x.levels.some(level => level.description.toLowerCase().includes(weaponFilter.value.toLowerCase())));
+      || x.levels?.some(level => level.description.toLowerCase().includes(weaponFilter.value.toLowerCase())));
 });
 
 const isNarrow = computed(() => {

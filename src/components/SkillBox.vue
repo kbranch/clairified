@@ -3,19 +3,28 @@ import { computed } from 'vue';
 import { useLoadoutStore } from '@/stores/loadout';
 import DamageFormula from './DamageFormula.vue';
 import { DamageCalc } from '@/damageCalc';
-import { sum, upperFirst } from '@/main';
+import { upperFirst } from '@/main';
 
 const props = defineProps(['skill']);
 const loadout = useLoadoutStore();
 
 const cost = computed(() => {
   const mods = loadout.selectedMods;
-  mods.byName = (name) => mods.find(mod => mod.name === name);
-  return typeof props.skill.apCost === 'function' ? props.skill.apCost(mods) : props.skill.apCost;
+  return typeof props.skill.apCost === 'function' ? DamageCalc.resolveFunction(props.skill.apCost, mods, props.skill) : props.skill.apCost;
 });
 
 const hits = computed(() => {
-  return sum(DamageCalc.getHits(calc.value.skill, calc.value.mods), 'count') ?? 1;
+  return DamageCalc.getHits(calc.value.skill, calc.value.mods);
+})
+
+const hitCount = computed(() => {
+  let hitCount = 0;
+
+  for (const hit of hits.value) {
+    hitCount += DamageCalc.hitCount(hit, calc.value.mods, calc.value.skill);
+  }
+
+  return hitCount;
 });
 
 const calc = computed (() => {
@@ -31,9 +40,9 @@ const calc = computed (() => {
     <h5>{{ skill.name }}</h5>
     <div>
       <span>
-        {{ hits }} {{ hits === 1 ? 'hit' : 'hits' }}
+        {{ hitCount }} {{ hitCount === 1 ? 'hit' : 'hits' }}
       </span>
-      <img v-for="element in [... new Set(skill.hits.map(x => x.element))]" :key="element" :src="loadout.elementUrl(element)"
+      <img v-for="element in [... new Set(hits.map(x => x.element))]" :key="element" :src="loadout.elementUrl(element)"
         class="element-icon" v-tooltip="upperFirst(loadout.resolveElement(element))" />
       <span class="ps-2">
         {{ cost }} AP

@@ -8,7 +8,8 @@ const loadout = useLoadoutStore();
 const props = defineProps(['skill', 'type']);
 
 function base(hit) {
-  return baseCalc.value.hitDamage(null, props.skill ? rawMods.value : [], [], additiveMods(hit).length == 0);
+  let tempMods = rawMods.value.filter(x => x.name !== 'Critical Hit');
+  return baseCalc.value.hitDamage(null, props.skill ? tempMods : [], [], additiveMods(hit).length == 0);
 }
 
 const rawMods = computed(() => {
@@ -103,6 +104,10 @@ function hitMult(hit) {
   return calc.value.getHitMultiplier(hit);
 }
 
+function hitCount(hit) {
+  return DamageCalc.hitCount(hit, calc.value.mods, calc.value.skill);
+}
+
 function modDifferentWithSkill(mod, hit, multName = 'multiplier') {
   return !props.skill
     || ['skill', 'Critical Hit'].includes(mod.name)
@@ -179,7 +184,7 @@ function showHits(hit) {
     </span>
 
     <span v-if="showHits(hit)">
-      * {{ hit.count.toLocaleString() }} hits
+      * {{ hitCount(hit).toLocaleString() }} hits
     </span>
 
     <span>

@@ -57,7 +57,7 @@ export var gimmicks = reactive([
       'Earth',
       'Fire',
       'Ice',
-      'Electric',
+      'Lightning',
       'Light',
       'Dark',
     ],

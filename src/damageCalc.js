@@ -25,21 +25,20 @@ export class DamageCalc {
       hit = DamageCalc.defaultHit;
     }
 
+    let combinedMods = mods.concat(extraMods)
     let totalDamage = 0;
 
-    for (let i = 0; i < DamageCalc.hitCount(hit, this.mods, this.skill); i++) {
+    for (let i = 0; i < DamageCalc.hitCount(hit, combinedMods, this.skill); i++) {
       let damage = this.loadout.baseAttackPower;
-      let combinedMods = mods
-        .concat(extraMods)
-        .filter(x => !x.hitDuration || x.hitDuration > hit.previousHits + i);
+      let hitMods = combinedMods.filter(x => !x.hitDuration || x.hitDuration > hit.previousHits + i);
 
-      combinedMods.push(hit);
+      hitMods.push(hit);
 
       if (hit?.element) {
-        combinedMods.push(this.loadout.weaknessMod(hit.element));
+        hitMods.push(this.loadout.weaknessMod(hit.element));
       }
 
-      let multiplier = this.getTotalMultiplier(hit, combinedMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
+      let multiplier = this.getTotalMultiplier(hit, hitMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
       let hitDamage = damage * multiplier;
 
       totalDamage += Math.round(this.loadout.capDamage ? Math.min(hitDamage, 9999) : hitDamage);
@@ -133,21 +132,52 @@ export class DamageCalc {
     let count = hit.count ?? 1;
 
     if (typeof count === 'function') {
-      count = count(mods, skill);
+      count = DamageCalc.resolveFunction(count, mods, skill);
     }
 
     return count;
   }
 
+  static resolveFunction(func, mods, skill) {
+    mods.byName = (name) => mods.find(mod => (mod.name ?? mod) === name);
+    mods.stainsMet = (requirements) => {
+      const stainCounts = ['Fire', 'Ice', 'Lightning', 'Earth', 'Light', 'Dark']
+        .reduce((counts, element) => {
+          counts[element] = (mods.byName(element)?.count ?? 0)
+          return counts;
+        }, {});
+
+      for (const element in requirements) {
+        const required = requirements[element];
+        const nativeAvailable = stainCounts[element];
+
+        if (nativeAvailable < required) {
+          const lightAvailable = stainCounts['Light'];
+
+          if (lightAvailable + nativeAvailable >= required) {
+            stainCounts['Light'] -= required - nativeAvailable;
+          }
+          else {
+            return false;
+          }
+        }
+      }
+      
+      return true;
+    }
+
+    return func(mods, skill);
+  }
+
   static getHits(skill, mods, extraMods=[]) {
     let hits = skill.hits;
+    let combined = mods.concat(extraMods);
 
     if (!skill || !skill.hits) {
       hits = [DamageCalc.defaultHit];
     }
     else if (typeof skill.hits === 'function') {
-      let combined = mods.concat(extraMods);
-      hits = skill.hits(combined);
+      hits = DamageCalc.resolveFunction(skill.hits, combined, skill);
     }
 
     let extraHits = mods
@@ -156,7 +186,7 @@ export class DamageCalc {
     
     for (const extra of extraHits) {
       if (typeof extra === 'function') {
-        let result = extra(mods, skill);
+        let result = DamageCalc.resolveFunction(extra, mods, skill);
         if (result) {
           hits = hits.concat(result);
         }
@@ -169,7 +199,7 @@ export class DamageCalc {
     let previousHits = 0;
     for (const hit of hits) {
       hit.previousHits = previousHits;
-      previousHits += DamageCalc.hitCount(hit, mods, skill);
+      previousHits += DamageCalc.hitCount(hit, combined, skill);
     }
 
     return hits;
@@ -186,8 +216,6 @@ export class DamageCalc {
       multiplier = target;
     }
     else if (typeof target === 'function') {
-      mods.byName = (name) => mods.find(mod => mod.name === name);
-
       let originalElement = hit?.element;
       let tempHit = hit ?? {};
       tempHit = stripProxy(tempHit);
@@ -196,7 +224,7 @@ export class DamageCalc {
         tempHit.element = mods.find(x => x.element && x.element != 'weapon')?.element ?? 'weapon';
       }
 
-      multiplier = target(mods, tempHit);
+      multiplier = DamageCalc.resolveFunction(target, mods, tempHit);
 
       tempHit.element = originalElement;
     }

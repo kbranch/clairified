@@ -67,6 +67,17 @@ function selectWeapon(weapon) {
   weapon.selected = true;
 }
 
+function selectLevel(level, weapon) {
+  if (level.selected && level.level == weapon.levels[0].level && weapon.levels.filter(x => x.selected).length == 1) {
+    level.selected = false;
+    return;
+  }
+
+  for (const otherLevel of weapon.levels) {
+    otherLevel.selected = otherLevel.level <= level.level;
+  }
+}
+
 onMounted(() => {
   updatePageWidth();
   window.addEventListener('resize', updatePageWidth);
@@ -86,8 +97,13 @@ onUnmounted(() => {
     </div>
 
     <div class="col d-flex justify-content-end align-items-center">
-      <input class="form-check-input ms-2" type="checkbox" id="capDamage" v-model="settings.capDamage">
-      <label for="capDamage" class="mx-2">Cap Damage</label>
+      <label for="damageCap" class="mx-2">Damage Cap</label>
+      <select id="damageCap" v-model="settings.damageCap" class="form-select">
+        <option value="9999"> {{ (9999).toLocaleString() }} </option>
+        <option value="99999"> {{ (99999).toLocaleString() }} </option>
+        <option value="999999"> {{ (999999).toLocaleString() }} </option>
+        <option value="0">None</option>
+      </select>
 
       <label for="spoilerLevel" class="mx-2">Spoiler Level</label>
       <select id="spoilerLevel" v-model="settings.spoilerLevel" class="form-select">
@@ -213,7 +229,7 @@ onUnmounted(() => {
       <template v-if="activeTab == 'Weapons'">
         <div class="d-flex">
           <WeaponBox v-for="weapon in visibleWeapons" :key="weapon.name" :weapon="weapon"
-            @clicked="(weapon) => selectWeapon(weapon)" @levelClicked="(level) => level.selected = !level.selected" />
+            @clicked="(weapon) => selectWeapon(weapon)" @levelClicked="(level, weapon) => selectLevel(level, weapon)" />
         </div>
       </template>
       <template v-if="activeTab == 'Skills'">

@@ -48,7 +48,7 @@ const favoriteIcon = computed(() => {
       </span>
 
       <img v-for="element in [... new Set(hits.map(x => x.element))]" :key="element" :src="loadout.elementUrl(element)"
-        class="element-icon" v-tooltip="upperFirst(loadout.resolveElement(element))" />
+        class="element-icon" v-tooltip:top="upperFirst(loadout.resolveElement(element))" />
 
       <span class="ps-2">
         {{ skill.calculatedCost }} AP
@@ -60,25 +60,34 @@ const favoriteIcon = computed(() => {
     {{ skill.description }}
   </span>
 
-  <div>
+  <div class="damage-wrapper">
     <span class="damage pe-2">
-      D {{ calc.skillDamage().toLocaleString() }}
-      <v-tooltip activator="parent" location="top">
-        <DamageFormula :skill="skill" />
-      </v-tooltip>
+      Damage: 
+      <span class="damage tip ps-1">
+        {{ calc.skillDamage().toLocaleString() }}
+        <v-tooltip activator="parent" location="top">
+          <DamageFormula :skill="skill" />
+        </v-tooltip>
+      </span>
     </span>
-    <span class="critDamage pe-2">
-      C {{ calc.skillCritDamage().toLocaleString() }}
-      <v-tooltip activator="parent" location="top">
-        <DamageFormula :skill="skill" type="crit" />
-      </v-tooltip>
-    </span>
-    <span class="averageDamage">
-      A {{ calc.skillAverageDamage().toLocaleString() }}
-      <v-tooltip activator="parent" location="top">
-        <DamageFormula :skill="skill" type="average" />
-      </v-tooltip>
-    </span>
+    <div class="critDamage pe-2">
+      Crit: 
+      <span class="critDamage tip ps-1">
+        {{ calc.skillCritDamage().toLocaleString() }}
+        <v-tooltip activator="parent" location="top">
+          <DamageFormula :skill="skill" type="crit" />
+        </v-tooltip>
+      </span>
+    </div>
+    <div class="averageDamage">
+      Average: 
+      <span class="averageDamage tip ps-1">
+        {{ calc.skillAverageDamage().toLocaleString() }}
+        <v-tooltip activator="parent" location="top">
+          <DamageFormula :skill="skill" type="average" />
+        </v-tooltip>
+      </span>
+    </div>
 
   </div>
 </div>
@@ -86,6 +95,16 @@ const favoriteIcon = computed(() => {
 </template>
 
 <style scoped>
+
+.damage-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.tip {
+  text-decoration-style: dashed;
+  text-decoration-line: underline;
+}
 
 .element-icon {
   height: 20px;

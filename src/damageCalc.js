@@ -42,7 +42,7 @@ export class DamageCalc {
       let multiplier = this.getTotalMultiplier(hit, hitMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
       let hitDamage = damage * multiplier;
 
-      totalDamage += Math.round(this.settings.capDamage ? Math.min(hitDamage, 9999) : hitDamage);
+      totalDamage += Math.round(this.settings.damageCap > 0 ? Math.min(hitDamage, this.settings.damageCap) : hitDamage);
     }
 
     return totalDamage;

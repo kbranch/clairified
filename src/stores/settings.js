@@ -3,7 +3,7 @@ import { computed, ref, watch } from "vue";
 import { spoilerLevels } from '@/consts.js';
 
 export const useSettingsStore = defineStore('settings', () => {
-  const capDamage = ref(true);
+  const damageCap = ref(9999);
   const spoilerLevel = ref(spoilerLevels[0]);
   const luminaSort = ref([{}])
   const weaponSort = ref([{}]);
@@ -28,7 +28,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   const allSettings = computed(() => {
     return {
-      capDamage: capDamage.value,
+      damageCap: damageCap.value,
       spoilerLevel: spoilerLevel.value,
       luminaSort: luminaSort.value,
       weaponSort: weaponSort.value,
@@ -75,7 +75,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
     if (savedSettings) {
       const settings = JSON.parse(savedSettings);
-      capDamage.value = settings.capDamage ?? true;
+      damageCap.value = settings.damageCap ?? 9999;
       spoilerLevel.value = settings.spoilerLevel ?? spoilerLevels[0];
       luminaSort.value = settings.luminaSort;
       weaponSort.value = settings.weaponSort;
@@ -104,7 +104,7 @@ export const useSettingsStore = defineStore('settings', () => {
   loadSettings();
 
   return {
-    capDamage, spoilerLevel, luminaSort, weaponSort, skillSort, favoriteWeapons, favoriteSkills, favoriteLuminas,
+    damageCap, spoilerLevel, luminaSort, weaponSort, skillSort, favoriteWeapons, favoriteSkills, favoriteLuminas,
     filterFavoriteLuminas, filterFavoriteSkills, filterFavoriteWeapons, sortBy, toggleFavorite,
   };
 });

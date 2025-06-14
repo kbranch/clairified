@@ -100,6 +100,8 @@ const hits = computed(() => {
   return DamageCalc.getHits(calc.value.skill, calc.value.mods);
 });
 
+const underline = computed(() => props.skill ? 'none' : 'underline');
+
 function hitMult(hit) {
   return calc.value.getHitMultiplier(hit);
 }
@@ -125,34 +127,48 @@ function showHits(hit) {
 
 <template v-if="type == 'average'">
  <span>
-    ({{ critlessCalc.skillDamage().toLocaleString() }}
-    *
-    {{ 100 - critlessCalc.skillCrit().toLocaleString() }}%)
-    +
+    <div>
+      Average damage:
+    </div>
+
     ({{ critCalc.skillDamage().toLocaleString() }}
     *
-    {{ critCalc.skillCrit().toLocaleString() }}%)
+    {{ critCalc.skillCrit().toLocaleString() }}% crit chance)
+    +
+    ({{ critlessCalc.skillDamage().toLocaleString() }}
+    *
+    {{ 100 - critlessCalc.skillCrit().toLocaleString() }}% hit chance)
     =
-    {{ calc.skillAverageDamage().toLocaleString() }}
+    <span class="total">
+      {{ calc.skillAverageDamage().toLocaleString() }}
+    </span>
  </span> 
 </template>
 
 <template v-else>
+  <span v-if="!skill">
+    Base formula:
+  </span>
+  <span v-else-if="type == 'crit'">
+    Critical hit:
+  </span>
+  <span v-else>
+    Normal hit:
+  </span>
   <div v-for="hit in hits" :key="hit">
-    <span v-if="!props.skill">
-      Base formula:
-    </span>
-
     <span>
       {{ base(hit).toLocaleString() }}
     </span>
 
-    <span v-for="mod in mods(hit)" :key="mod">
-      * {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
-      <v-tooltip v-if="!skill" activator="parent" location="top">
-        {{ mod.name }}
-      </v-tooltip>
-    </span>
+    <template v-for="mod in mods(hit)" :key="mod">
+      * 
+      <span class="multiplier">
+        {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
+        <v-tooltip v-if="!skill" activator="parent" location="top">
+          {{ mod.name }}
+        </v-tooltip>
+      </span>
+    </template>
 
     <span v-if="hitMult(hit) !== 1">
       * {{ hitMult(hit).toLocaleString() }} (skill)
@@ -163,32 +179,40 @@ function showHits(hit) {
         * (1 + 
       </span>
 
-      <span v-for="(mod, i) in additiveMods(hit)" :key="mod">
+      <template v-for="(mod, i) in additiveMods(hit)" :key="mod">
         {{ i > 0 ? ' + ' : '' }}
-        {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
+        <span class="multiplier">
+          {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
+          <v-tooltip v-if="!skill" activator="parent" location="top">
+            {{ mod.name }}
+          </v-tooltip>
+        </span>
         <template v-if="mod.name == 'skill'">
           (skill)
         </template>
-      <v-tooltip v-if="!skill" activator="parent" location="top">
-        {{ mod.name }}
-      </v-tooltip>
-      </span>
+      </template>
 
       <span class="end-paren">
         )
       </span>
     </template>
 
-    <span v-if="skill && calc.getSkillQteMultiplier() !== 1">
-      * {{ calc.getSkillQteMultiplier().toLocaleString() }} (QTE)
-    </span>
+    <template v-if="skill && calc.getSkillQteMultiplier() !== 1">
+      *
+      <span class="multiplier">
+        {{ calc.getSkillQteMultiplier().toLocaleString() }} (QTE)
+      </span>
+    </template>
 
     <span v-if="showHits(hit)">
      = {{ (calc.hitDamage(hit, rawMods, [calc.getSkillQteMultiplier()]) / hitCount(hit)).toLocaleString() }} per hit * {{ hitCount(hit).toLocaleString() }} hits
     </span>
 
     <span>
-      = {{ calc.hitDamage(hit, rawMods, [calc.getSkillQteMultiplier()]).toLocaleString() }}
+      = 
+      <span class="hit-total">
+        {{ calc.hitDamage(hit, rawMods, [calc.getSkillQteMultiplier()]).toLocaleString() }}
+      </span>
     </span>
     <img :src="loadout.elementUrl(hit.element ?? 'weapon')" class="element-icon" />
   </div>
@@ -202,6 +226,15 @@ function showHits(hit) {
 
 <style scoped>
 
+.wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.hit-total {
+  font-weight: bold;
+}
+
 .total {
   font-weight: bold;
 }
@@ -214,6 +247,11 @@ function showHits(hit) {
   height: 20px;
   width: 20px;
   margin-left: 5px;
+}
+
+.multiplier {
+  text-decoration-style: dashed;
+  text-decoration-line: v-bind(underline);
 }
 
 </style>

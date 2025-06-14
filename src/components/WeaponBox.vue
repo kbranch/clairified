@@ -32,7 +32,7 @@ const favoriteIcon = computed(() => {
 
   <div class="levels">
     <div v-for="level in weapon.levels" :key="level.level" class="level" :class="{ 'active': level.selected }"
-      @click="$emit('levelClicked', level)">
+      @click="$emit('levelClicked', level, weapon)">
 
       <span :class="`level-${level.level}`">
         {{ level.level }}

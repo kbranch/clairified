@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed, onMounted, onUnmounted } from 'vue'; 
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'; 
 import LuminaBox from '@/components/LuminaBox.vue';
 import WeaponBox from '@/components/WeaponBox.vue';
 import { spoilerLevels } from '@/consts.js';
@@ -11,6 +11,7 @@ import SkillsTab from '@/components/SkillsTab.vue';
 import ElementPicker from '@/components/ElementPicker.vue';
 import { useSettingsStore } from '@/stores/settings';
 import SortPicker from '@/components/SortPicker.vue';
+import AboutDialog from '@/components/AboutDialog.vue';
 
 const loadout = useLoadoutStore();
 const settings = useSettingsStore();
@@ -81,6 +82,8 @@ function selectLevel(level, weapon) {
 onMounted(() => {
   updatePageWidth();
   window.addEventListener('resize', updatePageWidth);
+
+  nextTick(() => settings.firstLoad = false);
 });
 
 onUnmounted(() => {
@@ -92,7 +95,7 @@ onUnmounted(() => {
 <template>
 
   <div class="row">
-    <div class="col d-flex justify-content-start pt-2">
+    <div class="col d-flex justify-content-start align-items-center pt-2">
       <h1>Clairified</h1>
     </div>
 
@@ -111,6 +114,8 @@ onUnmounted(() => {
           {{ level.name }}
         </option>
       </select>
+      <img src="/images/info-square.svg" class="header-icon ms-2" v-tooltip:top="'About Clairified'"
+        data-bs-toggle="modal" data-bs-target="#aboutModal" />
     </div>
   </div>
 
@@ -256,6 +261,8 @@ onUnmounted(() => {
     </div>
   </div>
 
+  <AboutDialog :start-showing="settings.firstLoad" />
+
 </template>
 
 <style>
@@ -297,6 +304,14 @@ onUnmounted(() => {
 
 <style scoped>
 
+.header-icon {
+  height: 32px;
+  width: 32px;
+  filter: invert(1)
+          brightness(0.5);
+  cursor: pointer;
+}
+
 .lumina-container {
   display: flex;
   flex-wrap: wrap;
@@ -329,8 +344,8 @@ onUnmounted(() => {
 
 .filters {
   flex: 1;
-  min-width: 0;
-  flex-wrap: nowrap;
+  min-width: 135px;
+  flex-wrap: wrap;
   display: flex;
   align-items: center;
   justify-content: flex-end;

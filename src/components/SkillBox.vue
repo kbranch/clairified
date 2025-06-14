@@ -102,7 +102,7 @@ const favoriteIcon = computed(() => {
 }
 
 .tip {
-  text-decoration-style: dashed;
+  /* text-decoration-style: dashed; */
   text-decoration-line: underline;
 }
 

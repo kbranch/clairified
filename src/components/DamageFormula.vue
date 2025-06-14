@@ -250,7 +250,7 @@ function showHits(hit) {
 }
 
 .multiplier {
-  text-decoration-style: dashed;
+  /* text-decoration-style: dashed; */
   text-decoration-line: v-bind(underline);
 }
 

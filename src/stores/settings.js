@@ -5,15 +5,16 @@ import { spoilerLevels } from '@/consts.js';
 export const useSettingsStore = defineStore('settings', () => {
   const damageCap = ref(9999);
   const spoilerLevel = ref(spoilerLevels[0]);
-  const luminaSort = ref([{}])
-  const weaponSort = ref([{}]);
-  const skillSort = ref([{}]);
+  const luminaSort = ref(null)
+  const weaponSort = ref(null);
+  const skillSort = ref(null);
   const favoriteWeapons = ref([]);
   const favoriteSkills = ref([]);
   const favoriteLuminas = ref([]);
   const filterFavoriteWeapons = ref(false);
   const filterFavoriteSkills = ref(false);
   const filterFavoriteLuminas = ref(false);
+  const firstLoad = ref(true);
 
   const sortTypes = {
     lumina: luminaSort,
@@ -39,6 +40,7 @@ export const useSettingsStore = defineStore('settings', () => {
       filterFavoriteWeapons: filterFavoriteWeapons.value,
       filterFavoriteSkills: filterFavoriteSkills.value,
       filterFavoriteLuminas: filterFavoriteLuminas.value,
+      firstLoad: firstLoad.value,
     };
   });
 
@@ -86,6 +88,7 @@ export const useSettingsStore = defineStore('settings', () => {
       filterFavoriteWeapons.value = settings.filterFavoriteWeapons ?? false;
       filterFavoriteSkills.value = settings.filterFavoriteSkills ?? false;
       filterFavoriteLuminas.value = settings.filterFavoriteLuminas ?? false;
+      firstLoad.value = settings.firstLoad ?? true;
     }
 
     if (!Array.isArray(luminaSort.value)) {
@@ -105,6 +108,6 @@ export const useSettingsStore = defineStore('settings', () => {
 
   return {
     damageCap, spoilerLevel, luminaSort, weaponSort, skillSort, favoriteWeapons, favoriteSkills, favoriteLuminas,
-    filterFavoriteLuminas, filterFavoriteSkills, filterFavoriteWeapons, sortBy, toggleFavorite,
+    filterFavoriteLuminas, filterFavoriteSkills, filterFavoriteWeapons, firstLoad, sortBy, toggleFavorite,
   };
 });

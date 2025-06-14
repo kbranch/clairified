@@ -21,7 +21,7 @@ const favoriteIcon = computed(() => {
 <div class="box" :class="{ 'active': weapon.selected }" @click="$emit('clicked', weapon)">
   <div class="header">
     <h5>{{ weapon.name }}</h5>
-    <div>
+    <div class="header">
       <img :src="favoriteIcon" class="icon-button" @click.stop="settings.toggleFavorite('weapon', weapon)"
         v-tooltip:top="'Favorite'" />
 

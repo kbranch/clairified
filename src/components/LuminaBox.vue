@@ -18,7 +18,7 @@ const favoriteIcon = computed(() => {
 <div class="box" :class="{ 'active': lumina.selected }" @click="$emit('clicked', lumina)">
   <div class="header">
     <h5>{{ lumina.name }}</h5>
-    <div>
+    <div class="header">
       <img :src="favoriteIcon" class="icon-button" @click.stop="settings.toggleFavorite('lumina', lumina)"
         v-tooltip:top="'Favorite'" />
       <span>{{ lumina.cost }}</span>

@@ -39,7 +39,7 @@ const favoriteIcon = computed(() => {
 <div class="box">
   <div class="header">
     <h5>{{ skill.name }}</h5>
-    <div>
+    <div class="header">
       <img :src="favoriteIcon" class="icon-button" @click.stop="settings.toggleFavorite('skill', skill)"
         v-tooltip:top="'Favorite'" />
 

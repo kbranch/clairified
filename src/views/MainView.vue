@@ -172,15 +172,15 @@ onUnmounted(() => {
           </span>
         </div>
         <div class="filters">
-          <img v-if="activeTab  == 'Luminas'" class="icon-button" v-tooltip:top="'Filter Favorites'" 
+          <img v-if="activeTab  == 'Luminas'" class="icon-button me-0" v-tooltip:top="'Filter Favorites'" 
             :src="`/images/star${settings.filterFavoriteLuminas ? '-fill': ''}.svg`"
            @click="settings.filterFavoriteLuminas = !settings.filterFavoriteLuminas"/>
 
-          <img v-if="activeTab  == 'Weapons'" class="icon-button" v-tooltip:top="'Filter Favorites'" 
+          <img v-if="activeTab  == 'Weapons'" class="icon-button me-0" v-tooltip:top="'Filter Favorites'" 
             :src="`/images/star${settings.filterFavoriteWeapons ? '-fill': ''}.svg`"
             @click="settings.filterFavoriteWeapons = !settings.filterFavoriteWeapons"/>
 
-          <img v-if="activeTab  == 'Skills'" class="icon-button" v-tooltip:top="'Filter Favorites'" 
+          <img v-if="activeTab  == 'Skills'" class="icon-button me-0" v-tooltip:top="'Filter Favorites'" 
             :src="`/images/star${settings.filterFavoriteSkills ? '-fill': ''}.svg`"
             @click="settings.filterFavoriteSkills = !settings.filterFavoriteSkills"/>
 
@@ -226,9 +226,11 @@ onUnmounted(() => {
       <div class="tab-header">
         <h4>Skills</h4>
         <div class="d-flex align-items-center">
-          <img class="icon-button" :src="`/images/star${settings.filterFavoriteSkills ? '-fill': ''}.svg`"
+          <img class="icon-button me-0" :src="`/images/star${settings.filterFavoriteSkills ? '-fill': ''}.svg`"
             v-tooltip:top="'Filter Favorites'" @click="settings.filterFavoriteSkills = !settings.filterFavoriteSkills"/>
+
           <SortPicker v-model="settings.skillSort[0]" type="skill" />
+
           <img src="@/assets/search.svg" class="pe-2 search-icon" />
           <input type="text" class="form-control search-box" v-model="skillFilter">
         </div>

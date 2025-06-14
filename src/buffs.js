@@ -43,6 +43,8 @@ export var targetBuffs = reactive([
   {
     name: 'Mark',
     type: 'boolean',
+    icon: 'mark.png',
+    iconOnly: true,
     description: 'The next hit deals 50% more damage.',
     multiplier: 1.5,
     hitDuration: 1,
@@ -50,6 +52,8 @@ export var targetBuffs = reactive([
   {
     name: 'Defenceless',
     type: 'boolean',
+    icon: 'defenceless.png',
+    iconOnly: true,
     description: 'Defenceless increases the damage received by the target by 25%.',
     multiplier: 1.25,
   },
@@ -61,10 +65,28 @@ export var targetBuffs = reactive([
   {
     name: 'Burn',
     type: 'count',
+    icon: 'fire.png',
+    iconOnly: true,
   },
   {
     name: 'Stunned',
     type: 'boolean',
+    icon: 'stun.png',
+    iconOnly: true,
+  },
+  {
+    name: 'Powerless',
+    type: 'boolean',
+    icon: 'powerless.png',
+    iconOnly: true,
+  },
+  {
+    name: 'Target Shield',
+    icon: 'shield.png',
+    iconOnly: true,
+    type: 'count',
+    default: 0,
+    min: 0,
   },
 ]);
 
@@ -84,13 +106,25 @@ export var selfBuffs = reactive([
     max: 100,
   },
   {
+    name: 'Self Shield',
+    icon: 'shield.png',
+    iconOnly: true,
+    type: 'count',
+    default: 0,
+    min: 0,
+  },
+  {
     name: 'Powerful',
     type: 'boolean',
+    icon: 'powerful.png',
+    iconOnly: true,
     multiplier: 1.25,
   },
   {
     name: 'Twilight',
     type: 'boolean',
+    icon: 'twilight.png',
+    iconOnly: true,
     multiplier: 1.5, // This is wrong, needs to account for how many sun/moon cards you have
     character: 'Sciel',
   },
@@ -127,9 +161,13 @@ export var selfBuffs = reactive([
   {
     name: 'Exhausted',
     type: 'boolean',
+    icon: 'exhausted.png',
+    iconOnly: true,
   },
   {
     name: 'Inverted',
     type: 'boolean',
+    icon: 'inverted.png',
+    iconOnly: true,
   },
 ]);

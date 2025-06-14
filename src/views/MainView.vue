@@ -33,18 +33,20 @@ const skillFilter = ref(null);
 
 const visibleLuminas = computed(() => {
   return sortByKey(loadout.luminas
-      .filter(x => !luminaFilter.value
+      .filter(x => (!luminaFilter.value
         || x.name.toLowerCase().includes(luminaFilter.value.toLowerCase())
         || x.description.toLowerCase().includes(luminaFilter.value.toLowerCase()))
-    , x => x[settings.luminaSort.prop], settings.luminaSort.asc);
+        && (!settings.filterFavoriteLuminas || x.favorite))
+    , x => settings.luminaSort.map(sort => x[sort.prop]), settings.luminaSort[0].asc);
 });
 
 const visibleWeapons = computed(() => {
   return sortByKey(loadout.weapons
-      .filter(x => !weaponFilter.value
+      .filter(x => (!weaponFilter.value
         || x.name.toLowerCase().includes(weaponFilter.value.toLowerCase())
         || x.levels?.some(level => level.description.toLowerCase().includes(weaponFilter.value.toLowerCase())))
-    , x => x[settings.weaponSort.prop], settings.weaponSort.asc);
+        && (!settings.filterFavoriteWeapons || x.favorite))
+    , x => settings.weaponSort.map(sort => x[sort.prop]), settings.weaponSort[0].asc);
 });
 
 const isNarrow = computed(() => {
@@ -170,15 +172,31 @@ onUnmounted(() => {
           </span>
         </div>
         <div class="filters">
-          <SortPicker v-if="activeTab  == 'Luminas'" v-model="settings.luminaSort" type="lumina" />
-          <SortPicker v-if="activeTab  == 'Weapons'" v-model="settings.weaponSort" type="weapon" />
-          <SortPicker v-if="activeTab  == 'Skills'" v-model="settings.skillSort" type="skill" />
+          <img v-if="activeTab  == 'Luminas'" class="icon-button" v-tooltip:top="'Filter Favorites'" 
+            :src="`/images/star${settings.filterFavoriteLuminas ? '-fill': ''}.svg`"
+           @click="settings.filterFavoriteLuminas = !settings.filterFavoriteLuminas"/>
+
+          <img v-if="activeTab  == 'Weapons'" class="icon-button" v-tooltip:top="'Filter Favorites'" 
+            :src="`/images/star${settings.filterFavoriteWeapons ? '-fill': ''}.svg`"
+            @click="settings.filterFavoriteWeapons = !settings.filterFavoriteWeapons"/>
+
+          <img v-if="activeTab  == 'Skills'" class="icon-button" v-tooltip:top="'Filter Favorites'" 
+            :src="`/images/star${settings.filterFavoriteSkills ? '-fill': ''}.svg`"
+            @click="settings.filterFavoriteSkills = !settings.filterFavoriteSkills"/>
+
+          <SortPicker v-if="activeTab  == 'Luminas'" v-model="settings.luminaSort[0]" type="lumina" />
+          <SortPicker v-if="activeTab  == 'Weapons'" v-model="settings.weaponSort[0]" type="weapon" />
+          <SortPicker v-if="activeTab  == 'Skills'" v-model="settings.skillSort[0]" type="skill" />
+
           <img v-if="activeTab  == 'Luminas' && luminaFilter" class="icon-button" src="@/assets/x-lg.svg"
             v-tooltip:top="'Clear Filter'" @click="luminaFilter = null"/>
+
           <img v-if="activeTab  == 'Weapons' && weaponFilter" class="icon-button" src="@/assets/x-lg.svg"
             v-tooltip:top="'Clear Filter'" @click="weaponFilter = null"/>
+
           <img v-if="activeTab  == 'Skills' && skillFilter" class="icon-button" src="@/assets/x-lg.svg"
             v-tooltip:top="'Clear Filter'" @click="skillFilter = null"/>
+
           <img src="@/assets/search.svg" class="pe-2 search-icon"/>
           <input v-if="activeTab  == 'Luminas'" type="text" class="form-control search-box" v-model="luminaFilter">
           <input v-if="activeTab  == 'Weapons'" type="text" class="form-control search-box" v-model="weaponFilter">
@@ -208,7 +226,9 @@ onUnmounted(() => {
       <div class="tab-header">
         <h4>Skills</h4>
         <div class="d-flex align-items-center">
-          <SortPicker v-model="settings.skillSort" type="skill" />
+          <img class="icon-button" :src="`/images/star${settings.filterFavoriteSkills ? '-fill': ''}.svg`"
+            v-tooltip:top="'Filter Favorites'" @click="settings.filterFavoriteSkills = !settings.filterFavoriteSkills"/>
+          <SortPicker v-model="settings.skillSort[0]" type="skill" />
           <img src="@/assets/search.svg" class="pe-2 search-icon" />
           <input type="text" class="form-control search-box" v-model="skillFilter">
         </div>

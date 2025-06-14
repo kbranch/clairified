@@ -13,10 +13,11 @@ const props = defineProps(['skillFilter'])
 
 const visibleSkills = computed(() => {
   return sortByKey(loadout.skills
-      .filter(x => !props.skillFilter
+      .filter(x => (!props.skillFilter
         || x.name.toLowerCase().includes(props.skillFilter.toLowerCase())
         || x.description?.toLowerCase().includes(props.skillFilter.toLowerCase()))
-    , x => x[settings.skillSort.prop], settings.skillSort.asc);
+        && (!settings.filterFavoriteSkills || x.favorite))
+    , x => settings.skillSort.map(sort => x[sort.prop]), settings.skillSort[0].asc);
 });
 
 </script>

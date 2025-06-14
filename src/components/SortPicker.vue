@@ -1,5 +1,8 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { useSettingsStore } from '@/stores/settings';
+import { computed } from 'vue';
+
+const settings = useSettingsStore();
 
 const ascIcons = {
   'name': 'sort-alpha-down.svg',
@@ -7,6 +10,7 @@ const ascIcons = {
   'calculatedCost': 'sort-numeric-down.svg',
   'averageDamage': 'sort-down-alt.svg',
   'sortMult': 'sort-down-alt.svg',
+  'favorite': 'star-half.svg',
 };
 
 const descIcons = {
@@ -15,6 +19,7 @@ const descIcons = {
   'calculatedCost': 'sort-numeric-up.svg',
   'averageDamage': 'sort-up-alt.svg',
   'sortMult': 'sort-up-alt.svg',
+  'favorite': 'star-half.svg',
 };
 
 const types = {
@@ -30,12 +35,20 @@ const types = {
     {
       name: 'Multiplier',
       prop: 'sortMult',
+    },
+    {
+      name: 'Favorite',
+      prop: 'favorite',
     }]
   },
   weapon: {
     options: [{
       name: 'Name',
       prop: 'name',
+    },
+    {
+      name: 'Favorite',
+      prop: 'favorite',
     }]
   },
   skill: {
@@ -50,6 +63,10 @@ const types = {
     {
       name: 'Damage',
       prop: 'averageDamage',
+    },
+    {
+      name: 'Favorite',
+      prop: 'favorite',
     }]
   },
 }
@@ -57,7 +74,9 @@ const types = {
 const model = defineModel();
 const props = defineProps(['type']);
 
-const selected = ref(null);
+const selected = computed(() => {
+  return types[props.type]?.options.find(x => x.prop === model.value.prop) || types[props.type]?.options[0];
+});
 
 const options = computed(() => types[props.type]?.options);
 
@@ -65,31 +84,16 @@ const icon = computed(() => {
   return `/images/${model.value.asc ? ascIcons[model.value.prop] : descIcons[model.value.prop]}`;
 });
 
-watch(() => props.type, (value) => {
-  initSelection(value);
-});
-
-function initSelection(type) {
-  selected.value = types[type]?.options.find(x => x.prop === model.value.prop) || types[type]?.options[0];
-}
-
-function setOption(option) {
-  model.value.prop = option.prop;
-  selected.value = option;
-}
-
-initSelection(props.type);
-
 </script>
 
 <template>
 
 <div class="btn-group">
-  <img :src="icon" @click="model.asc = !model.asc" class="icon-button" v-tooltip:top="`Sort by ${selected.name} (${model.asc ? 'Asc' : 'Desc'})`" />
+  <img :src="icon" @click="model.asc = !model.asc" class="icon-button" v-tooltip:top="`Sorting by ${selected.name} (${model.asc ? 'Asc' : 'Desc'})`" />
   <button type="button" class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
   </button>
   <ul class="dropdown-menu">
-    <li v-for="option in options" :key="option.name" @click="setOption(option)">
+    <li v-for="option in options" :key="option.name" @click="settings.sortBy(type, option.prop)">
       <a class="dropdown-item">{{ option.name }}</a>
     </li>
   </ul>

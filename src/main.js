@@ -36,8 +36,20 @@ function compare(a, b) {
   }
 }
 
+// JS defaults to converting arrays to strings when comparing
+function compareArrays(a, b) {
+  for (let i = 0; i < a.length; i++) {
+    const result = compare(a[i], b[i]);
+    if (result !== 0) {
+      return result;
+    }
+  }
+
+  return 0;
+}
+
 export function sortByKey(arr, key, sortAsc = true) {
-  let result = arr.sort((a, b) => compare(key(a), key(b)));
+  let result = arr.sort((a, b) => Array.isArray(key(a)) ? compareArrays(key(a), key(b)) : compare(key(a), key(b)));
   return sortAsc ? result : result.reverse();
 }
 

@@ -231,6 +231,18 @@ export const useLoadoutStore = defineStore('loadout', () => {
     }
   });
 
+  watch(() => settings.favoriteLuminas, () => {
+    updateLuminas();
+  }, { deep: true });
+
+  watch(() => settings.favoriteWeapons, () => {
+    updateWeapons();
+  }, { deep: true });
+
+  watch(() => settings.favoriteSkills, () => {
+    updateSkills();
+  }, { deep: true });
+
   function updateLuminas() {
     allLuminas.forEach(lumina => {
       let mult = DamageCalc.getMultiplier(lumina, selectedMods.value) - 1;
@@ -240,7 +252,8 @@ export const useLoadoutStore = defineStore('loadout', () => {
         additive = 0;
       }
 
-      lumina.sortMult = mult - 1 + additive;
+      lumina.sortMult = Math.round((mult + additive) * 100);
+      lumina.favorite = settings.favoriteLuminas.includes(lumina.name);
     });
   }
 
@@ -251,6 +264,13 @@ export const useLoadoutStore = defineStore('loadout', () => {
         : skill.apCost;
 
       skill.calculatedCost = cost
+      skill.favorite = settings.favoriteSkills.includes(skill.name);
+    });
+  }
+
+  function updateWeapons() {
+    allWeapons.forEach(weapon => {
+      weapon.favorite = settings.favoriteWeapons.includes(weapon.name);
     });
   }
 
@@ -332,6 +352,7 @@ export const useLoadoutStore = defineStore('loadout', () => {
 
     updateLuminas();
     updateSkills();
+    updateWeapons();
   }
 
   function clearSelections() {

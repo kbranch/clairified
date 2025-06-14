@@ -5,12 +5,26 @@ import { spoilerLevels } from '@/consts.js';
 export const useSettingsStore = defineStore('settings', () => {
   const capDamage = ref(true);
   const spoilerLevel = ref(spoilerLevels[0]);
-  const luminaSort = ref({})
-  const weaponSort = ref({});
-  const skillSort = ref({});
+  const luminaSort = ref([{}])
+  const weaponSort = ref([{}]);
+  const skillSort = ref([{}]);
   const favoriteWeapons = ref([]);
   const favoriteSkills = ref([]);
   const favoriteLuminas = ref([]);
+  const filterFavoriteWeapons = ref(false);
+  const filterFavoriteSkills = ref(false);
+  const filterFavoriteLuminas = ref(false);
+
+  const sortTypes = {
+    lumina: luminaSort,
+    weapon: weaponSort,
+    skill: skillSort,
+  };
+  const favoriteTypes = {
+    weapon: favoriteWeapons,
+    skill: favoriteSkills,
+    lumina: favoriteLuminas,
+  }
 
   const allSettings = computed(() => {
     return {
@@ -22,8 +36,35 @@ export const useSettingsStore = defineStore('settings', () => {
       favoriteWeapons: favoriteWeapons.value,
       favoriteSkills: favoriteSkills.value,
       favoriteLuminas: favoriteLuminas.value,
+      filterFavoriteWeapons: filterFavoriteWeapons.value,
+      filterFavoriteSkills: filterFavoriteSkills.value,
+      filterFavoriteLuminas: filterFavoriteLuminas.value,
     };
   });
+
+  function sortBy(type, prop) {
+    const sort = sortTypes[type];
+    const item = sort.value.find(x => x.prop === prop);
+
+    if (item) {
+      sort.value = sort.value.filter(x => x !== item);
+      sort.value.unshift(item)
+    }
+    else {
+      sort.value.unshift({ prop, asc: true });
+    }
+  }
+
+  function toggleFavorite(type, item) {
+    const favorite = favoriteTypes[type];
+
+    if (favorite.value.includes(item.name)) {
+      favorite.value = favorite.value.filter(x => x !== item.name);
+    } 
+    else {
+      favorite.value.push(item.name);
+    }
+  }
 
   watch(() => allSettings.value, (newSettings) => {
     localStorage.setItem('settings', JSON.stringify(newSettings));
@@ -36,12 +77,27 @@ export const useSettingsStore = defineStore('settings', () => {
       const settings = JSON.parse(savedSettings);
       capDamage.value = settings.capDamage ?? true;
       spoilerLevel.value = settings.spoilerLevel ?? spoilerLevels[0];
-      luminaSort.value = settings.luminaSort ?? {prop: 'name', asc: true};
-      weaponSort.value = settings.weaponSort ?? {prop: 'name', asc: true};
-      skillSort.value = settings.skillSort ?? {prop: 'name', asc: true};
+      luminaSort.value = settings.luminaSort;
+      weaponSort.value = settings.weaponSort;
+      skillSort.value = settings.skillSort;
       favoriteWeapons.value = settings.favoriteWeapons ?? [];
       favoriteSkills.value = settings.favoriteSkills ?? [];
       favoriteLuminas.value = settings.favoriteLuminas ?? [];
+      filterFavoriteWeapons.value = settings.filterFavoriteWeapons ?? false;
+      filterFavoriteSkills.value = settings.filterFavoriteSkills ?? false;
+      filterFavoriteLuminas.value = settings.filterFavoriteLuminas ?? false;
+    }
+
+    if (!Array.isArray(luminaSort.value)) {
+      luminaSort.value = [{ prop: 'name', asc: true }];
+    }
+
+    if (!Array.isArray(weaponSort.value)) {
+      weaponSort.value = [{ prop: 'name', asc: true }];
+    }
+
+    if (!Array.isArray(skillSort.value)) {
+      skillSort.value = [{ prop: 'name', asc: true }];
     }
   }
 
@@ -49,5 +105,6 @@ export const useSettingsStore = defineStore('settings', () => {
 
   return {
     capDamage, spoilerLevel, luminaSort, weaponSort, skillSort, favoriteWeapons, favoriteSkills, favoriteLuminas,
+    filterFavoriteLuminas, filterFavoriteSkills, filterFavoriteWeapons, sortBy, toggleFavorite,
   };
 });

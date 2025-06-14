@@ -1,11 +1,18 @@
 <script setup>
 import { upperFirst } from '@/main';
 import { useLoadoutStore } from '@/stores/loadout';
+import { useSettingsStore } from '@/stores/settings';
+import { computed } from 'vue';
 
 const loadout = useLoadoutStore();
+const settings = useSettingsStore();
 
-defineProps(['weapon']);
+const props = defineProps(['weapon']);
 defineEmits(['clicked', 'levelClicked']);
+
+const favoriteIcon = computed(() => {
+  return `/images/star${props.weapon.favorite ? '-fill' : ''}.svg`;
+});
 
 </script>
 
@@ -14,8 +21,13 @@ defineEmits(['clicked', 'levelClicked']);
 <div class="box" :class="{ 'active': weapon.selected }" @click="$emit('clicked', weapon)">
   <div class="header">
     <h5>{{ weapon.name }}</h5>
-    <img :src="loadout.elementUrl(weapon.element)" class="element-icon"
-      v-tooltip:top="upperFirst(loadout.resolveElement(weapon.element))" />
+    <div>
+      <img :src="favoriteIcon" class="icon-button" @click.stop="settings.toggleFavorite('weapon', weapon)"
+        v-tooltip:top="'Favorite'" />
+
+      <img :src="loadout.elementUrl(weapon.element)" class="element-icon"
+        v-tooltip:top="upperFirst(loadout.resolveElement(weapon.element))" />
+    </div>
   </div>
 
   <div class="levels">

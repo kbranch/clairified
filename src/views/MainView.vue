@@ -99,7 +99,7 @@ onUnmounted(() => {
       <h1>Clairified</h1>
     </div>
 
-    <div class="col d-flex justify-content-end align-items-center">
+    <div class="col-auto d-flex justify-content-end align-items-center">
       <label for="damageCap" class="mx-2">Damage Cap</label>
       <select id="damageCap" v-model="settings.damageCap" class="form-select">
         <option value="9999"> {{ (9999).toLocaleString() }} </option>

@@ -1,11 +1,11 @@
 import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { sortByKey } from '@/main';
-import { characters as allCharacters, gimmicks } from '@/consts.js';
-import { skills as allSkills } from '@/skills.js';
-import { luminas as allLuminas } from '@/luminas.js';
-import { weapons as allWeapons } from '@/weapons.js';
-import { targetBuffs as allTargetBuffs, selfBuffs as allSelfBuffs } from '@/buffs.js';
+import { characters as allCharacters, gimmicks } from '@/data/consts.js';
+import { skills as allSkills } from '@/data/skills.js';
+import { luminas as allLuminas } from '@/data/luminas.js';
+import { weapons as allWeapons } from '@/data/weapons.js';
+import { targetBuffs as allTargetBuffs, selfBuffs as allSelfBuffs } from '@/data/buffs.js';
 import { useSettingsStore } from './settings';
 import { DamageCalc } from '@/damageCalc';
 

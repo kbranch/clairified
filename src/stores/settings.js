@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
-import { spoilerLevels } from '@/consts.js';
+import { spoilerLevels } from '@/data/consts.js';
 
 export const useSettingsStore = defineStore('settings', () => {
   const damageCap = ref(9999);

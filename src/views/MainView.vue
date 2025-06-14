@@ -3,7 +3,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'; 
 import LuminaBox from '@/components/LuminaBox.vue';
 import WeaponBox from '@/components/WeaponBox.vue';
-import { spoilerLevels } from '@/consts.js';
+import { spoilerLevels } from '@/data/consts.js';
 import { useLoadoutStore } from '@/stores/loadout';
 import BuffGroups from '@/components/BuffGroups.vue';
 import { sortByKey, sum } from '@/main';

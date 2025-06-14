@@ -13,7 +13,7 @@ Start by entering your character's total Attack Power and Critical Rate. This in
 
 Also select which buffs are active (e.g. Powerful, Defenceless, active Stains, etc.), both on your character and on the enemy (target).
 
-![](/images/character-stats.png)
+![](/public/images/character-stats.png)
 
 ###### 2) Select Luminas and a weapon
 

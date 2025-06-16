@@ -97,6 +97,8 @@ onUnmounted(() => {
   <div class="row">
     <div class="col d-flex justify-content-start align-items-center pt-2">
       <h1>Clairified</h1>
+      <img src="/images/info-circle.svg" class="header-icon ms-2 mb-2" v-tooltip:top="'About Clairified'"
+        data-bs-toggle="modal" data-bs-target="#aboutModal" />
     </div>
 
     <div class="col-auto d-flex justify-content-end align-items-center">
@@ -114,8 +116,6 @@ onUnmounted(() => {
           {{ level.name }}
         </option>
       </select>
-      <img src="/images/info-square.svg" class="header-icon ms-2" v-tooltip:top="'About Clairified'"
-        data-bs-toggle="modal" data-bs-target="#aboutModal" />
     </div>
   </div>
 
@@ -266,6 +266,13 @@ onUnmounted(() => {
 </template>
 
 <style>
+
+@media (max-width: 576px) {
+  .modal-dialog {
+    max-width: 85%;
+    margin: auto;
+  }
+}
 
 .icon-button {
   height: 32px;

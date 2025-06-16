@@ -26,16 +26,30 @@ onMounted(() => {
       </div>
       <div class="modal-body">
         <p id="aboutBody">
-          Clairified is a damage calculator for <a href="https://www.expedition33.com/">Expedition 33: Clair Obscur</a>.
+          Clairified is a damage calculator for <a href="https://www.expedition33.com/">Expedition 33: Clair Obscur</a>. Thanks to <a href="https://www.nexusmods.com/clairobscurexpedition33/mods/134">Kimjsd's Enhanced Descriptions</a> mod for the underlying data.
         </p>
-        <p>
-          Source code is available on <a href="https://github.com/kbranch/clairified">GitHub</a>, which is also a great place for bug reports.
-          <strong>Contributions are welcome!</strong> Adding skills, luminas, weapons, buffs, and even characters can be done with little technical experience.
-        </p>
-        <p>
-          <strong>Note: This is currently early in development.</strong> A lot of data is missing, and most of the math has not been validated.
-          If you understand how the game does its calculations, your help would be much appreciated!
-        </p>
+
+        <div class="accordion" id="moreInfoAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#moreInfoCollapse" aria-controls="moreInfoCollapse">
+                More Information
+              </button>
+            </h2>
+            <div id="moreInfoCollapse" class="accordion-collapse collapse" data-bs-parent="#moreInfoAccordion">
+              <div class="accordion-body">
+                <p>
+                  Source code is available on <a href="https://github.com/kbranch/clairified">GitHub</a>, which is also a great place for bug reports.
+                  <strong>Contributions are welcome!</strong> Adding skills, luminas, weapons, buffs, and even characters can be done with little technical experience.
+                </p>
+                <p>
+                  <strong>Note: This is currently early in development.</strong> A lot of data is missing, and most of the math has not been validated.
+                  If you understand how the game does its calculations, your help would be much appreciated!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <h5 class="pt-3">Getting Started</h5>
         <h6 class="pt-2">1) Enter stats and buffs</h6>

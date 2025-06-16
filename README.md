@@ -1,6 +1,6 @@
 # Clairified
 
-Clairified is a damage calculator for [Expedition 33: Clair Obscur](https://www.expedition33.com/).
+Clairified is a damage calculator for [Expedition 33: Clair Obscur](https://www.expedition33.com/). Thanks to [Kimjsd's Enhanced Descriptions](https://www.nexusmods.com/clairobscurexpedition33/mods/134) mod for the underlying data.
 
 Source code is available on [GitHub](https://github.com/kbranch/clairified), which is also a great place for bug reports. **Contributions are welcome!** Adding skills, luminas, weapons, buffs, and even characters can be done with little technical experience.
 

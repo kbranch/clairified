@@ -63,6 +63,14 @@ export var gimmicks = reactive([
     ],
   },
   {
+    name: 'Charge',
+    character: 'Gustave',
+    type: 'counts',
+    options: [
+      'Charge',
+    ],
+  },
+  {
     name: 'Stance',
     character: 'Maelle',
     type: 'comboBox',

@@ -103,7 +103,7 @@ export const useLoadoutStore = defineStore('loadout', () => {
       gimmick.value.selected.type = 'gimmick';
       mods.push(gimmick.value.selected);
     }
-    else if (gimmick.value?.type == 'counts') {
+    else if (gimmick.value?.type == 'counts' && gimmick.value.counts) {
       for (const [option, count] of Object.entries(gimmick.value.counts)) {
         if (count > 0) {
           mods.push({
@@ -391,6 +391,20 @@ export const useLoadoutStore = defineStore('loadout', () => {
     }
   }
 
+  function initGimmicks() {
+    for (const gimmick of gimmicks) {
+      if (gimmick.type == 'comboBox') {
+        gimmick.selected = gimmick.options[0];
+      }
+      else if (gimmick.type == 'counts') {
+        gimmick.counts = {};
+        for (const option of gimmick.options) {
+          gimmick.counts[option] = 0;
+        }
+      }
+    }
+  }
+
   function saveSelectionsToStorage() {
     localStorage.setItem('selections', JSON.stringify(selections.value));
   }
@@ -417,6 +431,8 @@ export const useLoadoutStore = defineStore('loadout', () => {
       weaknesses.value[element] = 'normal';
     }
   }
+
+  initGimmicks();
 
   for (const buff of allSelfBuffs.concat(allTargetBuffs)) {
     initMod(buff);

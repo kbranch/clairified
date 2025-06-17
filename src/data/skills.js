@@ -32,10 +32,23 @@ export var skills = reactive([
       {
         count: 1,
         element: 'weapon',
+        multiplier: 2.5,
+      },
+    ],
+    apCost: 0,
+  },
+  {
+    name: 'Gradient Counter',
+    isSkill: false,
+    hits: [
+      {
+        count: 1,
+        element: 'weapon',
         multiplier: 5.95,
       },
     ],
     apCost: 0,
+    spoilerLevel: 3,
   },
   {
     name: 'Percée',
@@ -1444,4 +1457,115 @@ export var skills = reactive([
       Failure: 1,
     },
   },
+  {
+    name: 'Lumière Assault',
+    character: 'Gustave',
+    description: '25% damage. Uses weapon\'s element. Critical hits generate 1 additional Charge.',
+    apCost: 3,
+    hits: [
+      {
+        count: 5,
+        element: 'weapon',
+        multiplier: 0.25,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Overcharge',
+    character: 'Gustave',
+    description: '150% Lightning damage. Can Stun. Deals 20% more damage for each Charge. Deals 25% more damage when fully Charged. Resets Charges.',
+    apCost: 4,
+    hits: [
+      {
+        count: 1,
+        element: 'lightning',
+        multiplier: (mods) => {
+          const chargeCount = mods.byName('Charge')?.count ?? 0;
+          return 1.5 * (1 + chargeCount * 0.2) * (chargeCount == 10 ? 1.25 : 1);
+        },
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Marking Shot',
+    character: 'Gustave',
+    description: '100% Lightning damage. Applies Mark on hit.',
+    apCost: 2,
+    hits: [
+      {
+        count: 1,
+        element: 'lightning',
+        multiplier: 1,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'From Fire',
+    character: 'Gustave',
+    description: '62.5% damage. Uses weapon\'s element. Heals 20% Health if target Burns.',
+    apCost: 4,
+    hits: [
+      {
+        count: 3,
+        element: 'weapon',
+        multiplier: 0.625,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Shatter',
+    character: 'Gustave',
+    description: '175% Lightning damage to all enemies. Can Stun. Fully Charged on Stun',
+    apCost: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'lightning',
+        multiplier: 1.75,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Strike Storm',
+    character: 'Gustave',
+    description: '70% damage. Uses weapon\'s element. Critical Hits generate 2 additional Charges.',
+    apCost: 7,
+    hits: [
+      {
+        count: 6,
+        element: 'weapon',
+        multiplier: 0.7,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  }
 ])

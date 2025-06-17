@@ -915,6 +915,12 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Cruleram',
+    character: 'Gustave',
+    element: 'ice',
+    levels: [],
+  },
+  {
     name: 'Danseso',
     character: 'Verso',
     element: 'fire',
@@ -951,6 +957,12 @@ export var weapons = reactive([
         description: 'Start battle with Powerful. Lasts until Rank changes.',
       },
     ],
+  },
+  {
+    name: 'Delaram',
+    character: 'Gustave',
+    element: 'light',
+    levels: [],
   },
   {
     name: 'Demonam',
@@ -1049,6 +1061,12 @@ export var weapons = reactive([
         description: 'Parrying gives 2 Perfection instead of 1',
       },
     ],
+  },
+  {
+    name: 'Lanceram',
+    character: 'Gustave',
+    element: 'physical',
+    levels: [],
   },
   {
     name: 'Noahram',
@@ -1197,5 +1215,11 @@ export var weapons = reactive([
         description: '+1 AP on Mask change',
       },
     ],
-  }
+  },
+  {
+    name: 'Noahram',
+    character: 'Gustave',
+    element: 'physical',
+    levels: [],
+  },
 ]);

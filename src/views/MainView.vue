@@ -122,7 +122,7 @@ onUnmounted(() => {
   <ul class="nav nav-pills">
     <li v-for="character in loadout.characters" :key="character.name" class="nav-item">
       <a class="nav-link" :class="{ 'active': character.name == loadout.character.name }" aria-current="page" href="#"
-        @click="loadout.character = character">
+        @click="() => { if (character.name != '???') { loadout.character = character } }">
         {{ character.name }}
       </a>
     </li>

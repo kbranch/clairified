@@ -22,7 +22,13 @@ export const useLoadoutStore = defineStore('loadout', () => {
 
   const selections = ref([]);
 
-  const characters = computed(() => allCharacters.filter(x => (x.spoilerLevel ?? 0) <= settings.spoilerLevel.level));
+  const characters = computed (() => {
+    return allCharacters.map(x => {
+      return (x.spoilerLevel ?? 0) <= settings.spoilerLevel.level ? x : {
+        name: '???',
+      }
+    });
+  });
 
   const weaknesses = ref({});
 

@@ -237,6 +237,17 @@ export const useLoadoutStore = defineStore('loadout', () => {
     }
   });
 
+  watch(selectedMods, (newMods) => {
+    newMods.filter(x => x.hitDuration)
+      .forEach(x => {
+        x.duration = x.hitDuration;
+
+        if (typeof x.duration === 'function') {
+          x.duration = DamageCalc.resolveFunction(x.duration, newMods);
+        }
+    });
+  });
+
   watch(() => settings.favoriteLuminas, () => {
     updateLuminas();
   }, { deep: true });

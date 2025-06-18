@@ -31,7 +31,11 @@ export class DamageCalc {
 
     for (let i = 0; i < DamageCalc.hitCount(hit, combinedMods, this.skill); i++) {
       let damage = this.loadout.baseAttackPower;
-      let hitMods = combinedMods.filter(x => !x.hitDuration || x.hitDuration > hit.previousHits + i);
+      let hitMods = combinedMods.filter(x => {
+        return !x.duration
+          || x.duration > hit.previousHits + i
+          || (hit.leaves ?? []).includes(x.name)
+      });
 
       hitMods.push(hit);
 

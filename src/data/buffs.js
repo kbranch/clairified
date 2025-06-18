@@ -47,7 +47,7 @@ export var targetBuffs = reactive([
     iconOnly: true,
     description: 'The next hit deals 50% more damage.',
     multiplier: 1.5,
-    hitDuration: 1,
+    hitDuration: (mods) => mods.byName('Double Mark') ? 2 : 1,
   },
   {
     name: 'Defenceless',
@@ -55,7 +55,7 @@ export var targetBuffs = reactive([
     icon: 'defenceless.png',
     iconOnly: true,
     description: 'Defenceless increases the damage received by the target by 25%.',
-    multiplier: 1.25,
+    multiplier: (mods) => mods.byName('Greater Defenceless') ? 1.35 : 1.25,
   },
   {
     name: 'Foretell',
@@ -118,7 +118,7 @@ export var selfBuffs = reactive([
     type: 'boolean',
     icon: 'powerful.png',
     iconOnly: true,
-    multiplier: 1.25,
+    multiplier: (mods) => mods.byName('Greater Powerful') ? 1.35 : 1.25,
   },
   {
     name: 'Twilight',

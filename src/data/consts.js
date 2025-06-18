@@ -21,6 +21,10 @@ export var spoilerLevels = reactive([
     level: 4,
     name: 'After Monoco\'s Station',
   },
+  {
+    level: 5,
+    name: 'Start of Act 3',
+  },
 ]);
 
 export var characters = reactive([

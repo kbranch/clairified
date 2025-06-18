@@ -52,7 +52,13 @@ export var luminas = reactive([
     name: 'Augmented Counter I',
     description: '25% increased Counterattack damage',
     cost: 3,
-    additiveMultiplier: (mods, skill) => skill.name == 'Counterattack' ? 0.5 : 0,
+    additiveMultiplier: (mods, skill) => ['Counterattack', 'Gradient Counter'].includes(skill.name) ? 0.25 : 0,
+  },
+  {
+    name: 'Augmented Counter II',
+    description: '50% increased Counterattack damage',
+    cost: 5,
+    additiveMultiplier: (mods, skill) => ['Counterattack', 'Gradient Counter'].includes(skill.name) ? 0.5 : 0,
   },
   // {
   //   name: 'Breaker',
@@ -110,6 +116,27 @@ export var luminas = reactive([
     description: '25% increased Critical Chance on Defenceless enemies',
     cost: 5,
     crit: (mods) => mods.byName('Defenceless') ? 25 : 0,
+  },
+  {
+    name: 'Double Mark',
+    description: 'Mark requires one more hit to be removed',
+    cost: 20,
+  },
+  {
+    name: 'Greater Defenceless',
+    description: '+15% to Defenceless damage amplification',
+    cost: 15,
+  },
+  {
+    name: 'Greater Powerful',
+    description: '+15% to Powerful damage increase',
+    cost: 10,
+  },
+  {
+    name: 'Powered Attack',
+    description: 'On every damage dealt, try to consume 1 AP. If successful, increase damage by 20%.',
+    cost: 10,
+    additiveMultiplier: 0.2,
   },
   {
     name: 'Critical Moment',

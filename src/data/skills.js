@@ -52,9 +52,10 @@ export var skills = reactive([
   },
   {
     name: 'Percée',
-    description: 'Deals medium single target Physical damage. 1 hit. Increased damage to Marked targets.',
-    icon: 'percée.png',
     character: 'Maelle',
+    icon: 'percée.png',
+    description: '220% Physical damage. Mark: Deals 100% more damage. Virtuose Stance: Costs 2 AP.',
+    apCost: (mods) => (mods.byName('Virtuose') ? 2 : 5),
     hits: [
       {
         count: 1,
@@ -63,7 +64,6 @@ export var skills = reactive([
         additiveMultiplier: (mods) => (mods.byName('Mark') ? 1 : 0),
       },
     ],
-    apCost: (mods) => (mods.byName('Virtuose') ? 2 : 5),
     qte: {
       Perfect: 1.2,
       Success: 1.1,
@@ -71,16 +71,225 @@ export var skills = reactive([
     },
   },
   {
+    name: 'Phantom Strike',
+    character: 'Maelle',
+    description: '70% Void damage to all enemies. On completion, grants +35% Gradient Charge.',
+    apCost: 7,
+    spoilerLevel: 5,
+    hits: [
+      {
+        count: 4,
+        element: 'void',
+        multiplier: 0.7,
+      },
+    ],
+    qte: {
+      Perfect: 1.6786, // Seems odd, need to test
+      Success: 1.3393,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Burning Canvas',
+    character: 'Maelle',
+    description: '40% Void damage. Applies 1 Burn on hit. Deals 10% more damage for each Burn on target, up to 1000%.',
+    apCost: 5,
+    spoilerLevel: 5,
+    hits: [
+      {
+        count: 5,
+        element: 'void',
+        multiplier: (mods) => 0.4 + Math.min(mods.byName('Burn')?.count ?? 0, 100) * 0.1,
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Stendhal',
+    character: 'Maelle',
+    description: '1500% Void damage. Applies Defenceless to Maelle and removes all her Shields (5 turns).',
+    apCost: 8,
+    spoilerLevel: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'void',
+        multiplier: 15,
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    }
+  },
+  {
     name: 'Offensive Switch',
     character: 'Maelle',
+    description: '100% damage. Uses weapon\'s element. Applies Defenceless on hit (3 turns).',
+    apCost: 1,
     hits: [
       {
         count: 1,
         element: 'weapon',
       },
     ],
-    description: "Deals low single target damage and applies Defenceless for 3 turns. Uses weapon's element.",
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Payback',
+    character: 'Maelle',
+    description: '500% Physical damage. Can Stun. Reduced AP cost for each attack parried since last turn.',
+    apCost: 9,
+    hits: [
+      {
+        count: 1,
+        element: 'physical',
+        multiplier: 5,
+      },
+    ],
+    qte: {
+      Perfect: 1.6,
+      Success: 1.3,
+      Failure: 1,
+    }
+  },
+  {
+    name: 'Momentum Strike',
+    character: 'Maelle',
+    description: '350% damage. Uses weapon\'s element. Mark: Deals 100% more damage. Virtuose Stance: Costs 4 AP.',
+    apCost: (mods) => (mods.byName('Virtuose') ? 4 : 7),
+    hits: [
+      {
+        count: 1,
+        element: 'weapon',
+        multiplier: (mods) => mods.byName('Mark') ? 3.5 * 2 : 3.5,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Fencer\'s Flurry',
+    character: 'Maelle',
+    description: '140% damage to all enemies. Uses weapon\'s element. Applies Defenceless on hit (1 turn).',
+    apCost: 4,
+    hits: [
+      {
+        count: 1,
+        element: 'weapon',
+        multiplier: 1.4,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Sword Ballet',
+    character: 'Maelle',
+    description: '75% damage. Uses weapon\'s element. Critical Hits: deal 100% more damage.',
+    apCost: 9,
+    hits: [
+      {
+        count: 5,
+        element: 'weapon',
+        multiplier: (mods) => (mods.byName('Critical Hit') ? 0.75 * 1.33333333 : 0.75), // Needs testing
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Gustave\'s Homage',
+    character: 'Maelle',
+    description: '50% Lightning damage. Deals 100% more damage on last hit. Mark: Deals 50% more damage. Doesn\'t remove Mark.',
+    apCost: 8,
+    hits: [
+      {
+        count: 7,
+        element: 'lightning',
+        multiplier: (mods) => mods.byName('Mark') ? 0.5 * 1.5 : 0.5,
+        leaves: ['Mark'],
+      },
+      {
+        count: 1,
+        element: 'lightning',
+        multiplier: (mods) => mods.byName('Mark') ? 1 * 1.5 : 1,
+        leaves: ['Mark'],
+      }
+    ],
+    qte: {
+      Perfect: 1.6,
+      Success: 1.3,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Revenge',
+    character: 'Maelle',
+    description: '120% Fire damage. Can Stun. Deals 150% more damage for each hit received since the previous turn.',
+    apCost: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'fire',
+        multiplier: 1.2,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Pyrolyse',
+    character: 'Maelle',
+    description: '167% Fire damage. Applies 5 Burn on hit. Offensive Stance: applies 2 more Burn on hit.',
+    apCost: 9,
+    hits: [
+      {
+        count: 3,
+        element: 'fire',
+        multiplier: 1.67,
+      },
+    ],
+    qte: {
+      Perfect: 1.133333,
+      Success: 1.066667,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Virtuose Strike (Gradient)',
+    character: 'Maelle',
+    description: '30% Physical damage',
     apCost: 1,
+    spoilerLevel: 3,
+    hits: [
+      {
+        count: 5,
+        element: 'physical',
+        multiplier: 0.3,
+      },
+    ],
     qte: {
       Perfect: 1.2,
       Success: 1.1,
@@ -90,6 +299,7 @@ export var skills = reactive([
   {
     name: 'Breaking Rules',
     character: 'Maelle',
+    description: '75% Physical damage. Destroys all Shields on hit. Recovers 1 AP per Shield destroyed. If target is Defenceless, play a second turn.',
     hits: [
       {
         count: 2,
@@ -98,7 +308,6 @@ export var skills = reactive([
         breakMultiplier: 0.7,
       },
     ],
-    description: "Deals low single target Physical damage. Destroys all target's Shields. Gains 1 AP per Shield destroyed.If target is Defenceless, play a second turn.",
     apCost: 3,
     qte: {
       Perfect: 1.1,
@@ -109,13 +318,13 @@ export var skills = reactive([
   {
     name: 'Degagement',
     character: 'Maelle',
+    description: '100% Fire damage. Target becomes weak to Fire damage on hit (2 turns).',
     hits: [
       {
         count: 1,
         element: 'fire',
       },
     ],
-    description: 'Deals low single target Fire damage. Target becomes weak to Fire damage for 2 turns.',
     apCost: 2,
     qte: {
       Perfect: 1.2,
@@ -126,14 +335,14 @@ export var skills = reactive([
   {
     name: 'Spark',
     character: 'Maelle',
+    description: '100% Fire damage. Applies 3 Burn on hit. Offensive Stance: Applies 2 more Burn on hit.',
+    apCost: 3,
     hits: [
       {
         count: 1,
         element: 'fire',
       },
     ],
-    description: 'Deals low single target Fire damage. Applies 3 Burn. Offensive Stance: Applies 2 more Burn.',
-    apCost: 3,
     qte: {
       Perfect: 1.4,
       Success: 1.2,
@@ -143,6 +352,8 @@ export var skills = reactive([
   {
     name: 'Combustion',
     character: 'Maelle',
+    description: '80% Physical damage. Deals 40% more damage for each Burn, up to 400%. Consumes up to 10 Burn on completion.',
+    apCost: 4,
     hits: [
       {
         count: 2,
@@ -151,8 +362,6 @@ export var skills = reactive([
         breakMultiplier: 0.7,
       },
     ],
-    description: 'Deals medium single target Physical Damage. Consumes up to 10 Burn for increased damage.',
-    apCost: 4,
     qte: {
       Perfect: 1.2,
       Success: 1.1,
@@ -162,6 +371,8 @@ export var skills = reactive([
   {
     name: 'Fleuret Fury',
     character: 'Maelle',
+    description: '80% Physical damage. Can Stun. If in Virtuose Stance, stay in Virtuose Stance.',
+    apCost: 6,
     hits: [
       {
         count: 3,
@@ -170,9 +381,7 @@ export var skills = reactive([
         breakMultiplier: 0.5,
       },
     ],
-    description: 'Deals high single target Physical damage. If in Virtuose Stance, stay in Virtuose Stance.',
     canBreak: true,
-    apCost: 6,
     qte: {
       Perfect: 1.2,
       Success: 1.1,
@@ -182,6 +391,8 @@ export var skills = reactive([
   {
     name: 'Rain of Fire',
     character: 'Maelle',
+    description: '125% Fire damage. Applies 3 Burn on hit. Defensive Stance: applies 2 more Burn on hit.',
+    apCost: 5,
     hits: [
       {
         count: 2,
@@ -190,8 +401,6 @@ export var skills = reactive([
         breakMultiplier: 0.7,
       },
     ],
-    description: 'Deals medium single target Fire damage. Applies 3 Burn per hit. Defensive Stance: applies 2 more Burn per hit.',
-    apCost: 5,
     qte: {
       Perfect: 1.3,
       Success: 1.15,
@@ -201,14 +410,14 @@ export var skills = reactive([
   {
     name: 'Swift Stride',
     character: 'Maelle',
+    description: '100% Physical damage. Switches to Virtuose Stance if target is Burning on hit. Recovers 0-2 AP.',
+    apCost: 3,
     hits: [
       {
         count: 1,
         element: 'physical',
       },
     ],
-    description: 'Deals low single target Physical damage. Switches to Virtuose Stance if target is Burning. Regains 0 to 2 AP.',
-    apCost: 3,
     qte: {
       Perfect: 1,
       Success: 1,
@@ -441,6 +650,202 @@ export var skills = reactive([
     },
   },
   {
+    name: 'Hell',
+    character: 'Lune',
+    description: '500% Fire damage to all enemies. Deals damage to Lune if failed. Applies 5 Burn on hit. Consumes one Ice, one Earth, and one Lightning stain: Deals 200% more damage.',
+    apCost: 9,
+    hits: [
+      {
+        count: 2,
+        element: 'fire',
+        multiplier: (mods) => (mods.stainsMet({ Ice: 1, Earth: 1, Lightning: 1 }) ? 5 * 3 : 5),
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Terraquake',
+    character: 'Lune',
+    description: '80% Earth damage to all enemies on cast. 150% Earth damage on turn start (3 turns). Grants allies 50% more Break potency while active. Consumes two Lightning stains: Increased duration (5 turns).',
+    apCost: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'earth',
+        multiplier: 0.8,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Terraquake Periodic',
+    character: 'Lune',
+    description: '150% Earth damage on turn start (3 turns). Grants allies 50% more Break potency while active. Consumes two Lightning stains: Increased duration (5 turns).',
+    apCost: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'earth',
+        multiplier: 1.5,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Elemental Trick',
+    character: 'Lune',
+    description: '30% elemental damage. Element cycles through Ice, Fire, Lightning, and Earth. Critical Hits generate the corresponding Stain.',
+    apCost: 3,
+    hits: [
+      {
+        count: 1,
+        element: 'ice',
+        multiplier: 0.3,
+      },
+      {
+        count: 1,
+        element: 'fire',
+        multiplier: 0.3,
+      },
+      {
+        count: 1,
+        element: 'lightning',
+        multiplier: 0.3,
+      },
+      {
+        count: 1,
+        element: 'earth',
+        multiplier: 0.3,
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Crippling Tsunami',
+    character: 'Lune',
+    description: '250% Ice damage to all enemies. Applies Slow on hit (3 turns). Consumes one Earth, one Lightning, and one Fire stain: Deals 400% more damage.',
+    apCost: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'ice',
+        multiplier: (mods) => (mods.stainsMet({ Earth: 1, Lightning: 1, Fire: 1 }) ? 2.5 * 5 : 2.5),
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Typhoon',
+    character: 'Lune',
+    description: '120% Ice damage to all enemies on cast. 250% Ice damage on turn start (3 turns). Heals all allies by 20% when triggered or cast. Consumes two Earth stains: Increased duration (5 turns).',
+    apCost: 8,
+    hits: [
+      {
+        count: 1,
+        element: 'ice',
+        multiplier: 1.2,
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Typhoon Periodic',
+    character: 'Lune',
+    description: '250% Ice damage on turn start (3 turns). Heals all allies by 20% when triggered. Consumes two Earth stains: Increased duration (5 turns).',
+    apCost: 8,
+    hits: [
+      {
+        count: 1,
+        element: 'ice',
+        multiplier: 2.5,
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Elemental Genesis',
+    character: 'Lune',
+    description: '300% damage to all enemies. Each hit deals damage in a random element. Can only be cast with one Lightning Stain, one Earth Stain, one Fire Stain, and one Ice Stain.',
+    apCost: 4,
+    hits: [
+      {
+        count: 8,
+        element: 'weapon',
+        multiplier: 3,
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Storm Caller',
+    character: 'Lune',
+    description: 'Applies Stormcaller to all enemies (3 turns): 60% Lightning damage at the end of their turn. 20% Lightning damage on being hit. Consumes two Fire stains: Double thunder strikes on turn end.',
+    apCost: 6,
+    hits: [
+      {
+        count: 1,
+        element: 'lightning',
+        multiplier: 0.6,
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Tremor (Gradient)',
+    character: 'Lune',
+    description: '500% Earth damage to all enemies. Removes all enemy Shields on cast.',
+    apCost: 1,
+    spoilerLevel: 3,
+    hits: [
+      {
+        count: 1,
+        element: 'earth',
+        multiplier: 5,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
     name: 'Assault Zero',
     character: 'Verso',
     description: "25% damage. Uses weapon's element. Critical Hits generate 1 additional Perfection. Rank B: Deals 100% more damage.",
@@ -455,6 +860,170 @@ export var skills = reactive([
     qte: {
       Perfect: 1.24,
       Success: 1.12,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Steeled Strike',
+    character: 'Verso',
+    description: 'After 1 turn, deals 50% Physical damage. Interrupted if any damage taken. Rank S: Deals 150% more damage.',
+    apCost: 9,
+    hits: [
+      {
+        count: 1,
+        element: 'physical',
+        multiplier: (mods) => (mods.byName('S') ? 0.5 * 2.5 : 0.5),
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Radiant Slash',
+    character: 'Verso',
+    description: '70% Light damage to all enemies. Can Stun. Rank C: Deals 50% more damage.',
+    apCost: 2,
+    hits: [
+      {
+        count: 1,
+        element: 'light',
+        multiplier: (mods) => (mods.byName('C') ? 0.7 * 1.5 : 0.7),
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Light Holder',
+    character: 'Verso',
+    description: '30% Light damage. Interrupted if failed. Increases Rank by one on completion. Rank A: Recovers 2 AP.',
+    apCost: 4,
+    hits: [
+      {
+        count: 5,
+        element: 'light',
+        multiplier: 0.3,
+      },
+    ],
+    qte: {
+      Perfect: 1.32,
+      Success: 1.16,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'End Bringer',
+    character: 'Verso',
+    description: '120% Physical damage. Deals 200% more damage if target is Stunned. Rank A: Can reapply Stun.',
+    apCost: 9,
+    hits: [
+      {
+        count: 6,
+        element: 'physical',
+        multiplier: (mods) => (mods.byName('Stunned') ? 1.2 * 3 : 1.2),
+      },
+    ],
+    qte: {
+      Perfect: 1.166667,
+      Success: 1.083333,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Ascending Assault First Use',
+    character: 'Verso',
+    description: '250% damage. Uses weapon\'s element. Deals 30% more damage for each previous cast, up to 150%. Rank S: Costs 2 AP.',
+    apCost: (mods) => (mods.byName('S') ? 2 : 5),
+    hits: [
+      {
+        count: 1,
+        element: 'weapon',
+        multiplier: 2.5,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Ascending Assault 6+ Uses',
+    character: 'Verso',
+    description: '250% damage. Uses weapon\'s element. Deals 30% more damage for each previous cast, up to 150%. Rank S: Costs 2 AP.',
+    apCost: (mods) => (mods.byName('S') ? 2 : 5),
+    hits: [
+      {
+        count: 1,
+        element: 'weapon',
+        multiplier: 2.5 * 2.5,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Speed Burst',
+    character: 'Verso',
+    description: '50% Light damage. Damage increased by Speed difference with target, up to 100% more. Rank C: Deals 100% more damage.',
+    apCost: 6,
+    hits: [
+      {
+        count: 5,
+        element: 'light',
+        multiplier: 0.5,
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Sabotage (Gradient)',
+    character: 'Verso',
+    description: '300% Physical damage to all enemies. Applies Mark on hit.',
+    apCost: 1,
+    spoilerLevel: 3,
+    hits: [
+      {
+        count: 1,
+        element: 'physical',
+        multiplier: 3,
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Striker (Gradient)',
+    character: 'Verso',
+    description: '1000% Physical damage. Can Stun.',
+    apCost: 2,
+    spoilerLevel: 3,
+    hits: [
+      {
+        count: 1,
+        element: 'physical',
+        multiplier: 10,
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -530,6 +1099,24 @@ export var skills = reactive([
     qte: {
       Perfect: 1.2,
       Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Strike Storm',
+    character: 'Verso',
+    description: '70% damage. Uses weapon\'s element. Critical Hits generate 2 additional Perfection. Rank C: Deals 100% more damage.',
+    apCost: 7,
+    hits: [
+      {
+        count: 5,
+        element: 'weapon',
+        multiplier: (mods) => (mods.byName('C') ? 0.7 * 2 : 0.7),
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -669,6 +1256,61 @@ export var skills = reactive([
     qte: {
       Perfect: 1,
       Success: 1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Clair Enfeeble',
+    character: 'Monoco',
+    description: '175% Light damage to all enemies. Applies Powerless on hit (3 turns). Balanced Mask: Deals 200% more damage.',
+    apCost: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'light',
+        multiplier: (mods) => (mods.byName('Balanced') ? 1.75 * 3 : 1.75),
+      },
+    ],
+    qte: {
+      Perfect: 1.1666667,
+      Success: 1.0833333,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Obscur Sword',
+    character: 'Monoco',
+    description: '60% Dark damage. Deals 100% more damage against Powerless targets. Heavy Mask: Deals 200% more damage.',
+    apCost: 6,
+    hits: [
+      {
+        count: 5,
+        element: 'dark',
+        multiplier: (mods) => (mods.byName('Heavy') ? 0.6 * 3 : 0.6),
+      },
+    ],
+    qte: {
+      Perfect: 1.1666667,
+      Success: 1.0833333,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Mighty Strike (Gradient)',
+    character: 'Monoco',
+    description: '400% damage. Uses weapon\'s element. Deals 100% more damage if target is Stunned. Switch to Almighty Mask.',
+    apCost: 1,
+    spoilerLevel: 3,
+    hits: [
+      {
+        count: 2,
+        element: 'weapon',
+        multiplier: (mods) => (mods.byName('Stunned') ? 4 * 2 : 4),
+      },
+    ],
+    qte: {
+      Perfect: 2.4, // Can't be right, needs testing
+      Success: 1.7,
       Failure: 1,
     },
   },
@@ -826,7 +1468,7 @@ export var skills = reactive([
         count: 3,
         element: 'physical',
         // Crits are still going to do their 1.5 mod, so (5/3) * 1.5 gets us our 2.5
-        multiplier: (mods) => 0.6 * (mods.byName('Critical Hit') ? 5 / 3 : 1) * (mods.byName('Heavy') ? 3 : 1),
+        multiplier: (mods) => 0.6 * (mods.byName('Critical Hit') ? 2.5 : 1) * (mods.byName('Heavy') ? 3 : 1),
       },
     ],
     qte: {
@@ -888,6 +1530,78 @@ export var skills = reactive([
           const hpMissing = 100 - (mods.byName('Health %')?.count ?? 100)
           return 0.7 * (1 + hpMissing * 0.025) * (mods.byName('Agile') ? 3 : 1)
         },
+      },
+    ],
+    qte: {
+      Perfect: 1.1666667,
+      Success: 1.0833333,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Sakapatate Explosion',
+    character: 'Monoco',
+    description: '50% Lightning damage. Each hit targets a random enemy. Critical Hits trigger an additional hit. Caster Mask: Deals 200% more damage.',
+    apCost: 4,
+    hits: [
+      {
+        count: (mods) => 3 + (mods.byName('Critical Hit') ? 3 : 0),
+        element: 'lightning',
+        multiplier: (mods) => (mods.byName('Caster') ? 0.5 * 3 : 0.5),
+      },
+    ],
+    qte: {
+      Perfect: 1.1666667,
+      Success: 1.0833333,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Sakapatate Fire',
+    character: 'Monoco',
+    description: '150% Fire to all enemies. Applies 3 Burn on hit. Almighty Mask: Deals 400% more damage.',
+    apCost: 9,
+    hits: [
+      {
+        count: 3,
+        element: 'fire',
+        multiplier: (mods) => (mods.byName('Almighty') ? 1.5 * 4 : 1.5),
+      },
+    ],
+    qte: {
+      Perfect: 1.166667,
+      Success: 1.083333,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Sakapatate Estoc',
+    character: 'Monoco',
+    description: '150% Lightning damage. Deals 500% more damage if target is Stunned. Balanced Mask: Deals 200% more damage.',
+    apCost: 3,
+    hits: [
+      {
+        count: 1,
+        element: 'lightning',
+        multiplier: (mods) => (mods.byName('Stunned') ? 1.5 * 6 : 1.5) * (mods.byName('Balanced') ? 3 : 1),
+      },
+    ],
+    qte: {
+      Perfect: 1.1666667,
+      Success: 1.0833333,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Lancelier Impale',
+    character: 'Monoco',
+    description: '120% Ice damage. Applies Slow on hit (3 turns). Agile mask: Deals 200% more damage.',
+    apCost: 2,
+    hits: [
+      {
+        count: 1,
+        element: 'ice',
+        multiplier: (mods) => (mods.byName('Agile') ? 1.2 * 3 : 1.2),
       },
     ],
     qte: {
@@ -1059,6 +1773,24 @@ export var skills = reactive([
     },
   },
   {
+    name: 'Sakapatate Slam',
+    character: 'Monoco',
+    description: '300% Physical damage to all enemies. Mark: Deals 100% more damage. Heavy Mask: Deals 200% more damage.',
+    apCost: 7,
+    hits: [
+      {
+        count: 1,
+        element: 'physical',
+        multiplier: (mods) => (mods.byName('Mark') ? 3 * 2 : 3) * (mods.byName('Heavy') ? 3 : 1),
+      },
+    ],
+    qte: {
+      Perfect: 1.166667,
+      Success: 1.083333,
+      Failure: 1,
+    },
+  },
+  {
     name: 'Portier Crash',
     character: 'Monoco',
     description: '500% Physical damage to all enemies. Heavy Mask: Deals 200% more damage.',
@@ -1186,6 +1918,105 @@ export var skills = reactive([
     },
   },
   {
+    name: 'Plentiful Harvest',
+    character: 'Sciel',
+    description: '100% Physical damage. On completion, consumes all Foretell to recover 1 AP to an ally per stack.',
+    apCost: 4,
+    hits: [
+      {
+        count: 2,
+        element: 'physical',
+        multiplier: 1,
+        special: 'Moon',
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Our Sacrifice',
+    character: 'Sciel',
+    description: '200% Dark damage to all enemies. Sets other allies\' Health to 1. Deals 1.5% more damage for each HP% lost this way. Consumes all Foretell to deal 30% more damage per stack.',
+    apCost: 4,
+    hits: [
+      {
+        count: 1,
+        element: 'dark',
+        multiplier: (mods) => {
+          const hpLost = ((mods.byName('Health %')?.count ?? 100) - 1) * 3; // Assume three characters lose the same HP
+          const foretell = mods.byName('Foretell')?.count ?? 0;
+          return 2 * (1 + hpLost * 0.015) * (1 + 0.3 * foretell);
+        },
+        special: 'Moon',
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Dark Wave',
+    character: 'Sciel',
+    description: '100% dark damage to all enemies. Deals 25% more damage for each Foretell. Consumes all Foretell on completion.',
+    apCost: 6,
+    hits: [
+      {
+        count: 3,
+        element: 'dark',
+        multiplier: (mods) => 1 * (1 + 0.25 * (mods.byName('Foretell')?.count ?? 0)),
+        special: 'Moon',
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Final Path',
+    character: 'Sciel',
+    description: '750% Dark damage. Can Stun. Applies 10 Foretell on hit.',
+    apCost: 9,
+    hits: [
+      {
+        count: 1,
+        element: 'dark',
+        multiplier: 7.5,
+        special: 'Moon',
+      },
+    ],
+    qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Twilight Dance',
+    character: 'Sciel',
+    description: '150% Dark damage. During Twilight, extends its duration by m turn. Deals 25% more damage for each Foretell. Consumes all Foretell on completion.',
+    apCost: 9,
+    hits: [
+      {
+        count: 4,
+        element: 'dark',
+        multiplier: (mods) => 1.5 * (1 + 0.25 * (mods.byName('Foretell')?.count ?? 0)),
+        special: 'Moon',
+      },
+    ],
+    qte: {
+      Perfect: 1.3,
+      Success: 1.15,
+      Failure: 1,
+    },
+  },
+  {
     name: 'Card Weaver',
     character: 'Sciel',
     description: "200% Physical damage. Propagates target's Foretell to all enemies. Play a second turn.",
@@ -1201,6 +2032,65 @@ export var skills = reactive([
     qte: {
       Perfect: 1.2,
       Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Delaying Slash',
+    character: 'Sciel',
+    description: '150% damage. Uses weapon\'s element. Deals 30% more damage for each Foretell. Consumes all Foretell on completion and delay target\'s turn.',
+    apCost: 5,
+    hits: [
+      {
+        count: 2,
+        element: 'weapon',
+        multiplier: (mods) => 1.5 * (1 + 0.3 * (mods.byName('Foretell')?.count ?? 0)),
+        special: 'Moon',
+      },
+    ],
+    qte: {
+      Perfect: 1.1,
+      Success: 1.05,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Shadow Bringer (Gradient)',
+    character: 'Sciel',
+    description: '50% Dark damage. Each hit targets a random enemy. Applies 1 Foretell on hit.',
+    apCost: 1,
+    spoilerLevel: 3,
+    hits: [
+      {
+        count: 10,
+        element: 'dark',
+        multiplier: 0.5,
+        special: 'Sun',
+      },
+    ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Doom (Gradient)',
+    character: 'Sciel',
+    description: '250% Dark damage. Can Stun. Applies Powerless then Defenceless and then Slow (3 turns).',
+    apCost: 2,
+    spoilerLevel: 3,
+    hits: [
+      {
+        count: 3,
+        element: 'dark',
+        multiplier: 2.5,
+        special: 'Moon',
+      },
+    ],
+    qte: {
+      Perfect: 1.3,
+      Success: 1.15,
       Failure: 1,
     },
   },

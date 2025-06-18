@@ -1,5 +1,6 @@
 <script setup>
 import { DamageCalc } from '@/damageCalc';
+import { sum } from '@/main';
 import { useLoadoutStore } from '@/stores/loadout';
 import { computed } from 'vue';
 
@@ -8,7 +9,7 @@ const loadout = useLoadoutStore();
 const props = defineProps(['skill', 'type']);
 
 function base(hit) {
-  let tempMods = rawMods.value.filter(x => x.name !== 'Critical Hit');
+  let tempMods = rawMods.value.filter(x => x.name !== 'Critical Hit' && !x.hitDuration);
   return baseCalc.value.hitDamage(null, props.skill ? tempMods : [], [], additiveMods(hit).length == 0);
 }
 
@@ -22,15 +23,24 @@ const rawMods = computed(() => {
   return list;
 });
 
-function mods(hit) {
-  let raw = [... rawMods.value];
+const totalMods = computed(() => rawMods.value.filter(x => props.skill || !x.hitDuration));
+
+function mods(hit, i) {
+  let raw = [... totalMods.value];
 
   if (hit?.element) {
     raw.push(loadout.weaknessMod(hit.element));
   }
 
+  const previousHits = sum(hits.value.slice(0, i), 'count');
+
   let list = raw
-    .filter(x => modDifferentWithSkill(x, hit))
+    .filter(x => {
+      return modDifferentWithSkill(x, hit)
+        && (!x.hitDuration
+            || x.duration > previousHits
+            || (hit.leaves ?? []).includes(x.name));
+    })
     .map(x => ({
         name: x.name ?? x,
         mod: x,
@@ -114,6 +124,7 @@ function modDifferentWithSkill(mod, hit, multName = 'multiplier') {
   return !props.skill
     || ['skill', 'Critical Hit'].includes(mod.name)
     || mod.type == 'weakness'
+    || mod.hitDuration
     || DamageCalc.getMultiplier(mod[multName] ?? 1, rawMods.value) !== DamageCalc.getMultiplier(mod[multName] ?? 1, rawMods.value, hit)
 }
 
@@ -155,18 +166,19 @@ function showHits(hit) {
   <span v-else>
     Normal hit:
   </span>
-  <div v-for="hit in hits" :key="hit">
+  <div v-for="(hit, i) in hits" :key="hit">
     <span>
       {{ base(hit).toLocaleString() }}
     </span>
 
-    <template v-for="mod in mods(hit)" :key="mod">
+    <template v-for="mod in mods(hit, i)" :key="mod">
       * 
       <span class="multiplier">
         {{ (Math.round(mod.mult * 100) / 100).toLocaleString() }}
         <v-tooltip v-if="!skill" activator="parent" location="top">
           {{ mod.name }}
         </v-tooltip>
+        <span v-else>({{ mod.name }})</span>
       </span>
     </template>
 
@@ -205,13 +217,13 @@ function showHits(hit) {
     </template>
 
     <span v-if="showHits(hit)">
-     = {{ (calc.hitDamage(hit, rawMods, [calc.getSkillQteMultiplier()]) / hitCount(hit)).toLocaleString() }} per hit * {{ hitCount(hit).toLocaleString() }} hits
+     = {{ (calc.hitDamage(hit, totalMods, [calc.getSkillQteMultiplier()]) / hitCount(hit)).toLocaleString() }} per hit * {{ hitCount(hit).toLocaleString() }} hits
     </span>
 
     <span>
       = 
       <span class="hit-total">
-        {{ calc.hitDamage(hit, rawMods, [calc.getSkillQteMultiplier()]).toLocaleString() }}
+        {{ calc.hitDamage(hit, totalMods, [calc.getSkillQteMultiplier()]).toLocaleString() }}
       </span>
     </span>
     <img :src="loadout.elementUrl(hit.element ?? 'weapon')" class="element-icon" />
@@ -250,8 +262,8 @@ function showHits(hit) {
 }
 
 .multiplier {
-  /* text-decoration-style: dashed; */
   text-decoration-line: v-bind(underline);
+  cursor: default;
 }
 
 </style>

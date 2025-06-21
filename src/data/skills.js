@@ -32,7 +32,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'weapon',
-        multiplier: 2.5,
+        multiplier: 5.6,
       },
     ],
     apCost: 0,
@@ -99,7 +99,7 @@ export var skills = reactive([
       {
         count: 5,
         element: 'void',
-        multiplier: (mods) => 0.4 + Math.min(mods.byName('Burn')?.count ?? 0, 100) * 0.1,
+        multiplier: (mods) => 0.4 + Math.min(mods.byName('Burn')?.count ?? 0, 100) * 0.04,
       },
     ],
     qte: {
@@ -358,7 +358,7 @@ export var skills = reactive([
       {
         count: 2,
         element: 'physical',
-        multiplier: (mods) => 0.8 + Math.min(mods.byName('Burn')?.count ?? 0, 10) * 0.4,
+        multiplier: (mods) => (4 - 0.8) * Math.min(mods.byName('Burn')?.count ?? 0, 10) / 10 + 0.8,
         breakMultiplier: 0.7,
       },
     ],

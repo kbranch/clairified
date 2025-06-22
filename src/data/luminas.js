@@ -60,6 +60,20 @@ export var luminas = reactive([
     cost: 5,
     additiveMultiplier: (mods, skill) => ['Counterattack', 'Gradient Counter'].includes(skill.name) ? 0.5 : 0,
   },
+  {
+    name: 'Augmented First Strike',
+    description: 'Deal 50% increased damage on the first hit',
+    cost: 5,
+    additiveMultiplier: (mods) => mods.byName('Turn')?.count == 1 ? 0.5 : 0,
+    hitDuration: 1,
+  },
+  {
+    name: 'First Offensive',
+    description: 'First hit dealt and taken deals 50% more damage',
+    cost: 5,
+    multiplier: (mods) => mods.byName('Turn')?.count == 1 ? 1.5 : 1,
+    hitDuration: 1,
+  },
   // {
   //   name: 'Breaker',
   //   description: '25% more Break potency',
@@ -93,6 +107,39 @@ export var luminas = reactive([
         return [{
           count: 1,
           element: 'weapon',
+          multiplier: 0.5,
+        }];
+      }
+
+      return null;
+    },
+  },
+  {
+    name: 'Combo Attack II',
+    description: 'Base Attack has 1 extra hit',
+    cost: 20,
+    extraHits: (mods, skill) => {
+      if (skill.name == 'Base Attack') {
+        return [{
+          count: 1,
+          element: 'weapon',
+          multiplier: 0.5,
+        }];
+      }
+
+      return null;
+    },
+  },
+  {
+    name: 'Combo Attack III',
+    description: 'Base Attack has 1 extra hit',
+    cost: 30,
+    extraHits: (mods, skill) => {
+      if (skill.name == 'Base Attack') {
+        return [{
+          count: 1,
+          element: 'weapon',
+          multiplier: 0.5,
         }];
       }
 
@@ -202,12 +249,18 @@ export var luminas = reactive([
     name: 'Immaculate',
     description: 'Deal 30% increased damage until a hit is received',
     cost: 10,
-    additiveMultiplier: 0.3,
+    additiveMultiplier: (mods) => (mods.byName('Hits Taken')?.count ?? 0) > 0 ? 0 : 0.3,
   },
   {
     name: 'Shield Affinity',
     description: 'Deal 30% increased damage while having Shields, but receiving any damage always removes all Shields',
     cost: 15,
     additiveMultiplier: (mods) => mods.byName('Self Shield') ? 0.3 : 0,
-  }
+  },
+  {
+    name: 'Versatile',
+    description: 'After a Free Aim hit, Base Attack damage is increased by 50% for 1 turn',
+    cost: 5,
+    additiveMultiplier: (mods, skill) => skill.name == 'Base Attack' && (mods.byName('Shots Fired')?.count ?? 0) > 0 ? 0.5 : 0,
+  },
 ]);

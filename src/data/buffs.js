@@ -115,6 +115,18 @@ export var selfBuffs = reactive([
     min: 0,
   },
   {
+    name: 'Hits Taken',
+    type: 'count',
+    default: 0,
+    min: 0,
+  },
+  {
+    name: 'Shots Fired',
+    type: 'count',
+    default: 0,
+    min: 0,
+  },
+  {
     name: 'Powerful',
     type: 'boolean',
     icon: 'powerful.png',

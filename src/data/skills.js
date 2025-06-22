@@ -1250,7 +1250,7 @@ export var skills = reactive([
     name: 'Abbest Wind',
     character: 'Monoco',
     description: '80% Physical damage. Play a second turn. Agile Mask: Costs 0 AP.',
-    apCost: (mods) => (mods.byName('Agile') ? 0 : 2),
+    apCost: (mods) => (mods.maskMet('Agile') ? 0 : 2),
     hits: [
       {
         count: 1,
@@ -1273,7 +1273,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'light',
-        multiplier: (mods) => (mods.byName('Balanced') ? 1.75 * 3 : 1.75),
+        multiplier: (mods) => (mods.maskMet('Balanced') ? 1.75 * 3 : 1.75),
       },
     ],
     qte: {
@@ -1291,7 +1291,7 @@ export var skills = reactive([
       {
         count: 5,
         element: 'dark',
-        multiplier: (mods) => (mods.byName('Heavy') ? 0.6 * 3 : 0.6),
+        multiplier: (mods) => (mods.maskMet('Heavy') ? 0.6 * 3 : 0.6),
       },
     ],
     qte: {
@@ -1328,7 +1328,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'light',
-        multiplier: (mods) => (mods.byName('Caster') ? 0.8 * 3 : 0.8),
+        multiplier: (mods) => (mods.maskMet('Caster') ? 0.8 * 3 : 0.8),
       },
     ],
     qte: {
@@ -1346,7 +1346,7 @@ export var skills = reactive([
       {
         count: 2,
         element: 'fire',
-        multiplier: (mods) => (mods.byName('Balanced') ? 0.9 * 3 : 0.9),
+        multiplier: (mods) => (mods.maskMet('Balanced') ? 0.9 * 3 : 0.9),
       },
     ],
     qte: {
@@ -1364,7 +1364,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Caster') ? 0.8 * 3 : 0.8),
+        multiplier: (mods) => (mods.maskMet('Caster') ? 0.8 * 3 : 0.8),
       },
     ],
     qte: {
@@ -1382,7 +1382,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'ice',
-        multiplier: (mods) => (mods.byName('Caster') ? 0.8 * 3 : 0.8),
+        multiplier: (mods) => (mods.maskMet('Caster') ? 0.8 * 3 : 0.8),
       },
     ],
     qte: {
@@ -1400,7 +1400,7 @@ export var skills = reactive([
       {
         count: (mods) => (mods.byName('QTE').selected.name == 'Failure' ? 1 : 6),
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Balanced') ? 0.6 * 3 : 0.6),
+        multiplier: (mods) => (mods.maskMet('Balanced') ? 0.6 * 3 : 0.6),
       },
     ],
     qte: {
@@ -1418,7 +1418,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Agile') ? 0.8 * 3 : 0.8),
+        multiplier: (mods) => (mods.maskMet('Agile') ? 0.8 * 3 : 0.8),
       },
     ],
     qte: {
@@ -1436,7 +1436,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'ice',
-        multiplier: (mods) => (mods.byName('Balanced') ? 0.6 * 3 : 0.6),
+        multiplier: (mods) => (mods.maskMet('Balanced') ? 0.6 * 3 : 0.6),
       },
     ],
     qte: {
@@ -1454,7 +1454,7 @@ export var skills = reactive([
       {
         count: 6,
         element: 'physical',
-        multiplier: (mods) => ((mods.byName('Target Shield')?.count ?? 0) * 0.3 + 1) * (mods.byName('Agile') ? 3 * 0.3 : 0.3),
+        multiplier: (mods) => ((mods.byName('Target Shield')?.count ?? 0) * 0.3 + 1) * (mods.maskMet('Agile') ? 3 * 0.3 : 0.3),
       },
     ],
     qte: {
@@ -1473,7 +1473,7 @@ export var skills = reactive([
         count: 3,
         element: 'physical',
         // Crits are still going to do their 1.5 mod, so (5/3) * 1.5 gets us our 2.5
-        multiplier: (mods) => 0.6 * (mods.byName('Critical Hit') ? 2.5 : 1) * (mods.byName('Heavy') ? 3 : 1),
+        multiplier: (mods) => 0.6 * (mods.byName('Critical Hit') ? 2.5 : 1) * (mods.maskMet('Heavy') ? 3 : 1),
       },
     ],
     qte: {
@@ -1491,7 +1491,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Balanced') ? 2.5 * 3 : 2.5),
+        multiplier: (mods) => (mods.maskMet('Balanced') ? 2.5 * 3 : 2.5),
       },
     ],
     qte: {
@@ -1512,7 +1512,7 @@ export var skills = reactive([
         multiplier: (mods) => {
           const hp = mods.byName('Health %')?.count ?? 100
           const hpLost = hp * 0.9
-          return 0.3 * (1 + hpLost * 0.03) * (mods.byName('Heavy') ? 3 : 1);
+          return 0.3 * (1 + hpLost * 0.03) * (mods.maskMet('Heavy') ? 3 : 1);
         },
       },
     ],
@@ -1533,7 +1533,7 @@ export var skills = reactive([
         element: 'dark',
         multiplier: (mods) => {
           const hpMissing = 100 - (mods.byName('Health %')?.count ?? 100)
-          return 0.7 * (1 + hpMissing * 0.025) * (mods.byName('Agile') ? 3 : 1)
+          return 0.7 * (1 + hpMissing * 0.025) * (mods.maskMet('Agile') ? 3 : 1)
         },
       },
     ],
@@ -1552,7 +1552,7 @@ export var skills = reactive([
       {
         count: (mods) => 3 + (mods.byName('Critical Hit') ? 3 : 0),
         element: 'lightning',
-        multiplier: (mods) => (mods.byName('Caster') ? 0.5 * 3 : 0.5),
+        multiplier: (mods) => (mods.maskMet('Caster') ? 0.5 * 3 : 0.5),
       },
     ],
     qte: {
@@ -1570,7 +1570,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'fire',
-        multiplier: (mods) => (mods.byName('Almighty') ? 1.5 * 5 : 1.5),
+        multiplier: (mods) => (mods.maskMet('Almighty') ? 1.5 * 5 : 1.5),
       },
     ],
     qte: {
@@ -1588,7 +1588,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'lightning',
-        multiplier: (mods) => (mods.byName('Stunned') ? 1.5 * 6 : 1.5) * (mods.byName('Balanced') ? 3 : 1),
+        multiplier: (mods) => (mods.byName('Stunned') ? 1.5 * 6 : 1.5) * (mods.maskMet('Balanced') ? 3 : 1),
       },
     ],
     qte: {
@@ -1606,7 +1606,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'ice',
-        multiplier: (mods) => (mods.byName('Agile') ? 1.2 * 3 : 1.2),
+        multiplier: (mods) => (mods.maskMet('Agile') ? 1.2 * 3 : 1.2),
       },
     ],
     qte: {
@@ -1624,7 +1624,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'fire',
-        multiplier: (mods) => 1.3 * (mods.byName('Burn') ? 1.5 : 1) * (mods.byName('Balanced') ? 3 : 1),
+        multiplier: (mods) => 1.3 * (mods.byName('Burn') ? 1.5 : 1) * (mods.maskMet('Balanced') ? 3 : 1),
       },
     ],
     qte: {
@@ -1660,7 +1660,7 @@ export var skills = reactive([
       {
         count: 4,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Balanced') ? 0.4 * 3 : 0.5), // I tested this, it really is 0.5 without the mask
+        multiplier: (mods) => (mods.maskMet('Balanced') ? 0.4 * 3 : 0.5), // I tested this, it really is 0.5 without the mask
       },
     ],
     qte: {
@@ -1696,7 +1696,7 @@ export var skills = reactive([
       {
         count: 5,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Heavy') ? 0.6 * 2 : 0.6),
+        multiplier: (mods) => (mods.maskMet('Heavy') ? 0.6 * 2 : 0.6),
       },
     ],
     qte: {
@@ -1732,7 +1732,7 @@ export var skills = reactive([
       {
         count: 4,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Heavy') ? 0.5 * 3 : 0.5),
+        multiplier: (mods) => (mods.maskMet('Heavy') ? 0.5 * 3 : 0.5),
       },
     ],
     qte: {
@@ -1750,7 +1750,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Agile') ? 0.6 * 3 : 0.6),
+        multiplier: (mods) => (mods.maskMet('Agile') ? 0.6 * 3 : 0.6),
       },
     ],
     qte: {
@@ -1768,7 +1768,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Balanced') ? 1 * 3 : 1),
+        multiplier: (mods) => (mods.maskMet('Balanced') ? 1 * 3 : 1),
       },
     ],
     qte: {
@@ -1786,7 +1786,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Mark') ? 3 * 2 : 3) * (mods.byName('Heavy') ? 3 : 1),
+        multiplier: (mods) => (mods.byName('Mark') ? 3 * 2 : 3) * (mods.maskMet('Heavy') ? 3 : 1),
       },
     ],
     qte: {
@@ -1804,7 +1804,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Heavy') ? 5 * 3 : 5),
+        multiplier: (mods) => (mods.maskMet('Heavy') ? 5 * 3 : 5),
       },
     ],
     qte: {
@@ -1840,7 +1840,7 @@ export var skills = reactive([
       {
         count: 4,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Heavy') ? 0.4 * 3 : 0.4),
+        multiplier: (mods) => (mods.maskMet('Heavy') ? 0.4 * 3 : 0.4),
       },
     ],
     qte: {
@@ -1858,7 +1858,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'dark',
-        multiplier: (mods) => (mods.byName('Caster') ? 1 * 3 : 1),
+        multiplier: (mods) => (mods.maskMet('Caster') ? 1 * 3 : 1),
       },
     ],
     qte: {
@@ -1876,7 +1876,7 @@ export var skills = reactive([
       {
         count: 4,
         element: 'ice',
-        multiplier: (mods) => (mods.byName('Heavy') ? 0.45 * 3 : 0.45),
+        multiplier: (mods) => (mods.maskMet('Heavy') ? 0.45 * 3 : 0.45),
       },
     ],
     qte: {
@@ -1894,7 +1894,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'earth',
-        multiplier: (mods) => (mods.byName('Heavy') ? 4 * 3 : 4),
+        multiplier: (mods) => (mods.maskMet('Heavy') ? 4 * 3 : 4),
       },
     ],
     qte: {

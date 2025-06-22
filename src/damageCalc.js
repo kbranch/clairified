@@ -150,6 +150,7 @@ export class DamageCalc {
 
   static resolveFunction(func, mods, skill) {
     mods.byName = (name) => mods.find(mod => (mod.name ?? mod) === name);
+    mods.maskMet = (requirement) => mods.byName(requirement) || mods.byName('Almighty');
     mods.stainsMet = (requirements) => {
       const stainCounts = ['Fire', 'Ice', 'Lightning', 'Earth', 'Light', 'Dark']
         .reduce((counts, element) => {

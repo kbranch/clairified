@@ -559,11 +559,10 @@ export var skills = reactive([
       const stains = ['Fire', 'Ice', 'Lightning', 'Earth', 'Light', 'Dark']
         .map((element) => mods.byName(element))
         .filter((x) => x)
-      const multiplier = [0.69, 0.9, 1.2, 1.8][Math.min(sum(stains, 'count'), 3)]
+      const multiplier = [0, 0.69, 0.9, 1.2, 1.8][Math.min(sum(stains, 'count'), 4)]
 
       return stains.map((stain) => ({
-        count:
-          stain.name == 'Lightning' && mods.byName('Critical Hit') ? stain.count * 2 : stain.count,
+        count: stain.count,
         element: stain.name.toLocaleLowerCase(),
         multiplier: multiplier,
       }))
@@ -852,7 +851,7 @@ export var skills = reactive([
     apCost: 3,
     hits: [
       {
-        count: 5,
+        count: (mods) => mods.byName('QTE')?.selected.name == 'Failure' ? 2 : 5,
         element: 'weapon',
         multiplier: (mods) => (mods.byName('B') ? 0.25 * 2 : 0.25),
       },
@@ -1127,9 +1126,9 @@ export var skills = reactive([
     apCost: 4,
     hits: [
       {
-        count: 3,
+        count: (mods) => (mods.byName('QTE').selected.name == 'Failure' ? 2 : 3),
         element: 'weapon',
-        multiplier: (mods) => (mods.byName('B') ? 1.25 * 2 : 1.25),
+        multiplier: (mods) => (mods.byName('B') ? 0.625 * 2 : 0.625),
       },
     ],
     qte: {
@@ -1222,6 +1221,11 @@ export var skills = reactive([
         multiplier: (mods) => (mods.byName('B') ? 1.25 * 2 : 1.25),
       },
     ],
+    qte: {
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
   },
   {
     name: 'Quick Strike',
@@ -1254,8 +1258,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1,
-      Success: 1,
+      Perfect: 1.2,
+      Success: 1.1,
       Failure: 1,
     },
   },
@@ -1272,8 +1276,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1290,8 +1294,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1309,8 +1313,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 2.4, // Can't be right, needs testing
-      Success: 1.7,
+      Perfect: 1.3125,
+      Success: 1.15625,
       Failure: 1,
     },
   },
@@ -1327,7 +1331,7 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.2, // Needs testing, the spreadsheet doesn't make sense
+      Perfect: 1.2,
       Success: 1.1,
       Failure: 1,
     },
@@ -1345,8 +1349,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.08333,
-      Success: 1.04167,
+      Perfect: 1.3,
+      Success: 1.15,
       Failure: 1,
     },
   },
@@ -1363,8 +1367,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1381,8 +1385,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1,
-      Success: 1,
+      Perfect: 1.2,
+      Success: 1.1,
       Failure: 1,
     },
   },
@@ -1393,15 +1397,15 @@ export var skills = reactive([
     apCost: 7,
     hits: [
       {
-        count: 6,
+        count: (mods) => (mods.byName('QTE').selected.name == 'Failure' ? 1 : 6),
         element: 'physical',
         multiplier: (mods) => (mods.byName('Balanced') ? 0.6 * 3 : 0.6),
       },
     ],
     qte: {
-      Perfect: 1.083333,
-      Success: 1.041667,
-      Failure: 0,
+      Perfect: 1.25,
+      Success: 1.125,
+      Failure: 1,
     },
   },
   {
@@ -1417,8 +1421,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1447,14 +1451,14 @@ export var skills = reactive([
     apCost: 3,
     hits: [
       {
-        count: 3,
+        count: 6,
         element: 'physical',
-        multiplier: (mods) => ((mods.byName('Target Shield')?.count ?? 0) * 0.3 + 1) * (mods.byName('Agile') ? 3 : 1),
+        multiplier: (mods) => ((mods.byName('Target Shield')?.count ?? 0) * 0.3 + 1) * (mods.byName('Agile') ? 3 * 0.3 : 0.3),
       },
     ],
     qte: {
-      Perfect: 2.4, // This seems wrong, needs testing
-      Success: 1.7,
+      Perfect: 1.2,
+      Success: 1.1,
       Failure: 1,
     },
   },
@@ -1472,8 +1476,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1490,8 +1494,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.16,
-      Success: 1.08,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1506,7 +1510,7 @@ export var skills = reactive([
         element: 'dark',
         multiplier: (mods) => {
           const hp = mods.byName('Health %')?.count ?? 100
-          const hpLost = hp - hp * 0.9
+          const hpLost = hp * 0.9
           return 0.3 * (1 + hpLost * 0.03) * (mods.byName('Heavy') ? 3 : 1); // Also seems bugged, test
         },
       },
@@ -1533,8 +1537,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1551,8 +1555,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1565,12 +1569,12 @@ export var skills = reactive([
       {
         count: 3,
         element: 'fire',
-        multiplier: (mods) => (mods.byName('Almighty') ? 1.5 * 4 : 1.5),
+        multiplier: (mods) => (mods.byName('Almighty') ? 1.5 * 5 : 1.5),
       },
     ],
     qte: {
-      Perfect: 1.166667,
-      Success: 1.083333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1587,9 +1591,9 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
-      Failure: 1,
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 0,
     },
   },
   {
@@ -1605,8 +1609,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1623,8 +1627,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.25,
-      Success: 1.125,
+      Perfect: 1.2,
+      Success: 1.1,
       Failure: 1,
     },
   },
@@ -1641,8 +1645,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.46,
-      Success: 1.23,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1655,7 +1659,7 @@ export var skills = reactive([
       {
         count: 4,
         element: 'physical',
-        multiplier: (mods) => (mods.byName('Balanced') ? 0.4 * 3 : 0.4),
+        multiplier: (mods) => (mods.byName('Balanced') ? 0.4 * 3 : 0.5), // I tested this, it really is 0.5 without the mask
       },
     ],
     qte: {
@@ -1671,14 +1675,14 @@ export var skills = reactive([
     apCost: 4,
     hits: [
       {
-        count: 1,
+        count: 3,
         element: 'earth',
-        multiplier: 3, // Sounds like it might be bugged, test
+        multiplier: 3,
       },
     ],
     qte: {
-      Perfect: 1.2,
-      Success: 1.1,
+      Perfect: 1.333333,
+      Success: 1.166667,
       Failure: 1,
     },
   },
@@ -1695,8 +1699,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1866667,
-      Success: 1.0933333,
+      Perfect: 1.5,
+      Success: 1.25,
       Failure: 1,
     },
   },
@@ -1713,8 +1717,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1416667,
-      Success: 1.0708333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1731,8 +1735,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1749,8 +1753,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1,
-      Success: 1,
+      Perfect: 1.2,
+      Success: 1.1,
       Failure: 1,
     },
   },
@@ -1767,8 +1771,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.4233333, // Seems suspicious
-      Success: 1.2116667,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1785,8 +1789,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.166667,
-      Success: 1.083333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1803,8 +1807,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1821,9 +1825,9 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.2,
-      Success: 1.1,
-      Failure: 1,
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 0,
     },
   },
   {
@@ -1839,8 +1843,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1,
-      Success: 1,
+      Perfect: 1.2,
+      Success: 1.1,
       Failure: 1,
     },
   },
@@ -1857,8 +1861,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1875,8 +1879,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.3,
+      Success: 1.15,
       Failure: 1,
     },
   },
@@ -1893,8 +1897,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.1666667,
-      Success: 1.0833333,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -1946,7 +1950,7 @@ export var skills = reactive([
         count: 1,
         element: 'dark',
         multiplier: (mods) => {
-          const hpLost = ((mods.byName('Health %')?.count ?? 100) - 1) * 3; // Assume three characters lose the same HP
+          const hpLost = ((mods.byName('Health %')?.count ?? 100) - 1) * (mods.byName('Alone') ? 0 : mods.byName('Allies Alive') ? 2 : 1);
           const foretell = mods.byName('Foretell')?.count ?? 0;
           return 2 * (1 + hpLost * 0.015) * (1 + 0.3 * foretell);
         },

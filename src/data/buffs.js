@@ -73,6 +73,7 @@ export var targetBuffs = reactive([
     type: 'boolean',
     icon: 'stun.png',
     iconOnly: true,
+    multiplier: 1.2,
   },
   {
     name: 'Powerless',
@@ -125,7 +126,7 @@ export var selfBuffs = reactive([
     type: 'boolean',
     icon: 'twilight.png',
     iconOnly: true,
-    multiplier: 1.5, // This is wrong, needs to account for how many sun/moon cards you have
+    multiplier: (mods) => (mods.byName('Sun').count + mods.byName('Moon').count) * 0.25 + 1,
     character: 'Sciel',
   },
   {

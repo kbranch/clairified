@@ -9,6 +9,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'weapon',
+        multiplier: (mods) => mods.byName('Combo Attack I') || mods.byName('Combo Attack II') || mods.byName('Combo Attack III') ? 0.5 : 1,
       },
     ],
     apCost: -1,
@@ -84,8 +85,8 @@ export var skills = reactive([
       },
     ],
     qte: {
-      Perfect: 1.6786, // Seems odd, need to test
-      Success: 1.3393,
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },
@@ -207,7 +208,7 @@ export var skills = reactive([
       {
         count: 5,
         element: 'weapon',
-        multiplier: (mods) => (mods.byName('Critical Hit') ? 0.75 * 1.33333333 : 0.75), // Needs testing
+        multiplier: (mods) => (mods.byName('Critical Hit') ? 0.75 * 2 : 0.75),
       },
     ],
     qte: {
@@ -250,7 +251,7 @@ export var skills = reactive([
       {
         count: 1,
         element: 'fire',
-        multiplier: 1.2,
+        multiplier: (mods) => (mods.byName('Hits Taken') ? mods.byName('Hits Taken').count * 2.5 : 1) * 1.2,
       },
     ],
     qte: {
@@ -268,7 +269,7 @@ export var skills = reactive([
       {
         count: 3,
         element: 'fire',
-        multiplier: 1.67,
+        multiplier: 1.666666667,
       },
     ],
     qte: {
@@ -869,7 +870,7 @@ export var skills = reactive([
     apCost: 9,
     hits: [
       {
-        count: 1,
+        count: 13,
         element: 'physical',
         multiplier: (mods) => (mods.byName('S') ? 0.5 * 2.5 : 0.5),
       },
@@ -905,7 +906,7 @@ export var skills = reactive([
     apCost: 4,
     hits: [
       {
-        count: 5,
+        count: (mods) => (mods.byName('QTE')?.selected.name == 'Failure' ? 1 : 5),
         element: 'light',
         multiplier: 0.3,
       },
@@ -923,7 +924,7 @@ export var skills = reactive([
     apCost: 9,
     hits: [
       {
-        count: 6,
+        count: (mods) => mods.byName('QTE')?.selected.name == 'Failed' ? 2 : 6,
         element: 'physical',
         multiplier: (mods) => (mods.byName('Stunned') ? 1.2 * 3 : 1.2),
       },
@@ -979,12 +980,12 @@ export var skills = reactive([
       {
         count: 5,
         element: 'light',
-        multiplier: 0.5,
+        multiplier: (mods) => (mods.byName('C') ? 0.5 * 2 : 0.5),
       },
     ],
     qte: {
-      Perfect: 1.4,
-      Success: 1.2,
+      Perfect: 1.24,
+      Success: 1.12,
       Failure: 1,
     },
   },
@@ -1511,7 +1512,7 @@ export var skills = reactive([
         multiplier: (mods) => {
           const hp = mods.byName('Health %')?.count ?? 100
           const hpLost = hp * 0.9
-          return 0.3 * (1 + hpLost * 0.03) * (mods.byName('Heavy') ? 3 : 1); // Also seems bugged, test
+          return 0.3 * (1 + hpLost * 0.03) * (mods.byName('Heavy') ? 3 : 1);
         },
       },
     ],

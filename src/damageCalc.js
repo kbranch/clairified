@@ -40,7 +40,7 @@ export class DamageCalc {
       hitMods.push(hit);
 
       if (hit?.element) {
-        hitMods.push(this.loadout.weaknessMod(hit.element));
+        hitMods.push(this.loadout.weaknessMod(DamageCalc.getElement(hit.element, combinedMods, this.skill)));
       }
 
       let multiplier = this.getTotalMultiplier(hit, hitMods, 'multiplier', includeAdditive? 'additiveMultiplier' : 'nope');
@@ -94,7 +94,13 @@ export class DamageCalc {
   }
 
   skillAverageDamage(extraMods=[]) {
-    let critChance = this.skillCrit() / 100;
+    let combinedMods = this.mods.concat(extraMods);
+    let critChanceMods = [...combinedMods];
+    let weaknessMod = this.loadout.weaknessMod(DamageCalc.getElement(this.skill?.hits[0].element, combinedMods, this.skill));
+
+    critChanceMods.push(weaknessMod);
+
+    let critChance = this.skillCrit(critChanceMods) / 100;
     let hitChance = 1 - critChance;
     let damage = Math.round(this.skillDamage(extraMods) * hitChance + this.skillCritDamage(extraMods) * critChance);
 
@@ -136,6 +142,14 @@ export class DamageCalc {
     }
 
     return totalMultiplier;
+  }
+
+  static getElement(element, mods, skill) {
+    if (typeof element === 'function') {
+      element = DamageCalc.resolveFunction(element, mods, skill);
+    }
+
+    return element;
   }
 
   static hitCount(hit, mods, skill) {

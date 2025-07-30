@@ -10,7 +10,7 @@ const loadout = useLoadoutStore();
 <template>
 
 <div class="py-1">
-  <img :src="loadout.elementUrl(element ?? 'weapon')" class="element-icon" />
+  <img :src="loadout.elementUrl(element ?? 'weapon')" class="element-icon me-1" />
 
   <input type="radio" class="btn-check" :name="`${element}-weakness`" :id="`${element}-weak`" autocomplete="off"
     value="weak" v-model="loadout.weaknesses[element]">

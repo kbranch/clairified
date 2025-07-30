@@ -166,6 +166,8 @@ export const useLoadoutStore = defineStore('loadout', () => {
   }
 
   function resolveElement(element) {
+    element = DamageCalc.getElement(element, selectedMods.value);
+
     if (element == 'weapon') {
       element = selectedWeapon.value?.element ?? 'physical';
     }

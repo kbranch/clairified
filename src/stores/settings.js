@@ -15,6 +15,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const filterFavoriteSkills = ref(false);
   const filterFavoriteLuminas = ref(false);
   const firstLoad = ref(true);
+  const filterDamagingOnly = ref(true);
 
   const sortTypes = {
     lumina: luminaSort,
@@ -40,6 +41,7 @@ export const useSettingsStore = defineStore('settings', () => {
       filterFavoriteWeapons: filterFavoriteWeapons.value,
       filterFavoriteSkills: filterFavoriteSkills.value,
       filterFavoriteLuminas: filterFavoriteLuminas.value,
+      filterDamagingOnly: filterDamagingOnly.value,
       firstLoad: firstLoad.value,
     };
   });
@@ -88,6 +90,7 @@ export const useSettingsStore = defineStore('settings', () => {
       filterFavoriteWeapons.value = settings.filterFavoriteWeapons ?? false;
       filterFavoriteSkills.value = settings.filterFavoriteSkills ?? false;
       filterFavoriteLuminas.value = settings.filterFavoriteLuminas ?? false;
+      filterDamagingOnly.value = settings.filterDamagingOnly ?? true;
       firstLoad.value = settings.firstLoad ?? true;
     }
 
@@ -108,6 +111,6 @@ export const useSettingsStore = defineStore('settings', () => {
 
   return {
     damageCap, spoilerLevel, luminaSort, weaponSort, skillSort, favoriteWeapons, favoriteSkills, favoriteLuminas,
-    filterFavoriteLuminas, filterFavoriteSkills, filterFavoriteWeapons, firstLoad, sortBy, toggleFavorite,
+    filterFavoriteLuminas, filterFavoriteSkills, filterFavoriteWeapons, filterDamagingOnly, firstLoad, sortBy, toggleFavorite,
   };
 });

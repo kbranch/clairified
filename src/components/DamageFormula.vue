@@ -29,7 +29,7 @@ function mods(hit, i) {
   let raw = [... totalMods.value];
 
   if (hit?.element) {
-    raw.push(loadout.weaknessMod(hit.element));
+    raw.push(loadout.weaknessMod(DamageCalc.getElement(hit.element, rawMods.value, props.skill)));
   }
 
   const previousHits = sum(hits.value.slice(0, i), 'count');
@@ -226,7 +226,7 @@ function showHits(hit) {
         {{ calc.hitDamage(hit, totalMods, [calc.getSkillQteMultiplier()]).toLocaleString() }}
       </span>
     </span>
-    <img :src="loadout.elementUrl(hit.element ?? 'weapon')" class="element-icon" />
+    <img :src="loadout.elementUrl(DamageCalc.getElement(hit.element, rawMods, props.skill) ?? 'weapon')" class="element-icon" />
   </div>
   <div v-if="hits.length > 1 && type !== 'average'">
     <span>Total: </span>

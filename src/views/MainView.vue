@@ -37,7 +37,8 @@ const visibleLuminas = computed(() => {
       .filter(x => (!luminaFilter.value
         || x.name.toLowerCase().includes(luminaFilter.value.toLowerCase())
         || x.description.toLowerCase().includes(luminaFilter.value.toLowerCase()))
-        && (!settings.filterFavoriteLuminas || x.favorite))
+        && (!settings.filterFavoriteLuminas || x.favorite)
+        && (!settings.filterDamagingOnly || (x.damaging ?? true)))
     , x => settings.luminaSort.map(sort => x[sort.prop]), settings.luminaSort[0].asc);
 });
 
@@ -193,6 +194,10 @@ onUnmounted(() => {
           </span>
         </div>
         <div class="filters">
+          <img v-if="activeTab  == 'Luminas'" class="icon-button me-0" v-tooltip:top="'Damaging Only'" 
+            :class="{ active: settings.filterDamagingOnly }" :src="`/images/sword.svg`"
+           @click="settings.filterDamagingOnly = !settings.filterDamagingOnly"/>
+
           <img v-if="activeTab  == 'Luminas'" class="icon-button me-0" v-tooltip:top="'Filter Favorites'" 
             :src="`/images/star${settings.filterFavoriteLuminas ? '-fill': ''}.svg`"
            @click="settings.filterFavoriteLuminas = !settings.filterFavoriteLuminas"/>
@@ -371,6 +376,10 @@ select {
   color: unset;
 }
 
+.nav-link:not(.active):hover {
+  background-color: var(--color-background-soft);
+}
+
 .d-flex {
   flex-wrap: wrap;
 }
@@ -384,6 +393,11 @@ select {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
+
+img.active {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
 }
 
 </style>

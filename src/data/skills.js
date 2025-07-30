@@ -298,6 +298,25 @@ export var skills = reactive([
     },
   },
   {
+    name: 'Gommage (Gradient)',
+    character: 'Maelle',
+    description: '5000% Void damage. Kills weak targets.',
+    apCost: 3,
+    spoilerLevel: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'void',
+        multiplier: 50,
+      },
+    ],
+    qte: { // Untested
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
     name: 'Breaking Rules',
     character: 'Maelle',
     description: '75% Physical damage. Destroys all Shields on hit. Recovers 1 AP per Shield destroyed. If target is Defenceless, play a second turn.',
@@ -846,6 +865,33 @@ export var skills = reactive([
     },
   },
   {
+    name: 'Sky Break (Gradient)',
+    character: 'Lune',
+    description: '4000% damage to all enemies. Element depends on which Stains Lune has the most. Can Stun.',
+    apCost: 3,
+    spoilerLevel: 5,
+    hits: [
+      {
+        count: 1,
+        element: (mods) => {
+          const stains = ['Fire', 'Ice', 'Lightning', 'Earth', 'Light', 'Dark']
+            .map((element) => mods.byName(element))
+            .filter((x) => x)
+
+          return stains.reduce((max, stain) => {
+            return stain.count > max.count ? stain : max;
+          }, { count: 0 }).name.toLocaleLowerCase()
+        },
+        multiplier: 40, 
+      }
+    ],
+    qte: { // Untested
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
     name: 'Assault Zero',
     character: 'Verso',
     description: "25% damage. Uses weapon's element. Critical Hits generate 1 additional Perfection. Rank B: Deals 100% more damage.",
@@ -1026,6 +1072,25 @@ export var skills = reactive([
       Success: 1.2,
       Failure: 1,
     },
+  },
+  {
+    name: 'Angel\'s Eyes (Gradient)',
+    character: 'Verso',
+    description: '100% Physical damage. Gain 1 additional Perfection on hit. Applies Aureole to Verso, reviving him if he dies.',
+    apCost: 3,
+    spoilerLevel: 5,
+    hits: [
+      {
+        count: 8,
+        element: 'physical',
+        multiplier: 1,
+      },
+    ],
+    qte: { // Untested
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    }
   },
   {
     name: 'Berserk Slash',
@@ -1265,6 +1330,42 @@ export var skills = reactive([
     },
   },
   {
+    name: 'Duallist Storm',
+    character: 'Monoco',
+    description: '150% Physical damage. Can Stun. Almighty Mask: Deals 400% more damage.',
+    apCost: 8,
+    hits: [
+      {
+        count: 4,
+        element: 'physical',
+        multiplier: (mods) => (mods.maskMet('Almighty') ? 1.5 * 4 : 1.5),
+      },
+    ],
+    qte: { // Untested
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Aberration Light',
+    character: 'Monoco',
+    description: '150% Light damage to all enemies. Applies 4 Burn on hit. Agile Mask: Applies 2 more Burn on hit.',
+    apCost: 7,
+    hits: [
+      {
+        count: 2,
+        element: 'light',
+        multiplier: 1.5,
+      },
+    ],
+    qte: { // Untested
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1, 
+    }
+  },
+  {
     name: 'Clair Enfeeble',
     character: 'Monoco',
     description: '175% Light damage to all enemies. Applies Powerless on hit (3 turns). Balanced Mask: Deals 200% more damage.',
@@ -1316,6 +1417,25 @@ export var skills = reactive([
     qte: {
       Perfect: 1.3125,
       Success: 1.15625,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Break Point (Gradient)',
+    character: 'Monoco',
+    description: '4000% damage. Uses weapon\'s element. Breaks on hit.',
+    apCost: 3,
+    spoilerLevel: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'weapon',
+        multiplier: 40,
+      },
+    ],
+    qte: { // Untested
+      Perfect: 1.2,
+      Success: 1.1,
       Failure: 1,
     },
   },
@@ -1706,6 +1826,24 @@ export var skills = reactive([
     },
   },
   {
+    name: 'Création Void',
+    character: 'Monoco',
+    description: '200% Void damage. Each hit targets a random enemy. Deals 50% more damage if the same target is hit multiple times. Caster Mask: Deals 200% more damage.',
+    apCost: 9,
+    hits: [
+      {
+        count: 3,
+        element: 'void',
+        multiplier: (mods) => (mods.maskMet('Caster') ? 2.25 * 3 : 2.25), // Untested, assuming it goes +0%, +50%, +75%
+      },
+    ],
+    qte: { // Untested
+      Perfect: 1.2,
+      Success: 1.1,
+      Failure: 1,
+    },
+  },
+  {
     name: 'Hexga Crush',
     character: 'Monoco',
     description: '120% Earth damage. Last hit applies Defenceless (3 turns). Heavy Mask: Increases duration (5 turns).',
@@ -1718,6 +1856,24 @@ export var skills = reactive([
       },
     ],
     qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Lampmaster Light',
+    character: 'Monoco',
+    description: '200% Light damage to all enemies. Deals 200% more damage for each previous cast, up to 1000%. Almighty Mask: Deals 400% more damage.',
+    apCost: 5,
+    hits: [
+      {
+        count: 1, // Untested
+        element: 'light',
+        multiplier: (mods) => 2 * Math.max(3 * (mods.byName('Casts')?.count ?? 0), 11) * (mods.maskMet('Almighty') ? 5 : 1),
+      },
+    ],
+    qte: { // Untested
       Perfect: 1.4,
       Success: 1.2,
       Failure: 1,
@@ -1862,6 +2018,24 @@ export var skills = reactive([
       },
     ],
     qte: {
+      Perfect: 1.4,
+      Success: 1.2,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'Échassier Stabs',
+    character: 'Monoco',
+    description: '150% Physical damage. Last hit applies Mark. Agile Mask: Deals 200% more damage.',
+    apCost: 4,
+    hits: [
+      {
+        count: 2,
+        element: 'physical',
+        multiplier: (mods) => (mods.maskMet('Agile') ? 1.5 * 3 : 1.5),
+      },
+    ],
+    qte: { // Untested
       Perfect: 1.4,
       Success: 1.2,
       Failure: 1,
@@ -2096,6 +2270,26 @@ export var skills = reactive([
     qte: {
       Perfect: 1.3,
       Success: 1.15,
+      Failure: 1,
+    },
+  },
+  {
+    name: 'End Slice (Gradient)',
+    character: 'Sciel',
+    description: '1000% Physical damage. Deals 20% more damage for each Foretell consumed since the beginning of the battle.',
+    apCost: 3,
+    spoilerLevel: 5,
+    hits: [
+      {
+        count: 1,
+        element: 'physical',
+        multiplier: (mods) => 10 * (1 + 0.2 * (mods.byName('Foretell Consumed')?.count ?? 0)),
+        special: 'Moon',
+      },
+    ],
+    qte: { // Untested
+      Perfect: 1.4,
+      Success: 1.2,
       Failure: 1,
     },
   },

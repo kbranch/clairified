@@ -41,6 +41,12 @@ export var targetBuffs = reactive([
     type: 'boolean',
   },
   {
+    name: 'Slow',
+    type: 'boolean',
+    icon: 'slow.png',
+    iconOnly: true,
+  },
+  {
     name: 'Mark',
     type: 'boolean',
     icon: 'mark.png',
@@ -183,4 +189,18 @@ export var selfBuffs = reactive([
     icon: 'inverted.png',
     iconOnly: true,
   },
+  {
+    name: 'Level',
+    type: 'count',
+    default: 1,
+    min: 1,
+    max: 99,
+  },
+  {
+    name: 'Dodges',
+    type: 'count',
+    default: 0,
+    min: 0,
+    max: 100,
+  }
 ]);

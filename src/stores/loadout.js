@@ -20,6 +20,10 @@ export const useLoadoutStore = defineStore('loadout', () => {
   const baseAttackPower = ref(defaultAttackPower);
   const baseCrit = ref(defaultCrit);
 
+  const presets = ref(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
+  const activePresets = ref(null);
+  const activePreset = ref(null);
+
   const selections = ref([]);
 
   const characters = computed (() => {
@@ -233,7 +237,10 @@ export const useLoadoutStore = defineStore('loadout', () => {
     saveSelections(selectedMods.value);
   }, { deep: true });
 
-  watch(character, (value) => {
+  watch(character, (value, oldValue) => {
+    activePresets.value[oldValue.name] = activePreset.value;
+    activePreset.value = activePresets.value[value.name];
+
     if (selections.value[value.name]) {
       loadSelections(value.name);
     }
@@ -261,6 +268,11 @@ export const useLoadoutStore = defineStore('loadout', () => {
   watch(() => settings.favoriteSkills, () => {
     updateSkills();
   }, { deep: true });
+
+  watch(activePreset, () => {
+    loadSelectionsFromStorage();
+    loadSelections(character.value.name);
+  });
 
   function updateLuminas() {
     allLuminas.forEach(lumina => {
@@ -425,16 +437,42 @@ export const useLoadoutStore = defineStore('loadout', () => {
   }
 
   function saveSelectionsToStorage() {
-    localStorage.setItem('selections', JSON.stringify(selections.value));
+    const all = getAllFromStorage();
+
+    if (!all.presets) {
+      all.presets = {};
+    }
+
+    all.presets[activePreset.value] = selections.value;
+
+    localStorage.setItem('selections', JSON.stringify(all));
   }
 
   function loadSelectionsFromStorage() {
-    const storedSelections = localStorage.getItem('selections');
-    if (storedSelections) {
-      selections.value = JSON.parse(storedSelections);
+    const all = getAllFromStorage();
+    if (all) {
+      if (all.presets) {
+        selections.value = all.presets[activePreset.value];
+
+        if (!selections.value) {
+          initStorage();
+        }
+      }
+      else {
+        selections.value = all;
+      }
     } else {
       initStorage();
     }
+  }
+
+  function getAllFromStorage() {
+    const storedSelections = localStorage.getItem('selections');
+    if (storedSelections) {
+      return JSON.parse(storedSelections);
+    }
+
+    return null;
   }
 
   function initStorage() {
@@ -451,6 +489,16 @@ export const useLoadoutStore = defineStore('loadout', () => {
     }
   }
 
+  function initPresets() {
+    activePresets.value = allCharacters.reduce((acc, char) => {
+      acc[char.name] = presets.value[0];
+      return acc;
+    }, {});
+
+    activePreset.value = activePresets.value[character.value.name];
+  }
+
+  initPresets();
   initGimmicks();
 
   for (const buff of allSelfBuffs.concat(allTargetBuffs)) {
@@ -468,5 +516,5 @@ export const useLoadoutStore = defineStore('loadout', () => {
 
   return { character, baseAttackPower, baseCrit, characters, luminas, skills, gimmick,
     weapons, selectedWeapon, selfBuffs, targetBuffs, allMods, selectedMods, selectedLuminas, modByName, resetLuminas,
-    resetWeapons, weaknessMod, resolveElement, elementUrl, weaknesses };
+    resetWeapons, weaknessMod, resolveElement, elementUrl, weaknesses, presets, activePreset };
 })

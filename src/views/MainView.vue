@@ -12,6 +12,7 @@ import ElementPicker from '@/components/ElementPicker.vue';
 import { useSettingsStore } from '@/stores/settings';
 import SortPicker from '@/components/SortPicker.vue';
 import AboutDialog from '@/components/AboutDialog.vue';
+import PresetPicker from '@/components/PresetPicker.vue';
 
 const loadout = useLoadoutStore();
 const settings = useSettingsStore();
@@ -131,6 +132,11 @@ onUnmounted(() => {
 
   <div class="row mt-3">
     <div class="col">
+      <div class="presets pb-2">
+        <h4>Presets</h4>
+        <PresetPicker />
+      </div>
+
       <h4>Self</h4>
       <div class="buff-container">
 

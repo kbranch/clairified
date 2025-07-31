@@ -921,6 +921,149 @@ export var luminas = reactive([
   },
   {
     name: 'Random Defense',
-    description: ''
-  }
+    description: 'Damage taken is randomly multiplied by a value between 50% and 200%',
+    cost: 5,
+    damaging: false,
+  },
+  {
+    name: 'Recovery',
+    description: 'Heal 10% Health on turn start',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Revive Paradox',
+    description: 'Play immediately when revived',
+    cost: 5,
+    damaging: false,
+  },
+  {
+    name: 'Revive Tint Energy',
+    description: 'Revive Tints also give 3 AP',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Rewarding Mark',
+    description: 'Recover 2 AP on dealing damage to a Marked target. Once per turn.',
+    cost: 5,
+    damaging: false,
+  },
+  {
+    name: 'Roulette',
+    description: 'Every hit has a 50% chance to deal either 50% or 200% of its damage',
+    cost: 5,
+    damaging: false,
+  },
+  {
+    name: 'Rush On Powerful',
+    description: 'Apply Rush on applying Powerful (3 turns)',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'SOS Power',
+    description: 'Apply Powerful when falling below 50% Health (5 turns)',
+    cost: 5,
+    damaging: false,
+  },
+  {
+    name: 'SOS Rush',
+    description: 'Apply Rush when falling below 50% Health (3 turns)',
+    cost: 5,
+    damaging: false,
+  },
+  {
+    name: 'SOS Shell',
+    description: 'Apply Shell when falling below 50% Health (5 turns)',
+    cost: 5,
+    damaging: false,
+  },
+  {
+    name: 'Second Chance',
+    description: 'Revive with 100% Health. Once per battle.',
+    cost: 40,
+    damaging: false,
+  },
+  {
+    name: 'Shared Care',
+    description: 'When Healing an ally, also Heal self for 50% of that value',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Shell On Rush',
+    description: 'Apply Shell on applying Rush (3 turns)',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Shielding Death',
+    description: 'On death, other allies gain 3 Shields',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Shielding Tint',
+    description: 'Healing Tints also add 2 Shields',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Slowing Break',
+    description: 'Apply Slow on Stun (3 turns)',
+    cost: 5,
+    damaging: false,
+  },
+  {
+    name: 'Sniper',
+    description: 'First Free Aim shot each turn deals 200% increased damage and can Stun.',
+    cost: 15,
+    damaging: false,
+  },
+  {
+    name: 'Solidifying',
+    description: '+2 Shields when the character\'s Health falls below 50%. Once per battle.',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Stay Marked',
+    description: '50% chance to apply Mark when attacking a Marked target.',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Survivor',
+    description: 'Survive fatal damage with 1 Health. Once per battle.',
+    cost: 20,
+    damaging: false,
+  },
+  {
+    name: 'Tainted',
+    description: 'Deal 15% increased damage for each Status effect on self.',
+    cost: 3,
+    additiveMultiplier: (mods) => 0.15 * 
+      ((mods.byName('Exhausted') ? 1 : 0) + 
+      (mods.byName('Inverted') ? 1 : 0) +
+      (mods.byName('Powerful') ? 1 : 0) + 
+      (mods.byName('Self Powerless') ? 1 : 0) + 
+      (mods.byName('Self Mark') ? 1 : 0) + 
+      (mods.byName('Self Slow') ? 1 : 0) + 
+      (mods.byName('Self Burn') ? 1 : 0) + 
+      (mods.byName('Self Defenceless') ? 1 : 0)),
+  },
+  {
+    name: 'The One',
+    description: 'Max Health is reduced to 1',
+    cost: 1,
+    damaging: false,
+  },
+  {
+    name: 'Time Tint',
+    description: 'Energy Tints also apply Rush (3 turns)',
+    cost: 10,
+    damaging: false,
+  },
+
 ]);

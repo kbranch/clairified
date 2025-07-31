@@ -202,5 +202,32 @@ export var selfBuffs = reactive([
     default: 0,
     min: 0,
     max: 100,
-  }
+  },
+  {
+    name: 'Self Mark',
+    type: 'boolean',
+    icon: 'mark.png',
+    iconOnly: true,
+    description: 'The next hit deals 50% more damage.',
+  },
+  {
+    name: 'Self Defenceless',
+    type: 'boolean',
+    icon: 'defenceless.png',
+    iconOnly: true,
+    description: 'Defenceless increases the damage received by the target by 25%.',
+  },
+  {
+    name: 'Self Burn',
+    type: 'count',
+    icon: 'fire.png',
+    iconOnly: true,
+  },
+  {
+    name: 'Self Powerless',
+    type: 'boolean',
+    icon: 'powerless.png',
+    iconOnly: true,
+    multiplier: 0.8,
+  },
 ]);

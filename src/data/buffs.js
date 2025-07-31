@@ -230,4 +230,16 @@ export var selfBuffs = reactive([
     iconOnly: true,
     multiplier: 0.8,
   },
+  {
+    name: 'Self Rush',
+    type: 'boolean',
+    icon: 'rush.png',
+    iconOnly: true,
+  },
+  {
+    name: 'Self Shell',
+    type: 'boolean',
+    icon: 'shell.png',
+    iconOnly: true,
+  },
 ]);

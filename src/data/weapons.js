@@ -97,7 +97,7 @@ export var weapons = reactive([
       {
         level: 20,
         description: 'Deal 50% increased Counterattack damage for each Shield on self',
-        additiveMultiplier: (mods, skill) => skill.name == 'Counterattack' ? (0.5 * (mods.byName('Self Shield')?.count ?? 0)) : 0,
+        additiveMultiplier: (mods, skill) => skill.isCounter ? (0.5 * (mods.byName('Self Shield')?.count ?? 0)) : 0,
       },
     ],
   },
@@ -157,7 +157,7 @@ export var weapons = reactive([
       {
         level: 20,
         description: 'Deal 50% increased Counterattack damage for each Shield on self',
-        additiveMultiplier: (mods, skill) => skill.name == 'Counterattack' ? (0.5 * (mods.byName('Self Shield')?.count ?? 0)) : 0,
+        additiveMultiplier: (mods, skill) => skill.isCounter ? (0.5 * (mods.byName('Self Shield')?.count ?? 0)) : 0,
       },
     ],
   },
@@ -1039,7 +1039,7 @@ export var weapons = reactive([
       {
         level: 20,
         description: 'Counterattack is always a Critical hit',
-        crit: (mods, skill) => skill.name == 'Counterattack' ? 100 : 0,
+        crit: (mods, skill) => skill.isCounter ? 100 : 0,
       },
     ],
   },

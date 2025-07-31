@@ -29,11 +29,38 @@ export var skills = reactive([
   {
     name: 'Counterattack',
     isSkill: false,
+    isCounter: true,
     hits: [
       {
         count: 1,
         element: 'weapon',
-        multiplier: 5.6,
+        multiplier: (mods) => 2.5 + ((mods.byName('Level').count - 1) * 0.05),
+      },
+    ],
+    apCost: 0,
+  },
+  {
+    name: 'Expedition Counterattack',
+    isSkill: false,
+    isCounter: true,
+    hits: [
+      {
+        count: 1,
+        element: 'weapon',
+        multiplier: (mods) => (2.5 + ((mods.byName('Level').count - 1) * 0.05)) * 0.32,
+      },
+    ],
+    apCost: 0,
+  },
+  {
+    name: 'Jump Counterattack',
+    isSkill: false,
+    isCounter: true,
+    hits: [
+      {
+        count: 1,
+        element: 'weapon',
+        multiplier: (mods) => (2.5 + ((mods.byName('Level').count - 1) * 0.05)) * 0.4,
       },
     ],
     apCost: 0,
@@ -41,6 +68,7 @@ export var skills = reactive([
   {
     name: 'Gradient Counter',
     isSkill: false,
+    isCounter: true,
     hits: [
       {
         count: 1,

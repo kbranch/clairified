@@ -52,13 +52,13 @@ export var luminas = reactive([
     name: 'Augmented Counter I',
     description: '25% increased Counterattack damage',
     cost: 3,
-    additiveMultiplier: (mods, skill) => ['Counterattack', 'Gradient Counter'].includes(skill.name) ? 0.25 : 0,
+    additiveMultiplier: (mods, skill) => skill.isCounter ? 0.25 : 0,
   },
   {
     name: 'Augmented Counter II',
     description: '50% increased Counterattack damage',
     cost: 5,
-    additiveMultiplier: (mods, skill) => ['Counterattack', 'Gradient Counter'].includes(skill.name) ? 0.5 : 0,
+    additiveMultiplier: (mods, skill) => skill.isCounter ? 0.5 : 0,
   },
   {
     name: 'Augmented First Strike',
@@ -92,7 +92,7 @@ export var luminas = reactive([
     name: 'Breaking Counter',
     description: '50% more Break potency on Counterattack',
     cost: 3,
-    breakMultiplier: (mods, skill) => skill.name == 'Counterattack' ? 1.5 : 1,
+    breakMultiplier: (mods, skill) => skill.isCounter ? 1.5 : 1,
     damaging: false,
   },
   {

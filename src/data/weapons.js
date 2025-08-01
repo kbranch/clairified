@@ -43,6 +43,26 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Barrier Breaker',
+    character: 'Maelle',
+    element: 'void',
+    spoilerLevel: 5,
+    levels: [
+      {
+        level: 4,
+        description: 'Steal Shields removed by hitting enemies',
+      },
+      {
+        level: 10,
+        description: 'Switch to Virtuose Stance on destroying a Shield',
+      },
+      {
+        level: 20,
+        description: 'Hitting a Marked enemy destroys all Shields',
+      },
+    ],
+  },
+  {
     name: 'Battlum',
     character: 'Maelle',
     element: 'physical',
@@ -102,6 +122,26 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Chantenum',
+    character: 'Maelle',
+    element: 'fire',
+    levels: [
+      {
+        level: 4,
+        description: 'On turn start, if Stanceless, switch to Offensive Stance',
+      },
+      {
+        level: 10,
+        description: 'Fire Skills cost 1 less AP',
+      },
+      {
+        level: 20,
+        description: '+1 Shield on switching to Offensive Stance. Deal 10% more damage.',
+        multiplier: 1.1,
+      },
+    ],
+  },
+  {
     name: 'Clierum',
     character: 'Maelle',
     element: 'lightning',
@@ -118,7 +158,27 @@ export var weapons = reactive([
       {
         level: 20,
         description: '+50% Critical Chance while in Offensive Stance',
-        crit: (mods) => mods.byName('Offensive Stance') ? 50 : 0,
+        crit: (mods) => mods.byName('Offensive') ? 50 : 0,
+      },
+    ],
+  },
+  {
+    name: 'Coldum',
+    character: 'Maelle',
+    element: 'ice',
+    levels: [
+      {
+        level: 4,
+        description: 'Heal 2% Health on dealing a Critical hit',
+      },
+      {
+        level: 10,
+        description: '+50% Critical Chance while in Defensive Stance',
+        crit: (mods) => mods.byName('Defensive') ? 50 : 0,
+      },
+      {
+        level: 20,
+        description: 'If Stanceless, Base Attack switches to Defensive Stance',
       },
     ],
   },
@@ -142,6 +202,25 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Facesum',
+    character: 'Maelle',
+    element: 'physical',
+    levels: [
+      {
+        level: 4,
+        description: 'In Offensive Stance, double the amount of Burn applied',
+      },
+      {
+        level: 10,
+        description: 'Deal 50% increased Burn damage',
+      },
+      {
+        level: 20,
+        description: 'Base Attack propagates Burn',
+      },
+    ],
+  },
+  {
     name: 'Jarum',
     character: 'Maelle',
     element: 'physical',
@@ -158,6 +237,25 @@ export var weapons = reactive([
         level: 20,
         description: 'Deal 50% increased Counterattack damage for each Shield on self',
         additiveMultiplier: (mods, skill) => skill.isCounter ? (0.5 * (mods.byName('Self Shield')?.count ?? 0)) : 0,
+      },
+    ],
+  },
+  {
+    name: 'Lithum',
+    character: 'Maelle',
+    element: 'void',
+    levels: [
+      {
+        level: 4,
+        description: 'In Virtuose Stance, hitting a Marked enemy doesn\'t remove Mark',
+      },
+      {
+        level: 10,
+        description: 'Switch to Virtuose Stance on Counterattack',
+      },
+      {
+        level: 20,
+        description: 'Gain Shell when switching out of Virtuose Stance (3 turns)',
       },
     ],
   },
@@ -198,7 +296,7 @@ export var weapons = reactive([
       {
         level: 10,
         description: 'In Defensive Stance, double Break potency',
-        breakMultiplier: (mods) => mods.byName('Defensive Stance') ? 2 : 1,
+        breakMultiplier: (mods) => mods.byName('Defensive') ? 2 : 1,
       },
       {
         level: 20,
@@ -247,6 +345,64 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Tissenum',
+    character: 'Maelle',
+    element: 'earth',
+    levels: [
+      {
+        level: 4,
+        description: 'In Defensive Stance, double Break potency',
+      },
+      {
+        level: 10,
+        description: 'Recover 9 AP on Stunning an enemy',
+      },
+      {
+        level: 20,
+        description: 'Stunning an enemy deals 500% Earth damage',
+      },
+    ],
+  },
+  {
+    name: 'Veremum',
+    character: 'Maelle',
+    element: 'physical',
+    levels: [
+      {
+        level: 4,
+        description: 'If Stanceless, Base Attack switches to Offensive Stance',
+      },
+      {
+        level: 10,
+        description: 'Counterattacks apply Defenseless (3 turns)',
+      },
+      {
+        level: 20,
+        description: '+50% Critical Chance while in Offensive Stance',
+        crit: (mods) => mods.byName('Offensive') ? 50 : 0,
+      },
+    ],
+  },
+  {
+    name: 'Angerim',
+    character: 'Lune',
+    element: 'fire',
+    levels: [
+      {
+        level: 4,
+        description: 'Base Attack applies 2 Burn per Fire Stain',
+      },
+      {
+        level: 10,
+        description: 'Generate one Fire Stain at the beginning of each turn',
+      },
+      {
+        level: 20,
+        description: 'Deal 30% more Burn damage per Fire Stain',
+      },
+    ],
+  },
+  {
     name: 'Benisim',
     character: 'Lune',
     element: 'earth',
@@ -267,6 +423,46 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Betelim',
+    character: 'Lune',
+    element: 'earth',
+    levels: [
+      {
+        level: 4,
+        description: 'Deal 20% more damage each time you cast a Skill that consumed a Stain, up to 100%. Resets on using a Skill without consuming Stains.',
+      },
+      {
+        level: 10,
+        description: 'On turn start, if no Stains, 2 random Stains are generated',
+      },
+      {
+        level: 20,
+        description: 'Recover 1 AP when Stains are consumed',
+      },
+    ],
+  },
+  {
+    name: 'Braselim',
+    character: 'Lune',
+    element: 'fire',
+    levels: [
+      {
+        level: 4,
+        description: '30% increased Critical Chance per Ice Stain',
+        crit: (mods) => 0.3 * mods.byName('Ice').count,
+      },
+      {
+        level: 10,
+        description: '+5% Gradient Charge on Critical hit',
+      },
+      {
+        level: 20,
+        description: 'Deal 20% increased Fire damage with Skills',
+        additiveMultiplier: (mods, skill) => skill.element == 'fire' ? 20 : 0,
+      },
+    ],
+  },
+  {
     name: 'Chapelim',
     character: 'Lune',
     element: 'earth',
@@ -283,6 +479,26 @@ export var weapons = reactive([
       {
         level: 20,
         description: 'Generate one Earth Stain at the beginning of each turn',
+      },
+    ],
+  },
+  {
+    name: 'Choralim',
+    character: 'Lune',
+    element: 'fire',
+    levels: [
+      {
+        level: 4,
+        description: '100% Critical Chance when 4 Stains are simultaneously active',
+        crit: (mods) => mods.byName('Ice').count + mods.byName('Fire').count + mods.byName('Earth').count + mods.byName('Lightning').count + mods.byName('Light').count + mods.byName('Dark').count >= 4 ? 100 : 0,
+      },
+      {
+        level: 10,
+        description: 'Deal 20% increased damage for each consecutive turn without taking damage, up to 100%',
+      },
+      {
+        level: 20,
+        description: 'Critical hits apply Burn',
       },
     ],
   },
@@ -406,6 +622,27 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Lithelim',
+    character: 'Lune',
+    element: 'void',
+    levels: [
+      {
+        level: 4,
+        description: '50% chance to generate a Dark or Light Stain when consuming Stains. Deal 50% more damage with Skills per active Dark Stain',
+        multiplier: (mods, skill) => skill.isSkill ? 1 + (0.5 * (mods.byName('Dark')?.count ?? 0)) : 1,
+      },
+      {
+        level: 10,
+        description: 'Recover 1 AP on consuming a Light Stain',
+      },
+      {
+        level: 20,
+        description: 'Base attacks can consume one Dark Stain to deal 200% more damage',
+        multiplier: (mods, skill) => skill.name == 'Base Attack' && mods.byName('Dark') ? 3 : 1,
+      },
+    ],
+  },
+  {
     name: 'Lunerim',
     character: 'Lune',
     element: 'fire',
@@ -486,6 +723,25 @@ export var weapons = reactive([
         level: 20,
         description: 'With 4 active Dark Stains, any Skill can consume them to deal 300% increased damage',
         additiveMultiplier: (mods, skill) => skill.isSkill && mods.byName('Dark')?.count >= 4 ? 3 : 0,
+      },
+    ],
+  },
+  {
+    name: 'Snowim',
+    character: 'Lune',
+    element: 'ice',
+    levels: [
+      {
+        level: 4,
+        description: 'Freeze self when falling below 30% health. Prevent the next instance of damage while Frozen.',
+      },
+      {
+        level: 10,
+        description: 'On turn start, if Frozen, remove Freeze and heal 60% Health',
+      },
+      {
+        level: 20,
+        description: 'Gain 2 Ice Stains and 3 AP when Frozen',
       },
     ],
   },
@@ -669,6 +925,45 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Guleson',
+    character: 'Sciel',
+    element: 'lightning',
+    levels: [
+      {
+        level: 4,
+        description: 'On Twilight Start, apply mark to all enemies',
+      },
+      {
+        level: 10,
+        description: 'Hitting a Marked enemy during Twilight doesn\'t remove Mark',
+      },
+      {
+        level: 20,
+        description: 'Apply 3 Foretell on applying Mark',
+      },
+    ],
+  },
+  {
+    name: 'Hevason',
+    character: 'Sciel',
+    element: 'physical',
+    levels: [
+      {
+        level: 4,
+        description: 'Free Aim shots can consume a Sun charge to apply 5 Foretell and consume a Moon charge to deal 400% more damage',
+        multiplier: (mods, skill) => skill.name == 'Free Aim' && mods.byName('Moon') ? 5 : 1,
+      },
+      {
+        level: 10,
+        description: 'Consuming a Sun or Moon charge recovers 1 AP',
+      },
+      {
+        level: 20,
+        description: 'Base Attack gives 1 Moon charge',
+      },
+    ],
+  },
+  {
     name: 'Lusteson',
     character: 'Sciel',
     element: 'dark',
@@ -685,6 +980,25 @@ export var weapons = reactive([
         level: 20,
         description: 'Deal 20% increased Dark damage with Skills',
         additiveMultiplier: (mods, skill) => skill.isSkill && skill.element == 'dark' ? 0.2 : 0,
+      },
+    ],
+  },
+  {
+    name: 'Martenon',
+    character: 'Sciel',
+    element: 'earth',
+    levels: [
+      {
+        level: 4,
+        description: 'On Twilight Start, deal 50% damage to all enemies per Sun and Moon charges',
+      },
+      {
+        level: 10,
+        description: 'On Twilight Start, apply 2 Foretell per charge to all enemies',
+      },
+      {
+        level: 20,
+        description: 'Double Sun and Moon charge generation',
       },
     ],
   },
@@ -786,6 +1100,25 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Garganon',
+    character: 'Sciel',
+    element: 'fire',
+    levels: [
+      {
+        level: 4,
+        description: 'While having at least 1 Sun charge, apply one Burn stack per hit taken',
+      },
+      {
+        level: 10,
+        description: 'Counterattacks apply 1 Burn per Sun charge',
+      },
+      {
+        level: 20,
+        description: 'Base attack can consume 1 Sun charge to apply 5 Foretell',
+      },
+    ],
+  },
+  {
     name: 'Scieleson',
     character: 'Sciel',
     element: 'physical',
@@ -852,6 +1185,26 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Chevalam',
+    character: 'Verso',
+    element: 'physical',
+    levels: [
+      {
+        level: 4,
+        description: 'Start battle at Rank S, but can\'t be Healed or gain Shields',
+      },
+      {
+        level: 10,
+        description: 'Deal 20% increased damage for each consecutive turn without taking damage, up to 100%',
+        additiveMultiplier: (mods) => Math.min(mods.byName('Turn').count ?? 0 * 0.2, 1),
+      },
+      {
+        level: 20,
+        description: 'Rank S also grants Rush',
+      },
+    ],
+  },
+  {
     name: 'Confuso',
     character: 'Verso',
     element: 'light',
@@ -896,6 +1249,25 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Corpeso',
+    character: 'Verso',
+    element: 'fire',
+    levels: [
+      {
+        level: 4,
+        description: 'Base Attack applies 2 Burn stack per Rank',
+      },
+      {
+        level: 10,
+        description: 'Recover 1 AP on Rank Up',
+      },
+      {
+        level: 20,
+        description: 'Deal 50% more Burn damage per Rank, up to 300% on Rank S',
+      },
+    ],
+  },
+  {
     name: 'Cruleram',
     character: 'Verso',
     element: 'ice',
@@ -911,6 +1283,25 @@ export var weapons = reactive([
       {
         level: 20,
         description: 'Apply Powerless on Counterattack (3 turns)',
+      },
+    ],
+  },
+  {
+    name: 'Cultam',
+    character: 'Verso',
+    element: 'dark',
+    levels: [
+      {
+        level: 4,
+        description: 'No Perfection loss on damage taken. Perfection is instead lost on being Healed.',
+      },
+      {
+        level: 10,
+        description: 'Recover 2 AP on Counterattack',
+      },
+      {
+        level: 20,
+        description: 'Increase Rank by one on Counterattack',
       },
     ],
   },
@@ -985,6 +1376,26 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Dreameso',
+    character: 'Verso',
+    element: 'physical',
+    levels: [
+      {
+        level: 4,
+        description: 'Increase Rank by one Counterattack',
+      },
+      {
+        level: 10,
+        description: 'Deal 50% more Counterattack damage',
+        multiplier: (mods, skill) => skill.isCounter ? 1.5 : 1,
+      },
+      {
+        level: 20,
+        description: 'Recover 2 AP on Counterattack',
+      },
+    ],
+  },
+  {
     name: 'Dualiso',
     character: 'Verso',
     element: 'lightning',
@@ -1020,6 +1431,26 @@ export var weapons = reactive([
       {
         level: 20,
         description: 'Gain 2 Perfection on turn start',
+      },
+    ],
+  },
+  {
+    name: 'Gesam',
+    character: 'Verso',
+    element: 'physical',
+    levels: [
+      {
+        level: 4,
+        description: 'Convert Light damage from Skills to Physical damage',
+      },
+      {
+        level: 10,
+        description: 'Deal 20% increased Physical damage with Skills',
+        additiveMultiplier: (mods, skill) => skill.isSkill && ['light', 'physical'].includes(skill.element) ? 0.2 : 0,
+      },
+      {
+        level: 20,
+        description: 'Physical Skills cost 1 less AP',
       },
     ],
   },
@@ -1133,6 +1564,25 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Tireso',
+    character: 'Verso',
+    element: 'earth',
+    levels: [
+      {
+        level: 4,
+        description: 'Increase Rank by one on applying Mark',
+      },
+      {
+        level: 10,
+        description: 'Mark an enemy on Base Attack',
+      },
+      {
+        level: 20,
+        description: 'Apply Powerless on Marking an enemy (3 turns)',
+      },
+    ],
+  },
+  {
     name: 'Verleso',
     character: 'Verso',
     element: 'physical',
@@ -1177,6 +1627,85 @@ export var weapons = reactive([
     ],
   },
   {
+    name: 'Brumaro',
+    character: 'Monoco',
+    element: 'physical',
+    levels: [
+      {
+        level: 4,
+        description: 'Replay instantly when in Almighty Mask',
+      },
+      {
+        level: 10,
+        description: '+3 AP when in Almighty Mask',
+      },
+      {
+        level: 20,
+        description: 'Revive instantly with full Health if dead while in Almighty Mask. Once per Battle.',
+      },
+    ],
+  },
+  {
+    name: 'Fragaro',
+    character: 'Monoco',
+    element: 'lightning',
+    levels: [
+      {
+        level: 4,
+        description: 'Free Aim shots spin the Bestial Wheel to a random value',
+      },
+      {
+        level: 10,
+        description: 'Free Aim shots deal double damage with all Masks except Almighty',
+        multiplier: (mods, skill) => skill.name == 'Free Aim' && !mods.byName('Almighty') ? 2 : 1,
+      },
+      {
+        level: 20,
+        description: '100% Critical Chance while in Almighty Mask',
+        crit: (mods) => mods.byName('Almighty') ? 100 : 0,
+      },
+    ],
+  },
+  {
+    name: 'Grandaro',
+    character: 'Monoco',
+    element: 'earth',
+    levels: [
+      {
+        level: 4,
+        description: 'Start battle in Heavy Mask',
+      },
+      {
+        level: 10,
+        description: 'Heavy Mask applies Shell (3 turns)',
+      },
+      {
+        level: 20,
+        description: '+1 AP per hit taken',
+      },
+    ],
+  },
+  {
+    name: 'Joyaro',
+    character: 'Monoco',
+    element: 'lightning',
+    levels: [
+      {
+        level: 4,
+        description: 'Start battle in Almighty Mask',
+      },
+      {
+        level: 10,
+        description: 'Deal 20% increased damage for each consecutive turn without taking damage, up to 100%',
+        additiveMultiplier: (mods) => Math.min((mods.byName('Turn').count ?? 0) * 0.2, 1),
+      },
+      {
+        level: 20,
+        description: 'Break potency is doubled while in Almighty Mask',
+      },
+    ],
+  },
+  {
     name: 'Monocaro',
     character: 'Monoco',
     element: 'physical',
@@ -1213,6 +1742,45 @@ export var weapons = reactive([
       {
         level: 20,
         description: '+1 AP on Mask change',
+      },
+    ],
+  },
+  {
+    name: 'Sidaro',
+    character: 'Monoco',
+    element: 'dark',
+    levels: [
+      {
+        level: 4,
+        description: 'Deal 100% increased damage. Deal 3% increased damage per Upgraded Skill used. Resets on using a non-Upgraded Skill.',
+        additiveMultiplier: (mods) => 1 + (mods.byName('Turn').count ?? 0) * 0.3,
+      },
+      {
+        level: 10,
+        description: 'Base Attack spins the Bestial Wheel to a random value',
+      },
+      {
+        level: 20,
+        description: 'Using an Upgraded Skill recovers 1 AP to other allies',
+      },
+    ],
+  },
+  {
+    name: 'Urnaro',
+    character: 'Monoco',
+    element: 'earth',
+    levels: [
+      {
+        level: 4,
+        description: 'Switch to Almighty Mask on Stunning an enemy',
+      },
+      {
+        level: 10,
+        description: 'Almighty Mask recovers 2 AP to all allies',
+      },
+      {
+        level: 20,
+        description: '50% increased Break potency',
       },
     ],
   },

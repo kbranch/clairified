@@ -62,3 +62,25 @@ export function sum(items, prop) {
 export function upperFirst(text) {
   return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
 }
+
+export function download(filename, text) {
+    let element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+export function getFile(element) {
+    if (element.files.length == 0) {
+        return;
+    }
+
+    let file = element.files[0];
+    return file.text();
+}

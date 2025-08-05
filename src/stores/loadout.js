@@ -269,9 +269,10 @@ export const useLoadoutStore = defineStore('loadout', () => {
     updateSkills();
   }, { deep: true });
 
-  watch(activePreset, () => {
+  watch(activePreset, (value) => {
     loadSelectionsFromStorage();
     loadSelections(character.value.name);
+    activePresets.value[character.value.name] = value;
   });
 
   function updateLuminas() {
@@ -307,6 +308,10 @@ export const useLoadoutStore = defineStore('loadout', () => {
 
   function loadSelections(character) {
     clearSelections();
+
+    if (!(character in selections.value)) {
+      selections.value[character] = [];
+    }
 
     for (const mod of selections.value[character]) {
       if (mod.type == 'weapon') {
@@ -437,7 +442,11 @@ export const useLoadoutStore = defineStore('loadout', () => {
   }
 
   function saveSelectionsToStorage() {
-    const all = getAllFromStorage();
+    let all = getAllFromStorage();
+
+    if (!all) {
+      all = {};
+    }
 
     if (!all.presets) {
       all.presets = {};
@@ -445,11 +454,12 @@ export const useLoadoutStore = defineStore('loadout', () => {
 
     all.presets[activePreset.value] = selections.value;
 
-    localStorage.setItem('selections', JSON.stringify(all));
+    saveAllToStorage(all);
   }
 
   function loadSelectionsFromStorage() {
     const all = getAllFromStorage();
+
     if (all) {
       if (all.presets) {
         selections.value = all.presets[activePreset.value];
@@ -475,6 +485,10 @@ export const useLoadoutStore = defineStore('loadout', () => {
     return null;
   }
 
+  function saveAllToStorage(all) {
+    localStorage.setItem('selections', JSON.stringify(all));
+  }
+
   function initStorage() {
     selections.value = {};
 
@@ -498,23 +512,68 @@ export const useLoadoutStore = defineStore('loadout', () => {
     activePreset.value = activePresets.value[character.value.name];
   }
 
-  initPresets();
-  initGimmicks();
+  function exportData(targetCharacters) {
+    let allData = getAllFromStorage();
+    let output = {};
 
-  for (const buff of allSelfBuffs.concat(allTargetBuffs)) {
-    initMod(buff);
+    for (const char in targetCharacters) {
+      for (const preset of targetCharacters[char]) {
+        if (!(preset in output)) {
+          output[preset] = {};
+        }
+
+        output[preset][char] = allData.presets[preset]?.[char];
+      }
+    }
+
+    return output;
   }
 
-  for (const lumina of allLuminas) {
-    initMod(lumina);
+  function importData(data) {
+    let allData = getAllFromStorage();
+
+    for (const preset in data.presets) {
+      for (const char in data.presets[preset]) {
+        if (!(preset in allData.presets)) {
+          allData.presets[preset] = {};
+        }
+
+        allData.presets[preset][char] = data.presets[preset][char];
+      }
+    }
+
+    saveAllToStorage(allData);
+    loadCurrentSelections();
   }
 
-  initWeaknesses();
+  function loadCurrentSelections() {
+    loadSelectionsFromStorage();
+    loadSelections(character.value.name);
+  }
 
-  loadSelectionsFromStorage();
-  loadSelections(character.value.name);
+  function init() {
+    initPresets();
+    initGimmicks();
 
-  return { character, baseAttackPower, baseCrit, characters, luminas, skills, gimmick,
+    for (const buff of allSelfBuffs.concat(allTargetBuffs)) {
+      initMod(buff);
+    }
+
+    for (const lumina of allLuminas) {
+      initMod(lumina);
+    }
+
+    initWeaknesses();
+
+    loadCurrentSelections();
+  }
+
+  init();
+
+  return {
+    character, baseAttackPower, baseCrit, characters, luminas, skills, gimmick,
     weapons, selectedWeapon, selfBuffs, targetBuffs, allMods, selectedMods, selectedLuminas, modByName, resetLuminas,
-    resetWeapons, weaknessMod, resolveElement, elementUrl, weaknesses, presets, activePreset };
+    resetWeapons, weaknessMod, resolveElement, elementUrl, weaknesses, presets, activePreset, activePresets, exportData,
+    importData,
+  };
 })

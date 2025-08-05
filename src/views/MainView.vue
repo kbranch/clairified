@@ -1,18 +1,19 @@
 <script setup>
 
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'; 
-import LuminaBox from '@/components/LuminaBox.vue';
-import WeaponBox from '@/components/WeaponBox.vue';
 import { spoilerLevels } from '@/data/consts.js';
 import { useLoadoutStore } from '@/stores/loadout';
-import BuffGroups from '@/components/BuffGroups.vue';
+import { useSettingsStore } from '@/stores/settings';
 import { sortByKey, sum } from '@/main';
+import LuminaBox from '@/components/LuminaBox.vue';
+import WeaponBox from '@/components/WeaponBox.vue';
+import BuffGroups from '@/components/BuffGroups.vue';
 import SkillsTab from '@/components/SkillsTab.vue';
 import ElementPicker from '@/components/ElementPicker.vue';
-import { useSettingsStore } from '@/stores/settings';
 import SortPicker from '@/components/SortPicker.vue';
 import AboutDialog from '@/components/AboutDialog.vue';
 import PresetPicker from '@/components/PresetPicker.vue';
+import ImportExportDialog from '@/components/ImportExportDialog.vue';
 
 const loadout = useLoadoutStore();
 const settings = useSettingsStore();
@@ -101,6 +102,8 @@ onUnmounted(() => {
       <h1>Clairified</h1>
       <img src="/images/info-circle.svg" class="header-icon ms-2 mb-2" v-tooltip:top="'About Clairified'"
         data-bs-toggle="modal" data-bs-target="#aboutModal" />
+      <img src="/images/share-fill.svg" class="header-icon ms-2 mb-2" v-tooltip:top="'Import/Export Builds'"
+        data-bs-toggle="modal" data-bs-target="#exportModal" />
     </div>
 
     <div class="col-auto d-flex justify-content-end align-items-center">
@@ -273,6 +276,7 @@ onUnmounted(() => {
   </div>
 
   <AboutDialog :start-showing="settings.firstLoad" />
+  <ImportExportDialog />
 
 </template>
 
@@ -328,6 +332,12 @@ onUnmounted(() => {
   filter: invert(1)
           brightness(0.5);
   cursor: pointer;
+  padding: 6px;
+}
+
+.header-icon:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 
 .lumina-container {

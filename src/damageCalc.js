@@ -96,7 +96,7 @@ export class DamageCalc {
   skillAverageDamage(extraMods=[]) {
     let combinedMods = this.mods.concat(extraMods);
     let critChanceMods = [...combinedMods];
-    let weaknessMod = this.loadout.weaknessMod(DamageCalc.getElement(this.skill?.hits[0].element, combinedMods, this.skill));
+    let weaknessMod = this.loadout.weaknessMod(DamageCalc.getElement(this.skill?.hits[0]?.element, combinedMods, this.skill));
 
     critChanceMods.push(weaknessMod);
 
@@ -149,7 +149,7 @@ export class DamageCalc {
       element = DamageCalc.resolveFunction(element, mods, skill);
     }
 
-    return element;
+    return element ?? 'physical';
   }
 
   static hitCount(hit, mods, skill) {

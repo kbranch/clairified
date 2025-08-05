@@ -906,9 +906,9 @@ export var skills = reactive([
             .map((element) => mods.byName(element))
             .filter((x) => x)
 
-          return stains.reduce((max, stain) => {
+          return (stains.reduce((max, stain) => {
             return stain.count > max.count ? stain : max;
-          }, { count: 0 }).name.toLocaleLowerCase()
+          }, { count: 0 }).name ?? 'fire').toLocaleLowerCase()
         },
         multiplier: 40, 
       }
@@ -1898,7 +1898,7 @@ export var skills = reactive([
       {
         count: 1, // Untested
         element: 'light',
-        multiplier: (mods) => 2 * Math.max(3 * (mods.byName('Casts')?.count ?? 0), 11) * (mods.maskMet('Almighty') ? 5 : 1),
+        multiplier: (mods) => 2 * Math.min(2 * (mods.byName('Casts')?.count ?? 0) + 1, 11) * (mods.maskMet('Almighty') ? 5 : 1),
       },
     ],
     qte: { // Untested

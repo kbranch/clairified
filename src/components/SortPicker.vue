@@ -10,6 +10,7 @@ const ascIcons = {
   'calculatedCost': 'sort-numeric-down.svg',
   'averageDamage': 'sort-down-alt.svg',
   'sortMult': 'sort-down-alt.svg',
+  'selected': 'sort-down-alt.svg',
   'favorite': 'star-half.svg',
 };
 
@@ -19,6 +20,7 @@ const descIcons = {
   'calculatedCost': 'sort-numeric-up.svg',
   'averageDamage': 'sort-up-alt.svg',
   'sortMult': 'sort-up-alt.svg',
+  'selected': 'sort-up-alt.svg',
   'favorite': 'star-half.svg',
 };
 
@@ -39,6 +41,10 @@ const types = {
     {
       name: 'Favorite',
       prop: 'favorite',
+    },
+    {
+      name: 'Equipped',
+      prop: 'selected'
     }]
   },
   weapon: {

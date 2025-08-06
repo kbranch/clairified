@@ -239,24 +239,19 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <template v-if="activeTab == 'Luminas'">
-        <div class="lumina-container">
-          <LuminaBox v-for="lumina in visibleLuminas" :key="lumina.name" :lumina="lumina"
-            @clicked="(lumina) => lumina.selected = !lumina.selected" />
-        </div>
-      </template>
-      <template v-if="activeTab == 'Weapons'">
-        <div class="d-flex">
-          <WeaponBox v-for="weapon in visibleWeapons" :key="weapon.name" :weapon="weapon"
-            @clicked="(weapon) => selectWeapon(weapon)" @levelClicked="(level, weapon) => selectLevel(level, weapon)" />
-        </div>
-      </template>
-      <template v-if="activeTab == 'Skills'">
-        <div class="d-flex">
-          <SkillsTab :skill-filter="skillFilter" />
-        </div>
-      </template>
+      <div v-if="activeTab == 'Luminas'" class="lumina-container">
+        <LuminaBox v-for="lumina in visibleLuminas" :key="lumina.name" :lumina="lumina"
+          @clicked="(lumina) => lumina.selected = !lumina.selected" />
+      </div>
+      <div v-if="activeTab == 'Weapons'" class="d-flex weapon-container">
+        <WeaponBox v-for="weapon in visibleWeapons" :key="weapon.name" :weapon="weapon"
+          @clicked="(weapon) => selectWeapon(weapon)" @levelClicked="(level, weapon) => selectLevel(level, weapon)" />
+      </div>
+      <div v-if="activeTab == 'Skills'" class="d-flex small-skill-container">
+        <SkillsTab :skill-filter="skillFilter" />
+      </div>
     </div>
+
     <div v-if="!isNarrow" class="col">
       <div class="tab-header">
         <h4>Skills</h4>
@@ -271,8 +266,11 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <SkillsTab :skill-filter="skillFilter" />
+      <div class="large-skill-container">
+        <SkillsTab :skill-filter="skillFilter" />
+      </div>
     </div>
+
   </div>
 
   <AboutDialog :start-showing="settings.firstLoad" />
@@ -345,6 +343,23 @@ onUnmounted(() => {
   flex-wrap: wrap;
   margin-left: -5px;
   margin-right: -10px;
+  max-height: 1000px;
+  overflow: scroll;
+}
+
+.weapon-container {
+  max-height: 1000px;
+  overflow: scroll;
+}
+
+.small-skill-container {
+  max-height: 1000px;
+  overflow: scroll;
+}
+
+.large-skill-container {
+  max-height: 1625px;
+  overflow: scroll;
 }
 
 .search-icon {

@@ -61,6 +61,12 @@ export var luminas = reactive([
     additiveMultiplier: (mods, skill) => skill.isCounter ? 0.5 : 0,
   },
   {
+    name: 'Augmented Counter III',
+    description: '75% increased Counterattack damage',
+    cost: 7,
+    additiveMultiplier: (mods, skill) => skill.isCounter ? 0.75 : 0,
+  },
+  {
     name: 'Augmented First Strike',
     description: 'Deal 50% increased damage on the first hit',
     cost: 5,
@@ -96,6 +102,12 @@ export var luminas = reactive([
     damaging: false,
   },
   {
+    name: 'Breaking Death',
+    description: 'Fully charge enemy\'s Break Bar on death',
+    cost: 5,
+    damaging: false,
+  },
+  {
     name: 'Breaking Shots',
     description: '50% increased Break potency with Free Aim shots',
     cost: 3,
@@ -108,6 +120,12 @@ export var luminas = reactive([
     cost: 5,
     breakMultiplier: (mods) => mods.byName('Slow') ? 1.25 : 1,
     damaging: false,
+  },
+  {
+    name: 'Breaking Specialist',
+    description: 'Break damage is increased by 50%, but base damage is reduced by 20%',
+    cost: 1,
+    breakMultiplier: 0.8,
   },
   {
     name: 'Burn Affinity',
@@ -433,26 +451,50 @@ export var luminas = reactive([
     damaging: false,
   },
   {
+    name: 'Charging Alteration',
+    description: '+10% Gradient Charge on applying a Buff. Once per turn.',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Charging Attack',
+    description: '+15% of a Gradient Charge on Base Attack',
+    cost: 7,
+    damaging: false,
+  },
+  {
+    name: 'Charging Burn',
+    description: '+20% of a Gradient Charge on applying Burn. Once per turn.',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Charging Counter',
+    description: '+20% of a Gradient Charge on Counterattack',
+    cost: 10,
+    damaging: false,
+  },
+  {
     name: 'Charging Critical',
-    description: '+20% Gradient Charge on Critical Hit. Once per turn.',
+    description: '+20% of a Gradient Charge on Critical Hit. Once per turn.',
     cost: 10,
     damaging: false,
   },
   {
     name: 'Charging Mark',
-    description: '+20% Gradient Charge on hitting a Marked target. Once per turn.',
+    description: '+20% of a Gradient Charge on hitting a Marked target. Once per turn.',
     cost: 10,
     damaging: false,
   },
   {
     name: 'Charging Tint',
-    description: '+5% Gradient Charge on using an item',
+    description: '+5% of a Gradient Charge on using an item',
     cost: 2,
     damaging: false,
   },
   {
     name: 'Charging Weakness',
-    description: '+15% Gradient Charge on hitting a Weakness. Once per turn.',
+    description: '+15% of a Gradient Charge on hitting a Weakness. Once per turn.',
     cost: 5,
     damaging: false,
   },
@@ -554,6 +596,12 @@ export var luminas = reactive([
     damaging: false,
   },
   {
+    name: 'Empowering Parry',
+    description: 'Each successful Parry increases damage by 5% until end of the following turn. Taking any damage removes this buff.',
+    cost: 5,
+    damaging: false,
+  },
+  {
     name: 'Empowering Tint',
     description: 'Healing Tints also apply Powerful (3 turns)',
     cost: 5,
@@ -626,6 +674,12 @@ export var luminas = reactive([
     damaging: false,
   },
   {
+    name: 'Energizing Powerful',
+    description: 'Give 2 AP on applying Powerful',
+    cost: 10,
+    damaging: false,
+  },
+  {
     name: 'Energizing Revive',
     description: 'Recover 3 AP to all allies when revived',
     cost: 5,
@@ -634,6 +688,12 @@ export var luminas = reactive([
   {
     name: 'Energizing Rush',
     description: 'Recover 2 AP on applying Rush',
+    cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Energizing Shell',
+    description: 'Give 2 AP on applying Shell',
     cost: 10,
     damaging: false,
   },
@@ -686,6 +746,12 @@ export var luminas = reactive([
     damaging: false,
   },
   {
+    name: 'Enfeebling Attack',
+    description: 'Base Attack applies Powerless for 1 turn.',
+    cost: 10,
+    damaging: false,
+  },
+  {
     name: 'Enfeebling Mark',
     description: 'Marked targets deal 30% less damage',
     cost: 10,
@@ -704,16 +770,40 @@ export var luminas = reactive([
     damaging: false,
   },
   {
+    name: 'Faster Than Strong',
+    description: 'Always play twice in a row, but deal 50% less damage.',
+    cost: 5,
+    multiplier: 0.5,
+  },
+  {
     name: 'Fueling Break',
     description: 'Stunning a target doubles its Burn amount',
     cost: 5,
     damaging: false,
   },
   {
+    name: 'Full Strength',
+    description: '25% increased damage on Full Health',
+    cost: 5,
+    additiveMultiplier: (mods) => (mods.byName('Health %')?.count ?? 100) ? 0.25 : 0,
+  },
+  {
     name: 'Gradient Break',
     description: '+50% Gradient Charge on Stunning a target',
     cost: 5,
     damaging: false,
+  },
+  {
+    name: 'Gradient Breaker',
+    description: '50% increased Breaking damage with Gradient Attacks',
+    cost: 5,
+    damaging: false,
+  },
+  {
+    name: 'Gradient Fighter',
+    description: '+25% increased damage with Gradient Attacks',
+    cost: 5,
+    additiveMultiplier: (mods, skill) => skill?.name?.includes('Gradient') ? 0.25 : 0,
   },
   {
     name: 'Greater Powerless',
@@ -818,6 +908,12 @@ export var luminas = reactive([
     damaging: false,
   },
   {
+    name: 'Marking Break',
+    description: 'Apply Mark on Break',
+    cost: 5,
+    damaging: false,
+  },
+  {
     name: 'Marking Shots',
     description: '20% chance to apply Mark on Free Aim shot',
     cost: 3,
@@ -845,6 +941,12 @@ export var luminas = reactive([
     name: 'Piercing Shot',
     description: 'Deal 25% increased Free Aim damage. Free Aim shots ignore Shields.',
     cost: 2,
+    damaging: false,
+  },
+  {
+    name: 'Powerful Heal',
+    description: 'Healing an ally also applies Powerful for 1 turn',
+    cost: 5,
     damaging: false,
   },
   {
@@ -881,6 +983,12 @@ export var luminas = reactive([
     name: 'Pro Retreat',
     description: 'Allows Flee to be instantaneous',
     cost: 40,
+    damaging: false,
+  },
+  {
+    name: 'Protecting Attack',
+    description: 'Gain Shell for 1 turn on Base Attack',
+    cost: 10,
     damaging: false,
   },
   {
@@ -929,6 +1037,12 @@ export var luminas = reactive([
     name: 'Recovery',
     description: 'Heal 10% Health on turn start',
     cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Rejuvenating Revive',
+    description: 'Apply Regen for 3 turns when revived',
+    cost: 3,
     damaging: false,
   },
   {
@@ -1010,6 +1124,12 @@ export var luminas = reactive([
     damaging: false,
   },
   {
+    name: 'Shortcut',
+    description: 'Immediately play when falling below 30% Health. Once per battle.',
+    cost: 5,
+    damaging: false,
+  },
+  {
     name: 'Slowing Break',
     description: 'Apply Slow on Stun (3 turns)',
     cost: 5,
@@ -1063,6 +1183,12 @@ export var luminas = reactive([
     name: 'Time Tint',
     description: 'Energy Tints also apply Rush (3 turns)',
     cost: 10,
+    damaging: false,
+  },
+  {
+    name: 'Weakness Gain',
+    description: '+1AP on hitting an enemy\'s Weakness. Once per turn.',
+    cost: 3,
     damaging: false,
   },
 
